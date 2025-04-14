@@ -19,7 +19,7 @@ import com.lgh.StudyProject.service.CustomUserDetailsService;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
+	private final UserDetailsService userDetailsService;
 
 	private final CustomUserDetailsService customUserDetailsService;
 
@@ -27,24 +27,21 @@ public class SecurityConfig {
 		this.customUserDetailsService = customUserDetailsService;
 		this.userDetailsService = userDetailsService;
 	}
-	
+
 	@Bean
 	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
 		AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManagerBuilder.class)
-				.userDetailsService(customUserDetailsService)
-				.passwordEncoder(passwordEncoder())
-				.and()
-				.build();
+				.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder()).and().build();
 		return authenticationManager;
 	}
-	
+
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-		
+
 		provider.setUserDetailsService(customUserDetailsService);
 		provider.setPasswordEncoder(passwordEncoder());
-		
+
 		return provider;
 	}
 
@@ -54,12 +51,16 @@ public class SecurityConfig {
 				.authorizeHttpRequests(
 						auth -> auth.requestMatchers("/login", "/register").permitAll().anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
-						.defaultSuccessUrl("/dashboard", true).permitAll().failureHandler((request, response, exception) -> {
+						.defaultSuccessUrl("/dashboard", true).permitAll()
+						.failureHandler((request, response, exception) -> {
 							System.out.println("로그인 실패 : " + exception.getMessage());
 							response.sendRedirect("/login?error");
 						}))
-				.logout(logout -> logout.logoutSuccessUrl("/login"));
-		
+				.logout(logout -> {
+					logout.logoutSuccessUrl("/login");
+					logout.deleteCookies("JSESSIONID", "remember-me"); // 로그아웃 시 쿠기 삭제
+				});
+
 		System.out.println("필터 체인 로그");
 
 		return http.build();
