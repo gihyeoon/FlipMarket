@@ -32,17 +32,12 @@ public class UserController {
 		return "login";
 	}
 
-	@GetMapping("/dashboard")
-	public String dashboard() {
-		return "dashboard";
-	}
-
 	@PostMapping("/register")
 	public String register(@RequestParam(value = "id") String id, @RequestParam(value = "pwd") String pwd,
 			@RequestParam(value = "name") String name, @RequestParam(value = "age") int age,
 			@RequestParam(value = "phoneNum") String phoneNum) {
 		String encodedPwd = passwordEncoder.encode(pwd);
-		User user = new User(id, encodedPwd, name, age, phoneNum, "ROLE_USER");
+		User user = new User(id, encodedPwd, name, age, phoneNum, "USER");
 		userRepository.save(user);
 
 		return "redirect:/login";
