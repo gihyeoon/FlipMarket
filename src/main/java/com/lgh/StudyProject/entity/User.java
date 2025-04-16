@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,14 +34,18 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String name;
 	
+	@Column(nullable = false)
 	private int age;
 	
+	@Column(nullable = false)
 	private String phoneNum;
 	
 	private String role;
 	
+	@CreationTimestamp
 	private LocalDateTime createdAt;
 	
+	@UpdateTimestamp
 	private LocalDateTime updatedAt;
 	
 	public User() {
@@ -54,77 +60,17 @@ public class User implements UserDetails {
 		this.phoneNum = phoneNum;
 		this.role = role;
 	}
-
-	public Long getNum() {
-		return num;
-	}
-
-	public void setNum(Long num) {
-		this.num = num;
-	}
-
+	
 	public String getId() {
 		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getPwd() {
 		return pwd;
 	}
 
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public int getAge() {
-		return age;
-	}
-
-	public void setAge(int age) {
-		this.age = age;
-	}
-
-	public String getPhoneNum() {
-		return phoneNum;
-	}
-
-	public void setPhoneNum(String phoneNum) {
-		this.phoneNum = phoneNum;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
 	public String getRole() {
 		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
 	}
 
 	@Override
