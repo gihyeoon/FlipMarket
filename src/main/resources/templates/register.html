@@ -1,8 +1,16 @@
-<form method="post" th:action="@{/register}">
-  <input type="text" name="id" placeholder="id" />
-  <input type="password" name="pwd" placeholder="pwd" />
-  <input type="text" name="name" placeholder="name" />
-  <input type="number" name="age" placeholder="age" />
-  <input type="tel" name="phoneNum" placeholder="phoneNum" />
-  <button type="submit">회원가입</button>
-</form>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <title>회원가입</title>
+    </head>
+    <body>
+		<form method="post" th:action="@{/register}">
+		  <input type="text" name="id" placeholder="id" />
+		  <input type="password" name="pwd" placeholder="pwd" />
+		  <input type="text" name="name" placeholder="name" />
+		  <input type="number" name="age" placeholder="age" />
+		  <input type="tel" name="phoneNum" placeholder="phoneNum" />
+		  <button type="submit">회원가입</button>
+		</form>
+	</body>
+</html>
