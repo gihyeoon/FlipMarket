@@ -51,7 +51,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(
 						auth -> auth.requestMatchers("/login", "/register").permitAll().anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
-						.defaultSuccessUrl("/dashboard", true).permitAll()
+						.defaultSuccessUrl("/main", true).permitAll()
 						.failureHandler((request, response, exception) -> {
 							System.out.println("로그인 실패 : " + exception.getMessage());
 							response.sendRedirect("/login?error");
