@@ -61,6 +61,10 @@ public class User implements UserDetails {
 		this.role = role;
 	}
 	
+	public Long getNum() {
+		return num;
+	}
+	
 	public String getId() {
 		return id;
 	}
