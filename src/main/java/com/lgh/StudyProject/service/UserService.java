@@ -1,20 +1,35 @@
 package com.lgh.StudyProject.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lgh.StudyProject.dto.UserDto;
 import com.lgh.StudyProject.entity.User;
 import com.lgh.StudyProject.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
 @Service
+@Transactional
 public class UserService {
 
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 
-	public void saveUser(String id, String pwd, String name, int age, String phoneNum) {
-		User user = new User(id, pwd, name, age, phoneNum, "USER");
+	public UserService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
+
+	public void register(UserDto userDto) {
+		User user = new User(userDto.getId(), userDto.getName(), userDto.getPwd(), userDto.getAge(),
+				userDto.getPhoneNum(), "USER");
+		
+		System.out.println(user);
+		
 		userRepository.save(user);
 	}
-	
+
+	public boolean checkDuplicateId(String id) {
+		return userRepository.existsById(id);
+	}
+
 }
