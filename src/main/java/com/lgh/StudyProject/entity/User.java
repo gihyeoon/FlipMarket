@@ -37,7 +37,6 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private int age;
 	
-	@Column(nullable = false)
 	private String phoneNum;
 	
 	private String role;
@@ -71,6 +70,10 @@ public class User implements UserDetails {
 
 	public String getPwd() {
 		return pwd;
+	}
+	
+	public String getPhoneNum() {
+		return phoneNum;
 	}
 
 	public String getRole() {
