@@ -36,10 +36,15 @@ public class RegisterController {
 	}
 	
 	@PostMapping("/register")
-	public Long register(@RequestBody UserDto userDto) {
+	public ResponseEntity<String> register(@RequestBody UserDto userDto) {
 		String encodedPwd = passwordEncoder.encode(userDto.getPwd());
 		userDto.setPwd(encodedPwd);
-		return userService.register(userDto);
+		try {
+			userService.register(userDto);
+			return ResponseEntity.ok("success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Register Fail: " + e.getMessage());
+		}
 	}
 	
 }
