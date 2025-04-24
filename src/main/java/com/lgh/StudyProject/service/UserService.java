@@ -19,13 +19,13 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public void register(UserDto userDto) {
-		User user = new User(userDto.getId(), userDto.getName(), userDto.getPwd(), userDto.getAge(),
+	public Long register(UserDto userDto) {
+		User user = new User(userDto.getId(), userDto.getPwd(), userDto.getName(), userDto.getAge(),
 				userDto.getPhoneNum(), "USER");
-		
+
 		System.out.println(user);
-		
-		userRepository.save(user);
+
+		return userRepository.save(user).getNum();
 	}
 
 	public boolean checkDuplicateId(String id) {
