@@ -12,6 +12,8 @@ public class UserDto {
 	
 	private String phoneNum;
 	
+	public UserDto() {
+	}
 	
 	public UserDto(String name, String id, String pwd, int age, String phoneNum) {
 		this.setName(name);
