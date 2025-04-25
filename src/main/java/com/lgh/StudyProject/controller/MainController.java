@@ -26,9 +26,9 @@ public class MainController {
 		String id = authentication.getName();
 		if (!id.equals("anonymousUser")) {
 			Long num = userRepository.findById(id).get().getNum();
-			model.addAttribute("id", num);
+			model.addAttribute("num", num);
 		} else {
-			model.addAttribute("id", "");
+			model.addAttribute("num", "");
 		}
 		
 		return "main";

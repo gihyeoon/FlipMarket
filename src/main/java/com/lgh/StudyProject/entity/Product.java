@@ -31,6 +31,8 @@ public class Product {
 	@Column(nullable = false)
 	private String category;
 	
+	private String description;
+	
 	@ManyToOne
 	@JoinColumn(name = "")
 	private User user;
@@ -42,13 +44,13 @@ public class Product {
 	private LocalDateTime updatedAt;
 	
 	public Product() {
-		// TODO Auto-generated constructor stub
 	}
 	
-	public Product(String productName, int price, String category) {
+	public Product(String productName, int price, String category, String description) {
 		this.productName = productName;
 		this.price = price;
 		this.category = category;
+		this.description = description;
 	}
 	
 }

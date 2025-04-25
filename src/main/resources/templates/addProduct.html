@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <title>상품 등록</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    <body>
+		<form id="registerForm">
+		  <input type="file" onchange="readURL(this);" />
+		  <img name="preview" id="preview" /><br>
+		  <input type="text" id="product_name" name="product_name" placeholder="상품명" /><br>
+		  <input type="text" id="category" name="category" placeholder="카테고리" /><br>
+		  <input type="text" id="price" name="price" placeholder="가격" /><br>
+		  <textarea id="description" name="description"></textarea><br>
+		  <div><input type="button" onclick="addProduct(event)" value="상품 등록" /></div>
+		</form>
+		<form method="get" th:action="@{/main}">
+			<div><input type="submit" value="Main" /></div>
+		</form>
+    </body>
+</html>
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+		function readURL(input) {
+			if (input.files && input.files[0]) {
+				const reader = new FileReader();
+				reader.onload = function(e) {
+					$("#preview").attr("src", e.target.result);
+					$("#preview").attr("width", 250);
+					$("#preview").attr("height", 150);
+				};
+				reader.readAsDataURL(input.files[0]);
+			} else {
+				$("#preview").attr("src", "");
+			}
+		}
+		
+		function addProduct(event) {
+			event.preventDefault();
+			
+			const productName = $("#product_name").val();
+			const category = $("#category").val();
+			const price = $("#price").val();
+			const desc = $("#description").val();
+			
+		}
+	</script>
+</th:block>
