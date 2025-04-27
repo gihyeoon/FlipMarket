@@ -20,5 +20,12 @@
 			<a th:href="@{/addProduct}">상품 등록</a>
             <div><input type="submit" value="Logout"/></div>
         </form>
+		
+		<div th:each="list : ${productList}">
+			<img th:src="@{|/images/${list.imagePath}}" width="250" height="150">
+			<span th:text="${list.productName}"></span>
+			<span th:text="${list.category}"></span>
+			<span th:text="${list.price}"></span>
+		</div>
     </body>
 </html>
