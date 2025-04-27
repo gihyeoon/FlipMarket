@@ -58,4 +58,24 @@ public class Product {
 		this.user = user;
 	}
 	
+	public String getProductName() {
+		return productName;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+	
 }
