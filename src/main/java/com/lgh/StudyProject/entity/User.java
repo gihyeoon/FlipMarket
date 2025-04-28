@@ -75,6 +75,14 @@ public class User implements UserDetails {
 	public String getPhoneNum() {
 		return phoneNum;
 	}
+	
+	public int getAge() {
+		return age;
+	}
+	
+	public String getName() {
+		return name;
+	}
 
 	public String getRole() {
 		return role;
