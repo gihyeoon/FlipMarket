@@ -15,8 +15,8 @@
 			</form>
 		</div>
         <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
-			<a th:href="@{/mypage/(num=${num})}">마이페이지</a>
-			<a th:href="@{/cart/(num=${num})}">장바구니</a>
+			<a th:href="@{/mypage(num=${num})}">마이페이지</a>
+			<a th:href="@{/cart(num=${num})}">장바구니</a>
 			<a th:href="@{/addProduct}">상품 등록</a>
             <div><input type="submit" value="Logout"/></div>
         </form>
