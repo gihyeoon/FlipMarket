@@ -12,13 +12,9 @@
 			나이 : <span id="age" th:text="${age}"></span><br>
 			연락처 : <span id="phoneNum" th:text="${phoneNum}"></span><br>
 		</div>
+		<a th:href="@{/mypage/reConfirmUserInfo(num=${num})}">회원정보 수정</a>
 		<form method="get" th:action="@{/main}">
 			<div><input type="submit" value="Main"/></div>
 		</form>
 	</body>
 </html>
-<th:block layout:fragment="script">
-	<script th:inline="javascript">
-		
-	</script>
-</th:block>
