@@ -3,10 +3,86 @@
     <head>
         <title>회원정보 수정</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<style>
+			#cancelChangeBtn {
+				background-color: gray;
+				color: white;
+			}
+		</style>
     </head>
     <body>
+		<div>
+			아이디 : <span id="originId" th:text="${id}"></span><br>
+			<input type="button" id="toggleBtn" onclick="toggleVisibility();" value="아이디 변경" />
+			<input type="button" id="cancelChangeIdBtn" onclick="cancelChgId();" value="아이디 변경 취소" hidden /><br>
+			<input type="text" id="newId" th:text="${id}" hidden />
+			<input type="button" id="changeIdBtn" onclick="updateId(event);" value="변경하기" hidden />
+			이름 : <span id="name" th:text="${name}"></span><br>
+			휴대폰 번호 : <span id="phoneNum" th:text="${phoneNum}"></span><br>
+			비밀번호 변경<br>현재 비밀번호 : <input type="password" id="pwd" name="pwd" /><br>
+			새 비밀번호 : <input type="password" id="newPwd" name="newPwd" /><br>
+			비밀번호 재입력 : <input type="password" id="newPwdReConf" name="newPwdReConf" /><br>
+			<input type="button" onclick="updatePwd(event);" value="비밀번호 변경" />
+		</div>
 		<form method="get" th:action="@{/main}">
 			<div><input type="submit" value="Main"/></div>
 		</form>
 	</body>
 </html>
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+		function toggleVisibility() {
+			$("#toggleBtn").hide();
+			$("#cancelChangeIdBtn").show();
+			$("#newId").show();
+			$("#changeIdBtn").show();
+		}
+		
+		function cancelChgId() {
+			$("#toggleBtn").show();
+			$("#cancelChangeIdBtn").hide();
+			$("#newId").hide();
+			$("#changeIdBtn").hide();
+		}
+		
+		function updateId(event) {
+			event.preventDefault();
+			
+			const originId = $("#originId").val();
+			const newId = $("#newId").val();
+			
+			const data = {
+				newId: newId
+			}
+			
+			if (newId == "") {
+				alert("변경할 새로운 아이디를 입력해주세요.");
+				return false;
+			}
+			
+			if (originId === newId) {
+				alert("기존 아이디와 일치합니다. 다시 입력해주세요.");
+				return false;
+			}
+			
+			$.ajax({
+				type: "POST",
+				url: "/api/mypage/editProfile/updateId",
+				data: JSON.stringify(data),
+				contentType: "application/json",
+				
+				success: function (result) {
+					alert("아이디 변경 완료되었습니다.");
+					location.reload();
+				},
+				error: function (request, status, erro) {
+					alert("아이디 변경 오류\n code: " + request.status + "\n error: " + error);
+				}
+			});
+		}
+		
+		function updatePwd(event) {
+			event.preventDefault();
+		}
+	</script>
+</th:block>

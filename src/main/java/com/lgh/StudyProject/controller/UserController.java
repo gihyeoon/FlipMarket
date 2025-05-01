@@ -2,6 +2,7 @@ package com.lgh.StudyProject.controller;
 
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -76,6 +77,12 @@ public class UserController {
 	@GetMapping("/mypage/editProfile")
 	public String editProfileForm(@RequestParam("num") Long num) {
 		return "editProfile";
+	}
+	
+	@ResponseBody
+	@PostMapping("/api/mypage/editProfile/updateId")
+	public ResponseEntity<String> updateId(@RequestBody Map<String, String> data) {
+		String newId = data.get("newId");
 	}
 
 }
