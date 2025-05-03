@@ -12,11 +12,16 @@
     </head>
     <body>
 		<div>
+			<span id="num" th:text="${num}" hidden></span>
+			<span id="originPwd" th:text="${pwd}" hidden></span>
+			<span id="originAge" th:text="${age}" hidden></span>
+			<span id="originPhoneNum" th:text="${phoneNum}" hidden></span>
+			
 			아이디 : <span id="originId" th:text="${id}"></span><br>
 			<input type="button" id="toggleBtn" onclick="toggleVisibility();" value="아이디 변경" />
 			<input type="button" id="cancelChangeIdBtn" onclick="cancelChgId();" value="아이디 변경 취소" hidden /><br>
-			<input type="text" id="newId" th:text="${id}" hidden />
 			<input type="button" id="changeIdBtn" onclick="updateId(event);" value="변경하기" hidden />
+			<input type="text" id="newId" th:value="${id}" hidden />
 			이름 : <span id="name" th:text="${name}"></span><br>
 			휴대폰 번호 : <span id="phoneNum" th:text="${phoneNum}"></span><br>
 			비밀번호 변경<br>현재 비밀번호 : <input type="password" id="pwd" name="pwd" /><br>
@@ -48,11 +53,13 @@
 		function updateId(event) {
 			event.preventDefault();
 			
-			const originId = $("#originId").val();
+			const num = $("#num").text();
+			const originId = $("#originId").text();
 			const newId = $("#newId").val();
 			
 			const data = {
-				newId: newId
+				num: num,
+				id: newId,
 			}
 			
 			if (newId == "") {
@@ -60,7 +67,7 @@
 				return false;
 			}
 			
-			if (originId === newId) {
+			if (originId == newId) {
 				alert("기존 아이디와 일치합니다. 다시 입력해주세요.");
 				return false;
 			}
@@ -75,7 +82,7 @@
 					alert("아이디 변경 완료되었습니다.");
 					location.reload();
 				},
-				error: function (request, status, erro) {
+				error: function (request, status, error) {
 					alert("아이디 변경 오류\n code: " + request.status + "\n error: " + error);
 				}
 			});

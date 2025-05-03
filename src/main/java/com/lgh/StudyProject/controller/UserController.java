@@ -75,14 +75,17 @@ public class UserController {
 	}
 	
 	@GetMapping("/mypage/editProfile")
-	public String editProfileForm(@RequestParam("num") Long num) {
+	public String editProfileForm(@RequestParam("num") Long num, Model model) {
+		User user = userRepository.findById(num).orElseThrow(() -> new RuntimeException("User not found"));
+		
+		model.addAttribute("num", num);
+		model.addAttribute("id", user.getId());
+		model.addAttribute("name", user.getName());
+		model.addAttribute("pwd", user.getPwd());
+		model.addAttribute("phoneNum", user.getPhoneNum());
+		model.addAttribute("age", user.getAge());
+		
 		return "editProfile";
 	}
 	
-	@ResponseBody
-	@PostMapping("/api/mypage/editProfile/updateId")
-	public ResponseEntity<String> updateId(@RequestBody Map<String, String> data) {
-		String newId = data.get("newId");
-	}
-
 }
