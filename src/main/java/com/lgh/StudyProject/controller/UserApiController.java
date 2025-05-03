@@ -19,13 +19,13 @@ import com.lgh.StudyProject.service.UserService;
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/api")
-public class RegisterController {
-	
+public class UserApiController {
+
 	private final UserService userService;
-	
+
 	private final BCryptPasswordEncoder passwordEncoder;
-	
-	public RegisterController(UserService userService, BCryptPasswordEncoder passwordEncoder) {
+
+	public UserApiController(UserService userService, BCryptPasswordEncoder passwordEncoder) {
 		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
 	}
@@ -34,7 +34,7 @@ public class RegisterController {
 	public Map<String, String> idRegister(@RequestParam(value = "id") String id) {
 		return Map.of("result", userService.checkDuplicateId(id) ? "1" : "0");
 	}
-	
+
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody UserDto userDto) {
 		String encodedPwd = passwordEncoder.encode(userDto.getPwd());
@@ -46,5 +46,22 @@ public class RegisterController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Register Fail: " + e.getMessage());
 		}
 	}
-	
+
+	@PostMapping("/mypage/editProfile/updateId")
+	public ResponseEntity<String> updateId(@RequestBody Map<String, String> data) {
+		try {
+			int result = userService.updateId(data.get("id"), Long.parseLong(data.get("num")));
+			
+			if (result > 0) {
+				System.out.println("업데이트 성공");
+			} else {
+				System.out.println("유저 정보 없음");
+			}
+			return ResponseEntity.ok("success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("updateId Fail: " + e.getMessage());
+		}
+
+	}
+
 }
