@@ -2,7 +2,6 @@ package com.lgh.StudyProject.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,7 +13,6 @@ import com.lgh.StudyProject.repository.UserRepository;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-	@Autowired
 	private final UserRepository userRepository;
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());

@@ -24,13 +24,10 @@ import com.lgh.StudyProject.service.CustomUserDetailsService;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	private final UserDetailsService userDetailsService;
-
 	private final CustomUserDetailsService customUserDetailsService;
 
-	public SecurityConfig(CustomUserDetailsService customUserDetailsService, UserDetailsService userDetailsService) {
+	public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
 		this.customUserDetailsService = customUserDetailsService;
-		this.userDetailsService = userDetailsService;
 	}
 
 	@Bean
