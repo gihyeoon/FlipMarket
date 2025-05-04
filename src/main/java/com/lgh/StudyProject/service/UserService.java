@@ -28,6 +28,11 @@ public class UserService {
 	public int updateId(String newId, Long num) {
 		return userRepository.updateId(newId, num);
 	}
+	
+	@Transactional
+	public int updatePhoneNum(String newPhoneNum, Long num) {
+		return userRepository.updatePhoneNum(newPhoneNum, num);
+	}
 
 	public boolean checkDuplicateId(String id) {
 		return userRepository.existsById(id);

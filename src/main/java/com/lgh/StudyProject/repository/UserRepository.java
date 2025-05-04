@@ -20,4 +20,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@NativeQuery(value = "UPDATE user u SET u.id = ?1 WHERE u.num = ?2")
 	int updateId(String newId, Long num);
 	
+	@Modifying
+	@NativeQuery(value = "UPDATE user u SET u.phone_num = ?1 WHERE u.num = ?2")
+	int updatePhoneNum(String newPhoneNum, Long num);
+	
 }

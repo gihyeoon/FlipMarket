@@ -15,15 +15,22 @@
 			<span id="num" th:text="${num}" hidden></span>
 			<span id="originPwd" th:text="${pwd}" hidden></span>
 			<span id="originAge" th:text="${age}" hidden></span>
-			<span id="originPhoneNum" th:text="${phoneNum}" hidden></span>
 			
 			아이디 : <span id="originId" th:text="${id}"></span><br>
-			<input type="button" id="toggleBtn" onclick="toggleVisibility();" value="아이디 변경" />
+			<input type="button" id="toggleIdBtn" onclick="toggleIdVisibility();" value="아이디 변경" />
 			<input type="button" id="cancelChangeIdBtn" onclick="cancelChgId();" value="아이디 변경 취소" hidden /><br>
 			<input type="button" id="changeIdBtn" onclick="updateId(event);" value="변경하기" hidden />
-			<input type="text" id="newId" th:value="${id}" hidden />
-			이름 : <span id="name" th:text="${name}"></span><br>
-			휴대폰 번호 : <span id="phoneNum" th:text="${phoneNum}"></span><br>
+			<input type="text" id="newId" hidden />
+			
+			이름 : <span id="name" th:text="${name}"></span>
+			<input type="button" onclick="updateName(event);" value="이름 변경" /><br>
+			
+			휴대폰 번호 : <span id="originPhoneNum" th:text="${phoneNum}"></span>
+			<input type="button" id="togglePhoneNumBtn" onclick="togglePhoneNumVisibility();" value="휴대폰 번호 변경" />
+			<input type="button" id="cancelChangePhoneNumBtn" onclick="cancelChgPhoneNum();" value="휴대폰 번호 변경 취소" hidden /><br>
+			<input type="button" id="changePhoneNumBtn" onclick="updatePhoneNum(event);" value="변경하기" hidden />
+			<input type="tel" id="newPhoneNum" hidden /><br>
+			
 			비밀번호 변경<br>현재 비밀번호 : <input type="password" id="pwd" name="pwd" /><br>
 			새 비밀번호 : <input type="password" id="newPwd" name="newPwd" /><br>
 			비밀번호 재입력 : <input type="password" id="newPwdReConf" name="newPwdReConf" /><br>
@@ -36,15 +43,18 @@
 </html>
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		function toggleVisibility() {
-			$("#toggleBtn").hide();
+		function toggleIdVisibility() {
+			const id = $("#originId").text();
+			
+			$("#toggleIdBtn").hide();
 			$("#cancelChangeIdBtn").show();
 			$("#newId").show();
 			$("#changeIdBtn").show();
+			$("#newId").val(id);
 		}
 		
 		function cancelChgId() {
-			$("#toggleBtn").show();
+			$("#toggleIdBtn").show();
 			$("#cancelChangeIdBtn").hide();
 			$("#newId").hide();
 			$("#changeIdBtn").hide();
@@ -64,11 +74,13 @@
 			
 			if (newId == "") {
 				alert("변경할 새로운 아이디를 입력해주세요.");
+				$("#newId").focus();
 				return false;
 			}
 			
 			if (originId == newId) {
 				alert("기존 아이디와 일치합니다. 다시 입력해주세요.");
+				$("#newId").focus();
 				return false;
 			}
 			
@@ -86,6 +98,67 @@
 					alert("아이디 변경 오류\n code: " + request.status + "\n error: " + error);
 				}
 			});
+		}
+		
+		function togglePhoneNumVisibility() {
+			const phoneNum = $("#originPhoneNum").text();
+			
+			$("#togglePhoneNumBtn").hide();
+			$("#cancelChangePhoneNumBtn").show();
+			$("#newPhoneNum").show();
+			$("#changePhoneNumBtn").show();
+			$("#newPhoneNum").val(phoneNum);
+		}
+		
+		function cancelChgPhoneNum() {
+			$("#togglePhoneNumBtn").show();
+			$("#cancelChangePhoneNumBtn").hide();
+			$("#newPhoneNum").hide();
+			$("#changePhoneNumBtn").hide();
+		}
+		
+		function updatePhoneNum(event) {
+			event.preventDefault();
+			
+			const num = $("#num").text();
+			const originPhoneNum = $("#originPhoneNum").text();
+			const newPhoneNum = $("#newPhoneNum").val();
+			
+			const data = {
+				num: num,
+				phoneNum: newPhoneNum,
+			}
+			
+			if (newPhoneNum == "") {
+				alert("변경할 새로운 휴대폰 번호를 입력해주세요.");
+				$("#newPhoneNum").focus();
+				return false;
+			}
+			
+			if (originPhoneNum == newPhoneNum) {
+				alert("기존 휴대폰 번호와 일치합니다. 다시 입력해주세요.");
+				$("#newPhoneNum").focus();
+				return false;
+			}
+			
+			$.ajax({
+				type: "POST",
+				url: "/api/mypage/editProfile/updatePhoneNum",
+				data: JSON.stringify(data),
+				contentType: "application/json",
+				
+				success: function (result) {
+					alert("휴대폰 번호 변경 완료되었습니다.");
+					location.reload();
+				},
+				error: function (request, status, error) {
+					alert("휴대폰 번호 변경 오류\n code: " + request.status + "\n error: " + error);
+				}
+			});
+		}
+		
+		function updateName(event) {
+			event.preventDefault();
 		}
 		
 		function updatePwd(event) {

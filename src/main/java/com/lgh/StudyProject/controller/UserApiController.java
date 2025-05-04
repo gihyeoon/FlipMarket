@@ -51,9 +51,9 @@ public class UserApiController {
 	public ResponseEntity<String> updateId(@RequestBody Map<String, String> data) {
 		try {
 			int result = userService.updateId(data.get("id"), Long.parseLong(data.get("num")));
-			
+
 			if (result > 0) {
-				System.out.println("업데이트 성공");
+				System.out.println("아이디 업데이트 성공");
 			} else {
 				System.out.println("유저 정보 없음");
 			}
@@ -61,7 +61,22 @@ public class UserApiController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("updateId Fail: " + e.getMessage());
 		}
+	}
 
+	@PostMapping("/mypage/editProfile/updatePhoneNum")
+	public ResponseEntity<String> updatePhoneNum(@RequestBody Map<String, String> data) {
+		try {
+			int result = userService.updatePhoneNum(data.get("phoneNum"), Long.parseLong(data.get("num")));
+
+			if (result > 0) {
+				System.out.println("휴대폰 번호 업데이트 성공");
+			} else {
+				System.out.println("유저 정보 없음");
+			}
+			return ResponseEntity.ok("success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("updateId Fail: " + e.getMessage());
+		}
 	}
 
 }
