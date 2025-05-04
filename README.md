@@ -1,14 +1,42 @@
-# 들어가기 앞서..
-2023.12.26 ~ 2025.06.25 7사단 8GOP 복무를 하였고, 그 동안에 개발 공부는 전혀 하지 않았습니다.. 그래서 전역하면 바로 복직을 해야하는데, 이를 대비하기 위해
-공부하는 프로젝트를 만들게 되었습니다.
+# 📌 프로젝트 목표
+- 전역 이후 개발에 감을 다시 잡기 위해 진행
+- Spring Security, JPA 실전 적용
+- 실용적인 CRUD 및 보안 흐름 구현
+- 이후에는 로그인 연동, 상품별 통계 차트 등을 구현해볼 예정
 
-# 어떤 프로젝트인지
-## 목표 1
-Controller, Service, DAO, DTO, Entity 등 기본 개념들부터 다시 감 잡기
-MySQL을 이용하여 DB와 연결하는 것도 공부
+# 🛒 상품 사고팔기 사이트
 
-## 목표 2
-Mapper, JPA, Spring Security 등 Spring Boot에서 의존성을 추가하여 사용할 수 있는 것들 공부
+Spring Boot 기반의 **상품 사고팔기 서비스**입니다.  
+사용자는 상품을 등록하고, 다른 사용자의 상품을 검색해 구매할 수 있습니다.
 
-## 목표 3
-기본적인 목표는 옛날에 공부했었던 것들을 다시 복습하며 감을 잡는 것이지만 최종 목표는 이 프로젝트가 실제 웹 페이지에서도 돌아갈 수 있게끔 페이지를 개발하는 것임.
+---
+
+## 🚀 사용 기술 (Tech Stack)
+
+- **Backend**: Java 24, Spring Boot, Spring Security, JPA (Hibernate)
+- **Database**: MySQL
+- **Build Tool**: Gradle
+- **Authentication**: 로그인/회원가입, 비밀번호 암호화
+
+---
+
+## 🧩 주요 기능
+
+- 회원가입 / 로그인 / 로그아웃 / 정보 수정
+- 상품 등록 / 수정 / 삭제 (이미지 업로드 구현 완료)
+- 상품 목록 조회 / 검색
+- 상품별 통계 조회 (추가 예정)
+
+---
+
+## 🛠️ 프로젝트 실행 방법
+
+```bash
+# 1. 프로젝트 클론
+git clone https://github.com/your-id/your-project-name.git
+
+# 2. application.yml 또는 application.properties 설정
+# (DB 정보 및 시크릿 키 등)
+
+# 3. 실행
+./gradlew bootRun
