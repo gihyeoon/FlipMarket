@@ -172,7 +172,7 @@
 			const pwd = $("#pwd").val();
 			const newPwd = $("#newPwd").val();
 			const newPwdReConf = $("#newPwdReConf").val();
-			
+
 			const data = {
 				num: num,
 				pwd: pwd,
@@ -183,17 +183,17 @@
 				alert("현재 비밀번호와 변경하실 비밀번호가 동일합니다.");
 				return false;
 			}
-			
+
 			if (newPwd == "" || newPwd.length < 8 || newPwd.length > 20) {
 				alert("비밀번호는 8자 이상 20자 이하로 입력해주세요.");
 				return false;
 			}
-			
+
 			if (newPwd != newPwdReConf) {
 				alert("변경하실 비밀번호와 비밀번호 재입력 값이 다릅니다.");
 				return false;
 			}
-			
+
 			$.ajax({
 				type: "POST",
 				url: "/api/mypage/editProfile/updatePwd",

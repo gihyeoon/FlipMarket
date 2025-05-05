@@ -1,31 +1,35 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <head>
-        <title>메인 화면</title>
-    </head>
-    <body>
-		<div sec:authorize="isAnonymous()">
-	        <form th:action="@{/login}" method="get">
-				<a th:href="@{/mypage}">마이페이지</a>
-				<a th:href="@{/cart}">장바구니</a>
-	            <div><input type="submit" value="Login"/></div>
-	        </form>
-			<form th:action="@{/register}" method="get">
-				<div><input type="submit" value="Register"/></div>
-			</form>
-		</div>
-        <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
-			<a th:href="@{/mypage(num=${num})}">마이페이지</a>
-			<a th:href="@{/cart(num=${num})}">장바구니</a>
-			<a th:href="@{/addProduct}">상품 등록</a>
-            <div><input type="submit" value="Logout"/></div>
-        </form>
-		
-		<div th:each="list : ${productList}">
-			<img th:src="@{|/images/${list.imagePath}}" width="250" height="150">
-			<span th:text="${list.productName}"></span>
-			<span th:text="${list.category}"></span>
-			<span th:text="${list.price}"></span>
-		</div>
-    </body>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<title>메인 화면</title>
+</head>
+
+<body>
+	<div sec:authorize="isAnonymous()">
+		<form th:action="@{/login}" method="get">
+			<a th:href="@{/mypage}">마이페이지</a>
+			<a th:href="@{/cart}">장바구니</a>
+			<div><input type="submit" value="Login" /></div>
+		</form>
+		<form th:action="@{/register}" method="get">
+			<div><input type="submit" value="Register" /></div>
+		</form>
+	</div>
+	<form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+		<a th:href="@{/mypage(num=${num})}">마이페이지</a>
+		<a th:href="@{/cart(num=${num})}">장바구니</a>
+		<a th:href="@{/addProduct}">상품 등록</a>
+		<div><input type="submit" value="Logout" /></div>
+	</form>
+
+	<div th:each="list : ${productList}">
+		<img th:src="@{|/images/${list.imagePath}}" width="250" height="150">
+		<span th:text="${list.productName}"></span>
+		<span th:text="${list.category}"></span>
+		<span th:text="${list.price}"></span>
+	</div>
+</body>
+
 </html>

@@ -1,45 +1,49 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <head>
-        <title>회원정보 재확인</title>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    </head>
-    <body>
-		<input id="num" name="num" th:value="${num}" hidden />
-		아이디 : <input type="text" id="id" name="id" th:value="${id}" placeholder="아이디" readonly />
-		비밀번호 : <input type="password" id="pwd" name="pwd" />
-		<div><input type="button" onclick="validateUser(event)" value="확인" /></div>
-		<a th:href="@{/mypage(num=${num})}">마이페이지</a>
-	</body>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<title>회원정보 재확인</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+	<input id="num" name="num" th:value="${num}" hidden />
+	아이디 : <input type="text" id="id" name="id" th:value="${id}" placeholder="아이디" readonly />
+	비밀번호 : <input type="password" id="pwd" name="pwd" />
+	<div><input type="button" onclick="validateUser(event)" value="확인" /></div>
+	<a th:href="@{/mypage(num=${num})}">마이페이지</a>
+</body>
+
 </html>
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
 		function validateUser(event) {
 			event.preventDefault();
-			
+
 			const num = $("#num").val();
 			const id = $("#id").val();
 			const enteredPwd = $("#pwd").val();
-			
+
 			const data = {
 				id: id,
 				enteredPwd: enteredPwd
 			}
-			
+
 			console.log(data);
-			
+
 			if (enteredPwd == "") {
 				alert("비밀번호를 입력해주세요.");
 				$("#pwd").focus();
 				return false;
 			}
-			
+
 			$.ajax({
 				type: "POST",
 				url: "/api/validateUser",
 				data: JSON.stringify(data),
 				contentType: "application/json",
-				
+
 				success: function (result) {
 					if (result === 1) {
 						window.location.href = `/mypage/editProfile?num=${num}`;

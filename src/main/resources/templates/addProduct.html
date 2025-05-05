@@ -1,37 +1,41 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <head>
-        <title>상품 등록</title>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    </head>
-    <body>
-		<form id="registerForm">
-		  <input type="file" id="image" name="image" onchange="readURL(this);" />
-		  <img name="preview" id="preview" /><br>
-		  <input type="text" id="product_name" name="product_name" placeholder="상품명" /><br>
-		  <select id="category" name="category" size="4">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<title>상품 등록</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+	<form id="registerForm">
+		<input type="file" id="image" name="image" onchange="readURL(this);" />
+		<img name="preview" id="preview" /><br>
+		<input type="text" id="product_name" name="product_name" placeholder="상품명" /><br>
+		<select id="category" name="category" size="4">
 			<option value="" selected>카테고리 선택</option>
 			<option value="식품">식품</option>
 			<option value="도서">도서</option>
 			<option value="의류">의류</option>
 			<option value="장치">장치</option>
 			<option value="기타">기타</option>
-		  </select>
-		  <input type="text" id="price" name="price" placeholder="가격" /><br>
-		  <textarea id="description" name="description"></textarea><br>
-		  <div><input type="button" onclick="addProduct(event)" value="상품 등록" /></div>
-		</form>
-		<form method="get" th:action="@{/main}">
-			<div><input type="submit" value="Main" /></div>
-		</form>
-    </body>
+		</select>
+		<input type="text" id="price" name="price" placeholder="가격" /><br>
+		<textarea id="description" name="description"></textarea><br>
+		<div><input type="button" onclick="addProduct(event)" value="상품 등록" /></div>
+	</form>
+	<form method="get" th:action="@{/main}">
+		<div><input type="submit" value="Main" /></div>
+	</form>
+</body>
+
 </html>
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
 		function readURL(input) {
 			if (input.files && input.files[0]) {
 				const reader = new FileReader();
-				reader.onload = function(e) {
+				reader.onload = function (e) {
 					$("#preview").attr("src", e.target.result);
 					$("#preview").attr("width", 250);
 					$("#preview").attr("height", 150);
@@ -41,55 +45,55 @@
 				$("#preview").attr("src", "");
 			}
 		}
-		
+
 		function addProduct(event) {
 			event.preventDefault();
-			
+
 			const formData = new FormData(); // 파일을 업로드할 것이면 FormData를 써야한다.
-			
+
 			const productName = $("#product_name").val();
 			const category = $("#category option:selected").val();
 			const price = $("#price").val();
 			const desc = $("#description").val();
-			
+
 			if ($("#image")[0].files.length === 0) {
 				alert("이미지를 업로드하세요.");
 				return false;
 			}
-			
+
 			if (productName == "") {
 				alert("상품명을 적어주세요.");
 				return false;
 			}
-			
+
 			if (category == "") {
 				alert("카테고리를 선택해주세요.");
 				return false;
 			}
-			
+
 			if (price == "") {
 				alert("가격을 입력해주세요.");
 				return false;
 			}
-			
+
 			if (desc == "") {
 				alert("설명을 적어주세요.");
 				return false;
 			}
-			
+
 			formData.append("image", $("#image")[0].files[0]);
 			formData.append("productName", productName);
 			formData.append("category", category);
 			formData.append("price", price);
 			formData.append("desc", desc);
-			
+
 			$.ajax({
 				type: "POST",
 				url: "/api/addProduct",
 				data: formData,
 				contentType: false,
 				processData: false,
-				
+
 				success: function (result) {
 					alert("상품 등록이 완료되었습니다.");
 					window.location.href = "/main";
