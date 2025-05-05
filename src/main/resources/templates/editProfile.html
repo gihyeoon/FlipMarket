@@ -1,95 +1,103 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <head>
-        <title>회원정보 수정</title>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-		<style>
-			#cancelChangeBtn {
-				background-color: gray;
-				color: white;
-			}
-		</style>
-    </head>
-    <body>
-		<div>
-			<span id="num" th:text="${num}" hidden></span>
-			<span id="originPwd" th:text="${pwd}" hidden></span>
-			<span id="originAge" th:text="${age}" hidden></span>
-			
-			아이디 : <span id="originId" th:text="${id}"></span><br>
-			<input type="button" id="toggleIdBtn" onclick="toggleIdVisibility();" value="아이디 변경" />
-			<input type="button" id="cancelChangeIdBtn" onclick="cancelChgId();" value="아이디 변경 취소" hidden /><br>
-			<input type="button" id="changeIdBtn" onclick="updateId(event);" value="변경하기" hidden />
-			<input type="text" id="newId" hidden />
-			
-			이름 : <span id="name" th:text="${name}"></span>
-			<input type="button" onclick="updateName(event);" value="이름 변경" /><br>
-			
-			휴대폰 번호 : <span id="originPhoneNum" th:text="${phoneNum}"></span>
-			<input type="button" id="togglePhoneNumBtn" onclick="togglePhoneNumVisibility();" value="휴대폰 번호 변경" />
-			<input type="button" id="cancelChangePhoneNumBtn" onclick="cancelChgPhoneNum();" value="휴대폰 번호 변경 취소" hidden /><br>
-			<input type="button" id="changePhoneNumBtn" onclick="updatePhoneNum(event);" value="변경하기" hidden />
-			<input type="tel" id="newPhoneNum" hidden /><br>
-			
-			비밀번호 변경<br>현재 비밀번호 : <input type="password" id="pwd" name="pwd" /><br>
-			새 비밀번호 : <input type="password" id="newPwd" name="newPwd" /><br>
-			비밀번호 재입력 : <input type="password" id="newPwdReConf" name="newPwdReConf" /><br>
-			<input type="button" onclick="updatePwd(event);" value="비밀번호 변경" />
-		</div>
-		<form method="get" th:action="@{/main}">
-			<div><input type="submit" value="Main"/></div>
-		</form>
-	</body>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<title>회원정보 수정</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<style>
+		#cancelChangeBtn {
+			background-color: gray;
+			color: white;
+		}
+	</style>
+</head>
+
+<body>
+	<div>
+		<span id="num" th:text="${num}" hidden></span>
+		<span id="originAge" th:text="${age}" hidden></span>
+
+		아이디 : <span id="originId" th:text="${id}"></span><br>
+		<input type="button" id="toggleIdBtn" onclick="toggleIdVisibility();" value="아이디 변경" />
+		<input type="button" id="cancelChangeIdBtn" onclick="cancelChgId();" value="아이디 변경 취소" hidden /><br>
+		<input type="button" id="changeIdBtn" onclick="updateId(event);" value="변경하기" hidden />
+		<input type="text" id="newId" hidden />
+
+		이름 : <span id="name" th:text="${name}"></span><br>
+
+		휴대폰 번호 : <span id="originPhoneNum" th:text="${phoneNum}"></span>
+		<input type="button" id="togglePhoneNumBtn" onclick="togglePhoneNumVisibility();" value="휴대폰 번호 변경" />
+		<input type="button" id="cancelChangePhoneNumBtn" onclick="cancelChgPhoneNum();" value="휴대폰 번호 변경 취소"
+			hidden /><br>
+		<input type="button" id="changePhoneNumBtn" onclick="updatePhoneNum(event);" value="변경하기" hidden />
+
+		비밀번호 변경<br>현재 비밀번호 : <input type="password" id="pwd" name="pwd" /><br>
+		새 비밀번호 : <input type="password" id="newPwd" name="newPwd" /><br>
+		비밀번호 재입력 : <input type="password" id="newPwdReConf" name="newPwdReConf" /><br>
+		<input type="button" onclick="updatePwd(event);" value="비밀번호 변경" />
+	</div>
+	<form method="get" th:action="@{/main}">
+		<div><input type="submit" value="Main" /></div>
+	</form>
+</body>
+
 </html>
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
 		function toggleIdVisibility() {
 			const id = $("#originId").text();
-			
+
 			$("#toggleIdBtn").hide();
 			$("#cancelChangeIdBtn").show();
 			$("#newId").show();
 			$("#changeIdBtn").show();
 			$("#newId").val(id);
 		}
-		
+
 		function cancelChgId() {
 			$("#toggleIdBtn").show();
 			$("#cancelChangeIdBtn").hide();
 			$("#newId").hide();
 			$("#changeIdBtn").hide();
 		}
-		
+
 		function updateId(event) {
 			event.preventDefault();
-			
+
 			const num = $("#num").text();
 			const originId = $("#originId").text();
 			const newId = $("#newId").val();
-			
+
 			const data = {
 				num: num,
 				id: newId,
 			}
-			
+
 			if (newId == "") {
 				alert("변경할 새로운 아이디를 입력해주세요.");
 				$("#newId").focus();
 				return false;
 			}
-			
+
+			if (newId.length < 5 || newId.length > 20) {
+				alert("아이디는 5자 이상 20자 이하로 입력해야합니다.");
+				$("#id").focus();
+				return false;
+			}
+
 			if (originId == newId) {
 				alert("기존 아이디와 일치합니다. 다시 입력해주세요.");
 				$("#newId").focus();
 				return false;
 			}
-			
+
 			$.ajax({
 				type: "POST",
 				url: "/api/mypage/editProfile/updateId",
 				data: JSON.stringify(data),
 				contentType: "application/json",
-				
+
 				success: function (result) {
 					alert("아이디 변경 완료되었습니다.");
 					location.reload();
@@ -99,54 +107,54 @@
 				}
 			});
 		}
-		
+
 		function togglePhoneNumVisibility() {
 			const phoneNum = $("#originPhoneNum").text();
-			
+
 			$("#togglePhoneNumBtn").hide();
 			$("#cancelChangePhoneNumBtn").show();
 			$("#newPhoneNum").show();
 			$("#changePhoneNumBtn").show();
 			$("#newPhoneNum").val(phoneNum);
 		}
-		
+
 		function cancelChgPhoneNum() {
 			$("#togglePhoneNumBtn").show();
 			$("#cancelChangePhoneNumBtn").hide();
 			$("#newPhoneNum").hide();
 			$("#changePhoneNumBtn").hide();
 		}
-		
+
 		function updatePhoneNum(event) {
 			event.preventDefault();
-			
+
 			const num = $("#num").text();
 			const originPhoneNum = $("#originPhoneNum").text();
 			const newPhoneNum = $("#newPhoneNum").val();
-			
+
 			const data = {
 				num: num,
 				phoneNum: newPhoneNum,
 			}
-			
+
 			if (newPhoneNum == "") {
 				alert("변경할 새로운 휴대폰 번호를 입력해주세요.");
 				$("#newPhoneNum").focus();
 				return false;
 			}
-			
+
 			if (originPhoneNum == newPhoneNum) {
 				alert("기존 휴대폰 번호와 일치합니다. 다시 입력해주세요.");
 				$("#newPhoneNum").focus();
 				return false;
 			}
-			
+
 			$.ajax({
 				type: "POST",
 				url: "/api/mypage/editProfile/updatePhoneNum",
 				data: JSON.stringify(data),
 				contentType: "application/json",
-				
+
 				success: function (result) {
 					alert("휴대폰 번호 변경 완료되었습니다.");
 					location.reload();
@@ -156,13 +164,57 @@
 				}
 			});
 		}
-		
-		function updateName(event) {
-			event.preventDefault();
-		}
-		
+
 		function updatePwd(event) {
 			event.preventDefault();
+
+			const num = $("#num").text();
+			const pwd = $("#pwd").val();
+			const newPwd = $("#newPwd").val();
+			const newPwdReConf = $("#newPwdReConf").val();
+			
+			const data = {
+				num: num,
+				pwd: pwd,
+				newPwd: newPwd
+			};
+
+			if (pwd == newPwd) {
+				alert("현재 비밀번호와 변경하실 비밀번호가 동일합니다.");
+				return false;
+			}
+			
+			if (newPwd == "" || newPwd.length < 8 || newPwd.length > 20) {
+				alert("비밀번호는 8자 이상 20자 이하로 입력해주세요.");
+				return false;
+			}
+			
+			if (newPwd != newPwdReConf) {
+				alert("변경하실 비밀번호와 비밀번호 재입력 값이 다릅니다.");
+				return false;
+			}
+			
+			$.ajax({
+				type: "POST",
+				url: "/api/mypage/editProfile/updatePwd",
+				data: JSON.stringify(data),
+				contentType: "application/json",
+
+				success: function (result) {
+					if (result.result == "0") { // 만약 DB에 있는 사용자의 비밀번호와 현재 비밀번호 입력값이 다를 경우
+						alert("현재 비밀번호가 일치하지 않습니다.");
+						return false;
+					} else if (result.result == "1") { // 정상적으로 입력이 되었을 경우
+						alert("비밀번호 변경 완료되었습니다.");
+						location.reload();
+					} else {
+						alert("Server Error");
+					}
+				},
+				error: function (request, status, error) {
+					alert("비밀번호 번호 변경 오류\n code: " + request.status + "\n error: " + error);
+				}
+			});
 		}
 	</script>
 </th:block>

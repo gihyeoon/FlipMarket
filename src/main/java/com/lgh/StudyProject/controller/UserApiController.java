@@ -79,4 +79,28 @@ public class UserApiController {
 		}
 	}
 
+	@PostMapping("/mypage/editProfile/updatePwd")
+	public Map<String, String> updatePwd(@RequestBody Map<String, String> data) {
+		Long num = Long.parseLong(data.get("num"));
+		String pwd = data.get("pwd");
+		String newPwd = data.get("newPwd");
+
+		String originPwd = userService.selectUserPwdByNum(num);
+		String encodedNewPwd = passwordEncoder.encode(newPwd);
+
+		if (passwordEncoder.matches(pwd, originPwd)) {
+			int result = userService.updatePwd(encodedNewPwd, num);
+
+			if (result > 0) {
+				System.out.println("비밀번호 변경 완료");
+			} else {
+				System.out.println("비밀번호 변경할 유저 정보 없음");
+			}
+			
+			return Map.of("result", "1");
+		} else {
+			return Map.of("result", "0");
+		}
+	}
+
 }
