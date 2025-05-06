@@ -16,6 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	boolean existsById(String id);
 	
+	@NativeQuery(value = "SELECT COUNT(*) FROM user WHERE id = ?1")
+	int countUserById(String id);
+	
 	@NativeQuery(value = "SELECT pwd FROM user WHERE num = ?1")
 	String selectUserPwdByNum(Long num);
 	

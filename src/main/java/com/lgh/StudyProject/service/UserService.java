@@ -46,5 +46,9 @@ public class UserService {
 	public String selectUserPwdByNum(Long num) {
 		return userRepository.selectUserPwdByNum(num);
 	}
+	
+	public int countUserById(String id) {
+		return userRepository.countUserById(id);
+	}
 
 }
