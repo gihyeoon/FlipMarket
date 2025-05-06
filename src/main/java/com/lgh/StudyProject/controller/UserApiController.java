@@ -96,11 +96,48 @@ public class UserApiController {
 			} else {
 				System.out.println("비밀번호 변경할 유저 정보 없음");
 			}
-			
+
 			return Map.of("result", "1");
 		} else {
 			return Map.of("result", "0");
 		}
+	}
+
+	@PostMapping("/resetPassword/updatePwd")
+	public Map<String, String> resetPassword(@RequestBody Map<String, String> data) {
+		Long num = Long.parseLong(data.get("num"));
+
+		String newPwd = data.get("newPwd");
+		String originPwd = userService.selectUserPwdByNum(num);
+
+		if (passwordEncoder.matches(newPwd, originPwd)) {
+			return Map.of("result", "0");
+		} else {
+			String encodedNewPwd = passwordEncoder.encode(newPwd);
+
+			int result = userService.updatePwd(encodedNewPwd, num);
+
+			if (result > 0) {
+				System.out.println("비밀번호 재설정 완료");
+			} else {
+				System.out.println("비밀번호 재설정 실패");
+			}
+
+			return Map.of("result", "1");
+		}
+	}
+
+	@PostMapping("/resetPassword")
+	public Map<String, String> countUserBefResetPassword(@RequestBody Map<String, String> data) {
+		String id = data.get("id");
+		int cnt = userService.countUserById(id);
+
+		if (cnt == 0) {
+			return Map.of("result", "0");
+		} else {
+			return Map.of("result", "1");
+		}
+
 	}
 
 }

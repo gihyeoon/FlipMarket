@@ -2,7 +2,6 @@ package com.lgh.StudyProject.controller;
 
 import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +18,7 @@ import com.lgh.StudyProject.repository.UserRepository;
 public class UserController {
 
 	private final UserRepository userRepository;
-	
+
 	private final BCryptPasswordEncoder passwordEncoder;
 
 	public UserController(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
@@ -35,6 +34,11 @@ public class UserController {
 	@GetMapping("/login")
 	public String loginForm() {
 		return "login";
+	}
+
+	@GetMapping("/findPassword")
+	public String findPasswordForm() {
+		return "findPassword";
 	}
 
 	@GetMapping("/mypage")
@@ -66,26 +70,35 @@ public class UserController {
 	public int validateUser(@RequestBody Map<String, String> data) {
 		User user = userRepository.findById(data.get("id")).orElseThrow(() -> new RuntimeException("User not found"));
 		String loginUserPwd = user.getPwd();
-		
+
 		if (passwordEncoder.matches(data.get("enteredPwd"), loginUserPwd)) {
 			return 1;
 		} else {
 			return 0;
 		}
 	}
-	
+
 	@GetMapping("/mypage/editProfile")
 	public String editProfileForm(@RequestParam("num") Long num, Model model) {
 		User user = userRepository.findById(num).orElseThrow(() -> new RuntimeException("User not found"));
-		
+
 		model.addAttribute("num", num);
 		model.addAttribute("id", user.getId());
 		model.addAttribute("name", user.getName());
 		model.addAttribute("pwd", user.getPwd());
 		model.addAttribute("phoneNum", user.getPhoneNum());
 		model.addAttribute("age", user.getAge());
-		
+
 		return "editProfile";
 	}
-	
+
+	@GetMapping("/resetPassword")
+	public String resetPasswordForm(@RequestParam("id") String id, Model model) {
+		User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+		
+		model.addAttribute("num", user.getNum());
+		
+		return "resetPassword";
+	}
+
 }
