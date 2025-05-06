@@ -58,7 +58,7 @@ public class SecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(
-						auth -> auth.requestMatchers("/", "/login", "/findPassword", "/register", "/main", "/api/**",
+						auth -> auth.requestMatchers("/", "/login", "/findPassword", "/resetPassword", "/register", "/main", "/api/**",
 								"/images/**", "/**.jpg", "/**.png").permitAll().anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
 						.defaultSuccessUrl("/main", true).permitAll().failureHandler((request, response, exception) -> {
