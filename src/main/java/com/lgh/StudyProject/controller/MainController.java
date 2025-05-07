@@ -42,8 +42,6 @@ public class MainController {
 		
 		List<Product> productList = productRepository.findAll();
 		
-		System.out.println(productList.get(1).getImagePath());
-		
 		model.addAttribute("productList", productList);
 		
 		return "main";
