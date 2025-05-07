@@ -66,7 +66,7 @@ public class SecurityConfig {
 							response.sendRedirect("/login?error");
 						}))
 				.logout(logout -> {
-					logout.logoutSuccessUrl("/login");
+					logout.logoutSuccessUrl("/main");
 					logout.deleteCookies("JSESSIONID", "remember-me"); // 로그아웃 시 쿠기 삭제
 				});
 
