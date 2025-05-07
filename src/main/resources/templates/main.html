@@ -1,35 +1,61 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="ko">
 
 <head>
-	<title>메인 화면</title>
+	<meta charset="UTF-8">
+	<title>FlipMarket - 메인</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body>
-	<div sec:authorize="isAnonymous()">
-		<form th:action="@{/login}" method="get">
-			<a th:href="@{/mypage}">마이페이지</a>
-			<a th:href="@{/cart}">장바구니</a>
-			<div><input type="submit" value="Login" /></div>
-		</form>
-		<form th:action="@{/register}" method="get">
-			<div><input type="submit" value="Register" /></div>
-		</form>
-	</div>
-	<form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
-		<a th:href="@{/mypage(num=${num})}">마이페이지</a>
-		<a th:href="@{/cart(num=${num})}">장바구니</a>
-		<a th:href="@{/addProduct}">상품 등록</a>
-		<div><input type="submit" value="Logout" /></div>
-	</form>
+<body class="bg-gray-100">
 
-	<div th:each="list : ${productList}">
-		<img th:src="@{|/images/${list.imagePath}}" width="250" height="150">
-		<span th:text="${list.productName}"></span>
-		<span th:text="${list.category}"></span>
-		<span th:text="${list.price}"></span>
-	</div>
+	<!-- ✅ Header / Navigation -->
+	<header class="bg-white shadow">
+		<div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+			<h1 class="text-xl font-bold text-blue-600"><a th:href="@{/main}">FlipMarket</a></h1>
+
+			<nav class="flex items-center space-x-4 text-sm">
+				<!-- 공통 메뉴 -->
+
+				<!-- 로그인 상태 -->
+				<div sec:authorize="isAuthenticated()">
+					<a th:href="@{/mypage(num=${num})}" class="hover:underline">마이페이지</a>
+					<a th:href="@{/cart(num=${num})}" class="hover:underline">장바구니</a>
+					<a th:href="@{/addProduct}" class="hover:underline">상품 등록</a>
+					<a th:href="@{/logout}" class="text-red-600 hover:underline">로그아웃</a>
+				</div>
+
+				<!-- 비로그인 상태 -->
+				<div sec:authorize="isAnonymous()">
+					<a th:href="@{/mypage}" class="hover:underline">마이페이지</a>
+					<a th:href="@{/cart}" class="hover:underline">장바구니</a>
+					<a th:href="@{/login}" class="hover:underline">로그인</a>
+					<a th:href="@{/register}" class="hover:underline">회원가입</a>
+				</div>
+			</nav>
+		</div>
+	</header>
+
+	<!-- ✅ 상품 리스트 영역 -->
+	<main class="max-w-7xl mx-auto px-4 py-8">
+		<h2 class="text-2xl font-semibold mb-6">전체 상품</h2>
+
+		<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+			<div th:each="list : ${productList}"
+				class="bg-white rounded-xl shadow hover:shadow-md transition p-4 cursor-pointer"
+				th:onclick="'location.href=\'/products/\' + ' + ${list.num}">
+				<img th:src="@{|/images/${list.imagePath}}" alt="상품 이미지" class="w-full h-48 object-cover rounded-md mb-3" />
+
+				<div class="text-lg font-medium text-gray-900" th:text="${list.productName}">상품명</div>
+				<div class="text-sm text-gray-500" th:text="${list.category}">카테고리</div>
+				<div class="text-blue-600 font-semibold mt-1"
+					th:text="${#numbers.formatInteger(list.price, 3, 'COMMA')} + '원'">가격</div>
+			</div>
+		</div>
+	</main>
+
 </body>
 
 </html>
