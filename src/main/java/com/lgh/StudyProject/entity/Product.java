@@ -58,6 +58,10 @@ public class Product {
 		this.user = user;
 	}
 	
+	public Long num() {
+		return num;
+	}
+	
 	public String getProductName() {
 		return productName;
 	}
