@@ -1,32 +1,86 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="ko">
 
 <head>
-	<title>회원가입</title>
+	<meta charset="UTF-8">
+	<title>FlipMarket - 회원가입</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
-<body>
-	<form id="registerForm">
-		<input type="text" id="id" name="id" placeholder="id" />
-		<input type="button" id="idOverlay" onclick="idCheck()" value="중복 체크" /><br>
-		<input type="password" id="pwd" name="pwd" placeholder="pwd" /><br>
-		<input type="text" id="name" name="name" placeholder="name" /><br>
-		<input type="number" id="age" name="age" placeholder="age" /><br>
-		<input type="tel" id="phoneNum" name="phoneNum" placeholder="phoneNum" /><br>
-		<div><input type="button" onclick="checkValidate(event)" value="Register" /></div>
-	</form>
-	<form method="get" th:action="@{/main}">
-		<div><input type="submit" value="Main" /></div>
-	</form>
-</body>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen px-4">
+
+	<div class="w-full max-w-lg bg-white p-8 rounded-2xl shadow-lg">
+		<h2 class="text-2xl font-bold mb-6 text-center text-blue-600">FlipMarket 회원가입</h2>
+
+		<form id="registerForm">
+
+			<!-- 아이디 -->
+			<div class="mb-4">
+				<label for="id" class="block text-sm text-gray-700 mb-1">아이디</label>
+				<div class="flex gap-2">
+					<input type="text" name="id" id="id" required
+						class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+						placeholder="아이디 입력" />
+					<button type="button" onclick="checkIdDuplicate(event)" id="idOverlay"
+						class="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-xs">중복확인</button>
+				</div>
+			</div>
+
+			<!-- 비밀번호 -->
+			<div class="mb-4">
+				<label for="pwd" class="block text-sm text-gray-700 mb-1">비밀번호</label>
+				<input type="password" name="pwd" id="pwd" required
+					class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+					placeholder="비밀번호 입력" />
+			</div>
+
+			<!-- 이름 -->
+			<div class="mb-4">
+				<label for="name" class="block text-sm text-gray-700 mb-1">이름</label>
+				<input type="text" name="name" id="name" required
+					class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+					placeholder="이름 입력" />
+			</div>
+
+			<!-- 나이 -->
+			<div class="mb-4">
+				<label for="age" class="block text-sm text-gray-700 mb-1">나이</label>
+				<input type="number" name="age" id="age" required min="0"
+					class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+					placeholder="나이 입력" />
+			</div>
+
+			<!-- 휴대폰 번호 -->
+			<div class="mb-6">
+				<label for="phoneNum" class="block text-sm text-gray-700 mb-1">휴대폰 번호</label>
+				<input type="tel" name="phoneNum" id="phoneNum" required
+					class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+					placeholder="010-1234-5678" maxlength="13" oninput="formatPhoneNumber(this);" />
+			</div>
+
+			<!-- 가입 버튼 -->
+			<button type="submit" onclick="register(event);"
+				class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition">가입하기</button>
+		</form>
+
+		<!-- 메인으로 이동 -->
+		<div class="mt-6 text-center text-sm text-gray-600">
+			<a th:href="@{/}" class="text-blue-600 hover:underline">메인 페이지로 이동</a>
+		</div>
+	</div>
 
 </html>
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		function idCheck() {
+		// 아이디 중복체크 로직
+		function checkIdDuplicate() {
+			event.preventDefault();
+
 			const id = $("#id").val();
+
 			if (id == "") {
 				alert("아이디는 5자 이상 20자 이하로 입력해주세요.");
 				$("#id").focus();
@@ -67,12 +121,34 @@
 			});
 		}
 
-		function checkValidate(event) {
+		// 휴대폰 번호 입력 시 하이픈 자동 입력 함수
+		function formatPhoneNumber(input) {
+			let numbers = input.value.replace(/\D/g, ''); // 숫자만 남기기
+
+			if (numbers.length > 11) {
+				numbers = numbers.slice(0, 11); // 11자리로 제한
+			}
+
+			let formatted = '';
+			if (numbers.length <= 3) {
+				formatted = numbers;
+			} else if (numbers.length <= 7) {
+				formatted = numbers.slice(0, 3) + '-' + numbers.slice(3);
+			} else {
+				formatted = numbers.slice(0, 3) + '-' + numbers.slice(3, 7) + "-" + numbers.slice(7);
+			}
+
+			input.value = formatted;
+		}
+
+		// 회원가입 로직
+		function register(event) {
 			event.preventDefault();
 
 			const pwd = $("#pwd").val();
 			const name = $("#name").val();
 			const age = $("#age").val();
+			const phoneNum = $("#phoneNum").val();
 
 			const data = {
 				id: $("#id").val(),
@@ -95,11 +171,25 @@
 
 			if (name == "") {
 				alert("이름을 입력해주세요.");
+				$("#name").focus();
 				return false;
 			}
 
 			if (age == "") {
 				alert("나이를 입력해주세요.");
+				$("#age").focus();
+				return false;
+			}
+
+			if (phoneNum == "") {
+				alert("휴대폰 번호를 입력해주세요.");
+				$("#phoneNum").focus();
+				return false;
+			}
+
+			if (phoneNum.length < 13) {
+				alert("휴대폰 번호를 다시 입력해주세요.\nex)010-0000-0000");
+				$("#phoneNum").focus();
 				return false;
 			}
 
