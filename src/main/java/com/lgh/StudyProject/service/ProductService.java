@@ -5,9 +5,13 @@ import java.io.IOException;
 import org.springframework.stereotype.Service;
 
 import com.lgh.StudyProject.dto.ProductDto;
+import com.lgh.StudyProject.dto.UserDto;
+import com.lgh.StudyProject.entity.Cart;
 import com.lgh.StudyProject.entity.Product;
 import com.lgh.StudyProject.entity.User;
+import com.lgh.StudyProject.repository.CartRepository;
 import com.lgh.StudyProject.repository.ProductRepository;
+import com.lgh.StudyProject.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -15,30 +19,44 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class ProductService {
 
-	private final ProductRepository productRepository;
+	private final UserRepository userRepository;
 
-	public ProductService(ProductRepository productRepository) {
+	private final ProductRepository productRepository;
+	
+	private final CartRepository cartRepository;
+
+	public ProductService(UserRepository userRepository, ProductRepository productRepository, CartRepository cartRepository) {
+		this.userRepository = userRepository;
 		this.productRepository = productRepository;
+		this.cartRepository = cartRepository;
 	}
 
 	public ProductDto findByNum(Long num) {
 		Product product = productRepository.findById(num)
 				.orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
-		
-		return ProductDto.builder()
-				.num(product.getNum())
-				.productName(product.getProductName())
-				.price(product.getPrice())
-				.category(product.getCategory())
-				.description(product.getDescription())
-				.imagePath(product.getImagePath())
-				.build();
+
+		return ProductDto.builder().num(product.getNum()).productName(product.getProductName())
+				.price(product.getPrice()).category(product.getCategory()).description(product.getDescription())
+				.imagePath(product.getImagePath()).build();
 	}
 
-	public void addProduct(String path, String productName, String category, int price, String desc, User user)
+	public void addProduct(String path, String productName, String category, int price, String desc, UserDto userDto)
 			throws IOException {
+		User user = userRepository.findById(userDto.getNum())
+				.orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+
 		Product product = new Product(productName, price, category, desc, path, user);
 		productRepository.save(product);
+	}
+
+	public void addCart(UserDto userDto, ProductDto productDto) {
+		User user = userRepository.findById(userDto.getNum())
+				.orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+		Product product = productRepository.findById(productDto.getNum())
+				.orElseThrow(() -> new IllegalArgumentException("해당 상품은 존재하지 않습니다."));
+		Cart cart = new Cart(user, product);
+		
+		cartRepository.save(cart);
 	}
 
 }
