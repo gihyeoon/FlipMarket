@@ -1,4 +1,4 @@
-package com.lgh.StudyProject.controller;
+package com.lgh.StudyProject.controller.user;
 
 import java.util.Map;
 
