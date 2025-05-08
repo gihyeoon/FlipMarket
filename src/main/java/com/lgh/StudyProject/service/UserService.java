@@ -18,6 +18,23 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
+	public UserDto findByNum(Long num) {
+		User user = userRepository.findById(num).orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+		
+		return UserDto.builder()
+				.num(user.getNum())
+				.id(user.getId())
+				.name(user.getName())
+				.pwd(user.getPwd())
+				.age(user.getAge())
+				.phoneNum(user.getPhoneNum())
+				.build();
+	}
+	
+	public Long findNumById(String id) {
+		return userRepository.findById(id).get().getNum();
+	}
+	
 	public void register(UserDto userDto) {
 		User user = new User(userDto.getId(), userDto.getPwd(), userDto.getName(), userDto.getAge(),
 				userDto.getPhoneNum(), "USER");
@@ -46,7 +63,7 @@ public class UserService {
 	public String selectUserPwdByNum(Long num) {
 		return userRepository.selectUserPwdByNum(num);
 	}
-	
+
 	public int countUserById(String id) {
 		return userRepository.countUserById(id);
 	}
