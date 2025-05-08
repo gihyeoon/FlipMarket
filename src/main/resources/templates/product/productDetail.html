@@ -60,8 +60,14 @@
 				contentType: "application/json",
 
 				success: function (result) {
-					alert("장바구니에 추가되었습니다.");
-					window.location.href = "/main";
+					if (result.result == "0") {
+						alert("로그인이 되어있지 않습니다.");
+						window.location.href = "/login";
+						return false;
+					} else {
+						alert("장바구니에 추가되었습니다.");
+						window.location.href = "/main";
+					}
 				},
 				error: function (request, status, error) {
 					alert("장바구니 추가 오류\ncode: " + request.status + "\nerror: " + error);

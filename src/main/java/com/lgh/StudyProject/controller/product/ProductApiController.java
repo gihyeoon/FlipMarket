@@ -51,19 +51,20 @@ public class ProductApiController {
 	}
 
 	@PostMapping("/addCart")
-	public ResponseEntity<String> addCart(@RequestBody Map<String, String> data) {
+	public Map<String, String> addCart(@RequestBody Map<String, String> data) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-		Long productNum = Long.parseLong(data.get("productNum"));
-		Long userNum = userService.findNumById(authentication.getName());
-		UserDto userDto = userService.findByNum(userNum);
-		ProductDto productDto = productService.findByNum(productNum);
+		if (authentication.getName().equals("anonymousUser")) {
+			return Map.of("result", "0");
+		} else {
+			Long productNum = Long.parseLong(data.get("productNum"));
+			Long userNum = userService.findNumById(authentication.getName());
+			UserDto userDto = userService.findByNum(userNum);
+			ProductDto productDto = productService.findByNum(productNum);
 
-		try {
 			productService.addCart(userDto, productDto);
-			return ResponseEntity.ok("success");
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("product add fail: " + e.getMessage());
+
+			return Map.of("result", "1");
 		}
 	}
 
