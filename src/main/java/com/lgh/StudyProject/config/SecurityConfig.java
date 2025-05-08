@@ -57,9 +57,10 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable())
-				.authorizeHttpRequests(
-						auth -> auth.requestMatchers("/", "/login", "/findPassword", "/resetPassword", "/register", "/main", "/api/**",
-								"/images/**", "/**.jpg", "/**.png").permitAll().anyRequest().authenticated())
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/", "/login", "/findPassword", "/resetPassword", "/register", "/main",
+								"/products/**", "/api/**", "/images/**", "/**.jpg", "/**.png")
+						.permitAll().anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
 						.defaultSuccessUrl("/main", true).permitAll().failureHandler((request, response, exception) -> {
 							System.out.println("로그인 실패 : " + exception.getMessage());
