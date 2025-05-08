@@ -15,18 +15,18 @@
 
 <body>
 	<div>
-		<span id="num" th:text="${num}" hidden></span>
-		<span id="originAge" th:text="${age}" hidden></span>
+		<span id="num" th:text="${user.num}" hidden></span>
+		<span id="originAge" th:text="${user.age}" hidden></span>
 
-		아이디 : <span id="originId" th:text="${id}"></span><br>
+		아이디 : <span id="originId" th:text="${user.id}"></span><br>
 		<input type="button" id="toggleIdBtn" onclick="toggleIdVisibility();" value="아이디 변경" />
 		<input type="button" id="cancelChangeIdBtn" onclick="cancelChgId();" value="아이디 변경 취소" hidden /><br>
 		<input type="button" id="changeIdBtn" onclick="updateId(event);" value="변경하기" hidden />
 		<input type="text" id="newId" hidden />
 
-		이름 : <span id="name" th:text="${name}"></span><br>
+		이름 : <span id="name" th:text="${user.name}"></span><br>
 
-		휴대폰 번호 : <span id="originPhoneNum" th:text="${phoneNum}"></span>
+		휴대폰 번호 : <span id="originPhoneNum" th:text="${user.phoneNum}"></span>
 		<input type="button" id="togglePhoneNumBtn" onclick="togglePhoneNumVisibility();" value="휴대폰 번호 변경" />
 		<input type="button" id="cancelChangePhoneNumBtn" onclick="cancelChgPhoneNum();" value="휴대폰 번호 변경 취소"
 			hidden /><br>

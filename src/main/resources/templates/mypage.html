@@ -9,13 +9,13 @@
 
 <body>
 	<div>
-		아이디 : <span id="id" th:text="${id}"></span><br>
+		아이디 : <span id="id" th:text="${user.id}"></span><br>
 		비밀번호 : <span id="pwd">********</span><br>
-		이름 : <span id="name" th:text="${name}"></span><br>
-		나이 : <span id="age" th:text="${age}"></span><br>
-		연락처 : <span id="phoneNum" th:text="${phoneNum}"></span><br>
+		이름 : <span id="name" th:text="${user.name}"></span><br>
+		나이 : <span id="age" th:text="${user.age}"></span><br>
+		연락처 : <span id="phoneNum" th:text="${user.phoneNum}"></span><br>
 	</div>
-	<a th:href="@{/mypage/reConfirmUserInfo(num=${num})}">회원정보 수정</a>
+	<a th:href="@{/mypage/reConfirmUserInfo(num=${user.num})}">회원정보 수정</a>
 	<form method="get" th:action="@{/main}">
 		<div><input type="submit" value="Main" /></div>
 	</form>
