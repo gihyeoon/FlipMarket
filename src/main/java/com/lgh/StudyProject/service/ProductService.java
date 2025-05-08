@@ -1,6 +1,7 @@
 package com.lgh.StudyProject.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -22,13 +23,18 @@ public class ProductService {
 	private final UserRepository userRepository;
 
 	private final ProductRepository productRepository;
-	
+
 	private final CartRepository cartRepository;
 
-	public ProductService(UserRepository userRepository, ProductRepository productRepository, CartRepository cartRepository) {
+	public ProductService(UserRepository userRepository, ProductRepository productRepository,
+			CartRepository cartRepository) {
 		this.userRepository = userRepository;
 		this.productRepository = productRepository;
 		this.cartRepository = cartRepository;
+	}
+
+	public List<Product> findAll() {
+		return productRepository.findAll();
 	}
 
 	public ProductDto findByNum(Long num) {
@@ -55,7 +61,7 @@ public class ProductService {
 		Product product = productRepository.findById(productDto.getNum())
 				.orElseThrow(() -> new IllegalArgumentException("해당 상품은 존재하지 않습니다."));
 		Cart cart = new Cart(user, product);
-		
+
 		cartRepository.save(cart);
 	}
 
