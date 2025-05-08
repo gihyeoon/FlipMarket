@@ -11,7 +11,7 @@
 
 <body class="bg-gray-100">
 
-	<!-- ✅ Header / Navigation -->
+	<!-- Header / Navigation -->
 	<header class="bg-white shadow">
 		<div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
 			<h1 class="text-xl font-bold text-blue-600"><a th:href="@{/main}">FlipMarket</a></h1>
@@ -38,20 +38,21 @@
 		</div>
 	</header>
 
-	<!-- ✅ 상품 리스트 영역 -->
+	<!-- 상품 리스트 영역 -->
 	<main class="max-w-7xl mx-auto px-4 py-8">
 		<h2 class="text-2xl font-semibold mb-6">전체 상품</h2>
 
 		<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 			<div th:each="list : ${productList}"
-				class="bg-white rounded-xl shadow hover:shadow-md transition p-4 cursor-pointer"
-				th:onclick="'location.href=\'/products/\' + ' + ${list.num}">
-				<img th:src="@{|/images/${list.imagePath}}" alt="상품 이미지" class="w-full h-48 object-cover rounded-md mb-3" />
-
-				<div class="text-lg font-medium text-gray-900" th:text="${list.productName}">상품명</div>
-				<div class="text-sm text-gray-500" th:text="${list.category}">카테고리</div>
-				<div class="text-blue-600 font-semibold mt-1"
-					th:text="${#numbers.formatInteger(list.price, 3, 'COMMA')} + '원'">가격</div>
+				class="bg-white rounded-xl shadow hover:shadow-md transition p-4 cursor-pointer">
+				<a th:href="@{/products(num=${list.num})}">
+					<img th:src="@{|/images/${list.imagePath}}" alt="상품 이미지"
+						class="w-full h-64 object-contain rounded-md mb-3" />
+					<div class="text-lg font-medium text-gray-900" th:text="${list.productName}">상품명</div>
+					<div class="text-sm text-gray-500" th:text="${list.category}">카테고리</div>
+					<div class="text-blue-600 font-semibold mt-1"
+						th:text="${#numbers.formatInteger(list.price, 3, 'COMMA')} + '원'">가격</div>
+				</a>
 			</div>
 		</div>
 	</main>

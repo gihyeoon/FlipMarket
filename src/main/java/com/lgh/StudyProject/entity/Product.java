@@ -58,7 +58,7 @@ public class Product {
 		this.user = user;
 	}
 	
-	public Long num() {
+	public Long getNum() {
 		return num;
 	}
 	
