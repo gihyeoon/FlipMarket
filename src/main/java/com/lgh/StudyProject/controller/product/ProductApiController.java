@@ -40,7 +40,7 @@ public class ProductApiController {
 			@RequestParam("productName") String productName, @RequestParam("category") String category,
 			@RequestParam("price") int price, @RequestParam("desc") String desc) throws IOException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Long num = userService.findNumById(authentication.getName());
+		Long num = userService.findNumByEmail(authentication.getName());
 		UserDto userDto = userService.findByNum(num);
 		try {
 			productService.addProduct(productImageHandler.save(image), productName, category, price, desc, userDto);
@@ -58,7 +58,7 @@ public class ProductApiController {
 			return Map.of("result", "0");
 		} else {
 			Long productNum = Long.parseLong(data.get("productNum"));
-			Long userNum = userService.findNumById(authentication.getName());
+			Long userNum = userService.findNumByEmail(authentication.getName());
 			UserDto userDto = userService.findByNum(userNum);
 			ProductDto productDto = productService.findByNum(productNum);
 

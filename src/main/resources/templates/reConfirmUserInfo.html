@@ -9,7 +9,7 @@
 
 <body>
 	<input id="num" name="num" th:value="${num}" hidden />
-	아이디 : <input type="text" id="id" name="id" th:value="${id}" placeholder="아이디" readonly />
+	이메일 : <input type="text" id="email" name="email" th:value="${email}" placeholder="이메일" readonly />
 	비밀번호 : <input type="password" id="pwd" name="pwd" />
 	<div><input type="button" onclick="validateUser(event)" value="확인" /></div>
 	<a th:href="@{/mypage(num=${num})}">마이페이지</a>
@@ -22,15 +22,13 @@
 			event.preventDefault();
 
 			const num = $("#num").val();
-			const id = $("#id").val();
+			const email = $("#email").val();
 			const enteredPwd = $("#pwd").val();
 
 			const data = {
-				id: id,
+				email: email,
 				enteredPwd: enteredPwd
 			}
-
-			console.log(data);
 
 			if (enteredPwd == "") {
 				alert("비밀번호를 입력해주세요.");

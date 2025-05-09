@@ -53,7 +53,7 @@ public class UserController {
 		UserDto userDto = userService.findByNum(num);
 
 		model.addAttribute("num", userDto.getNum());
-		model.addAttribute("id", userDto.getId());
+		model.addAttribute("email", userDto.getEmail());
 		model.addAttribute("pwd", userDto.getPwd());
 
 		return "reConfirmUserInfo";
@@ -62,7 +62,7 @@ public class UserController {
 	@ResponseBody
 	@PostMapping("/api/validateUser")
 	public int validateUser(@RequestBody Map<String, String> data) {
-		Long userNum = userService.findNumById(data.get("id"));
+		Long userNum = userService.findNumByEmail(data.get("email"));
 		UserDto userDto = userService.findByNum(userNum);
 		String loginUserPwd = userDto.getPwd();
 
@@ -81,8 +81,8 @@ public class UserController {
 	}
 
 	@GetMapping("/resetPassword")
-	public String resetPasswordForm(@RequestParam("id") String id, Model model) {
-		Long userNum = userService.findNumById(id);
+	public String resetPasswordForm(@RequestParam("email") String email, Model model) {
+		Long userNum = userService.findNumByEmail(email);
 		UserDto userDto = userService.findByNum(userNum);
 
 		model.addAttribute("num", userDto.getNum());

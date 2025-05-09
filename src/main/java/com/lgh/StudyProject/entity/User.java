@@ -26,7 +26,7 @@ public class User implements UserDetails {
 	private Long num;
 	
 	@Column(nullable = false)
-	private String id;
+	private String email;
 	
 	@Column(nullable = false)
 	private String pwd;
@@ -51,8 +51,16 @@ public class User implements UserDetails {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public User(String id, String pwd, String name, int age, String phoneNum, String role) {
-		this.id = id;
+	public User(String email, String pwd, String name, int age, String phoneNum) {
+		this.email = email;
+		this.pwd = pwd;
+		this.name = name;
+		this.age = age;
+		this.phoneNum = phoneNum;
+	}
+	
+	public User(String email, String pwd, String name, int age, String phoneNum, String role) {
+		this.email = email;
 		this.pwd = pwd;
 		this.name = name;
 		this.age = age;
@@ -64,8 +72,8 @@ public class User implements UserDetails {
 		return num;
 	}
 	
-	public String getId() {
-		return id;
+	public String getEmail() {
+		return email;
 	}
 
 	public String getPwd() {
@@ -100,7 +108,7 @@ public class User implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return id;
+		return email;
 	}
 	
 	@Override
@@ -123,4 +131,16 @@ public class User implements UserDetails {
         return true;
     }
 	
+    public void setEmail(String email) {
+    	this.email = email;
+    }
+    
+    public void setPhoneNum(String phoneNum) {
+    	this.phoneNum = phoneNum;
+    }
+    
+    public void setPwd(String pwd) {
+    	this.pwd = pwd;
+    }
+    
 }

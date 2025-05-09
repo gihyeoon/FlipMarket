@@ -17,14 +17,14 @@
 
 		<form id="registerForm">
 
-			<!-- 아이디 -->
+			<!-- 이메일 -->
 			<div class="mb-4">
-				<label for="id" class="block text-sm text-gray-700 mb-1">아이디</label>
+				<label for="email" class="block text-sm text-gray-700 mb-1">이메일</label>
 				<div class="flex gap-2">
-					<input type="text" name="id" id="id" required
+					<input type="text" name="email" id="email" required
 						class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-						placeholder="아이디 입력" />
-					<button type="button" onclick="checkIdDuplicate(event)" id="idOverlay"
+						placeholder="이메일 입력" />
+					<button type="button" onclick="checkEmailDuplicate(event)" id="emailOverlay"
 						class="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-xs">중복확인</button>
 				</div>
 			</div>
@@ -75,48 +75,48 @@
 </html>
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		// 아이디 중복체크 로직
-		function checkIdDuplicate() {
+		// 이메일 중복체크 로직
+		function checkEmailDuplicate() {
 			event.preventDefault();
 
-			const id = $("#id").val();
+			const email = $("#email").val();
 
-			if (id == "") {
-				alert("아이디는 5자 이상 20자 이하로 입력해주세요.");
-				$("#id").focus();
+			if (email == "") {
+				alert("이메일을 입력해주세요.");
+				$("#email").focus();
 				return false;
 			}
 
-			if (id.length < 5 || id.length > 20) {
-				alert("아이디는 5자 이상 20자 이하로 입력해주세요.");
-				$("#id").focus();
+			if (email.length < 5 || email.length > 20) {
+				alert("이메일을 5자 이상 20자 이하로 입력해주세요.");
+				$("#email").focus();
 				return false;
 			}
 
 			$.ajax({
 				type: "GET",
-				url: "/api/overlap/idRegister",
-				data: {"id": id},
+				url: "/api/overlap/emailRegister",
+				data: {"email": email},
 				dataType: "JSON",
 
 				success: function (result) {
 					if (result.result == "0") {
-						if (confirm("사용 가능한 아이디입니다.")) {
-							$("#id").attr("readonly", true);
-							$("#idOverlay").attr("disabled", true);
-							$("#idOverlay").attr("display", "none");
+						if (confirm("사용 가능한 이메일입니다.")) {
+							$("#email").attr("readonly", true);
+							$("#emailOverlay").attr("disabled", true);
+							$("#emailOverlay").attr("display", "none");
 						}
 
 						return false;
 					} else if (result.result == "1") {
-						alert("이미 사용중인 아이디입니다.");
-						$("#id").focus();
+						alert("이미 사용중인 이메일입니다.");
+						$("#email").focus();
 					} else {
 						alert("Server Error");
 					}
 				},
 				error: function (request, status, error) {
-					alert("ajax 에러\n code: " + request.status + "\n error: " + error);
+					alert("이메일 중복체크 에러\n code: " + request.status + "\n error: " + error);
 				}
 			});
 		}
@@ -145,21 +145,22 @@
 		function register(event) {
 			event.preventDefault();
 
+			const email = $("#email").val();
 			const pwd = $("#pwd").val();
 			const name = $("#name").val();
 			const age = $("#age").val();
 			const phoneNum = $("#phoneNum").val();
 
 			const data = {
-				id: $("#id").val(),
+				email: email,
 				pwd: pwd,
 				name: name,
 				age: age,
-				phoneNum: $("#phoneNum").val()
+				phoneNum: phoneNum
 			};
 
-			if (!$("#idOverlay").is(":disabled")) {
-				alert("아이디 중복체크를 해주세요.");
+			if (!$("#emailOverlay").is(":disabled")) {
+				alert("이메일 중복체크를 해주세요.");
 				return false;
 			}
 

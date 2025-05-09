@@ -12,19 +12,19 @@ import com.lgh.StudyProject.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	Optional<User> findById(String id);
+	Optional<User> findByEmail(String email);
 	
-	boolean existsById(String id);
+	boolean existsByEmail(String email);
 	
-	@NativeQuery(value = "SELECT COUNT(*) FROM user WHERE id = ?1")
-	int countUserById(String id);
+	@NativeQuery(value = "SELECT COUNT(*) FROM user WHERE email = ?1")
+	int countUserByEmail(String email);
 	
 	@NativeQuery(value = "SELECT pwd FROM user WHERE num = ?1")
 	String selectUserPwdByNum(Long num);
 	
 	@Modifying
-	@NativeQuery(value = "UPDATE user u SET u.id = ?1 WHERE u.num = ?2")
-	int updateId(String newId, Long num);
+	@NativeQuery(value = "UPDATE user u SET u.email = ?1 WHERE u.num = ?2")
+	int updateEmail(String newEmail, Long num);
 	
 	@Modifying
 	@NativeQuery(value = "UPDATE user u SET u.phone_num = ?1 WHERE u.num = ?2")

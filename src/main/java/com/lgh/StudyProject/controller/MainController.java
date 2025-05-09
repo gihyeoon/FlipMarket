@@ -32,9 +32,9 @@ public class MainController {
 	@GetMapping("/main")
 	public String mainForm(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String id = authentication.getName();
-		if (!id.equals("anonymousUser")) {
-			Long num = userService.findNumById(id);
+		String email = authentication.getName();
+		if (!email.equals("anonymousUser")) {
+			Long num = userService.findNumByEmail(email);
 			model.addAttribute("num", num);
 		} else {
 			model.addAttribute("num", "");

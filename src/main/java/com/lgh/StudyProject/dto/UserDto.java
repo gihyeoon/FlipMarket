@@ -6,7 +6,7 @@ public class UserDto {
 
 	private String name;
 
-	private String id;
+	private String email;
 
 	private String pwd;
 
@@ -17,10 +17,10 @@ public class UserDto {
 	public UserDto() {
 	}
 
-	private UserDto(Long num, String name, String id, String pwd, int age, String phoneNum) {
+	private UserDto(Long num, String name, String email, String pwd, int age, String phoneNum) {
 		this.num = num;
 		this.name = name;
-		this.id = id;
+		this.email = email;
 		this.pwd = pwd;
 		this.age = age;
 		this.phoneNum = phoneNum;
@@ -34,8 +34,8 @@ public class UserDto {
 		return name;
 	}
 
-	public String getId() {
-		return id;
+	public String getEmail() {
+		return email;
 	}
 
 	public void setPwd(String pwd) {
@@ -57,7 +57,7 @@ public class UserDto {
 	public static class Builder {
 		private Long num;
 		private String name;
-		private String id;
+		private String email;
 		private String pwd;
 		private int age;
 		private String phoneNum;
@@ -72,8 +72,8 @@ public class UserDto {
 			return this;
 		}
 
-		public Builder id(String id) {
-			this.id = id;
+		public Builder email(String email) {
+			this.email = email;
 			return this;
 		}
 
@@ -93,7 +93,7 @@ public class UserDto {
 		}
 
 		public UserDto build() {
-			return new UserDto(num, name, id, pwd, age, phoneNum);
+			return new UserDto(num, name, email, pwd, age, phoneNum);
 		}
 	}
 

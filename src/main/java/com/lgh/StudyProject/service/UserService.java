@@ -23,7 +23,7 @@ public class UserService {
 		
 		return UserDto.builder()
 				.num(user.getNum())
-				.id(user.getId())
+				.email(user.getEmail())
 				.name(user.getName())
 				.pwd(user.getPwd())
 				.age(user.getAge())
@@ -31,19 +31,19 @@ public class UserService {
 				.build();
 	}
 	
-	public Long findNumById(String id) {
-		return userRepository.findById(id).get().getNum();
+	public Long findNumByEmail(String email) {
+		return userRepository.findByEmail(email).get().getNum();
 	}
 	
 	public void register(UserDto userDto) {
-		User user = new User(userDto.getId(), userDto.getPwd(), userDto.getName(), userDto.getAge(),
+		User user = new User(userDto.getEmail(), userDto.getPwd(), userDto.getName(), userDto.getAge(),
 				userDto.getPhoneNum(), "USER");
 		userRepository.save(user);
 	}
 
 	@Transactional
-	public int updateId(String newId, Long num) {
-		return userRepository.updateId(newId, num);
+	public int updateEmail(String newEmail, Long num) {
+		return userRepository.updateEmail(newEmail, num);
 	}
 
 	@Transactional
@@ -56,16 +56,16 @@ public class UserService {
 		return userRepository.updatePwd(newPwd, num);
 	}
 
-	public boolean checkDuplicateId(String id) {
-		return userRepository.existsById(id);
+	public boolean checkDuplicateEmail(String email) {
+		return userRepository.existsByEmail(email);
 	}
 
 	public String selectUserPwdByNum(Long num) {
 		return userRepository.selectUserPwdByNum(num);
 	}
 
-	public int countUserById(String id) {
-		return userRepository.countUserById(id);
+	public int countUserByEmail(String email) {
+		return userRepository.countUserByEmail(email);
 	}
 
 }
