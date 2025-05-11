@@ -30,12 +30,12 @@ public class CartService {
 		this.productRepository = productRepository;
 	}
 
-	public void addCart(UserDto userDto, ProductDto productDto) {
+	public void addCart(UserDto userDto, ProductDto productDto, int quantity) {
 		User user = userRepository.findById(userDto.getNum())
 				.orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 		Product product = productRepository.findById(productDto.getNum())
 				.orElseThrow(() -> new IllegalArgumentException("해당 상품은 존재하지 않습니다."));
-		Cart cart = new Cart(user, product);
+		Cart cart = new Cart(user, product, quantity);
 
 		cartRepository.save(cart);
 	}
