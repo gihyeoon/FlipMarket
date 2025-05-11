@@ -32,6 +32,14 @@
 				<hr>
 				<p class="text-sm text-gray-700 whitespace-pre-line" th:text="${product.description}"></p>
 
+				<!-- 수량 선택 -->
+				<div class="flex items-center space-x-4">
+					<label for="quantity" class="font-medium">수량</label>
+					<input type="number" id="quantity" name="quantity" value="1" min="1" max="10"
+						class="w-16 text-center border rounded-md">
+					<p class="text-gray-500 text-sm" id="stock" th:text="'남은 수량: ' + ${product.quantity}"></p>
+				</div>
+
 				<!-- 예: 구매하기 버튼 -->
 				<div class="pt-4">
 					<button onclick="addCart(event);"
@@ -52,11 +60,23 @@
 			event.preventDefault();
 
 			const productNum = $("#productNum").text();
+			const quantity = $("#quantity").val();
+			const stock = $("#stock").text();
+
+			const data = {
+				productNum: productNum,
+				quantity: quantity
+			}
+
+			if (quantity > stock) {
+				alert("수량이 초과되었습니다.");
+				return false;
+			}
 
 			$.ajax({
 				type: "POST",
 				url: "/api/addCart",
-				data: JSON.stringify({productNum: productNum}),
+				data: JSON.stringify(data),
 				contentType: "application/json",
 
 				success: function (result) {
