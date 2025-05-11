@@ -37,7 +37,7 @@
 					<label for="quantity" class="font-medium">수량</label>
 					<input type="number" id="quantity" name="quantity" value="1" min="1" max="10"
 						class="w-16 text-center border rounded-md">
-					<p class="text-gray-500 text-sm" id="stock" th:text="'남은 수량: ' + ${product.quantity}"></p>
+					<p class="text-gray-500 text-sm" id="stock" th:text="'남은 수량: ' + ${product.stock}"></p>
 				</div>
 
 				<!-- 예: 구매하기 버튼 -->

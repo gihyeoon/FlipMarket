@@ -42,13 +42,14 @@ public class ProductApiController {
 	@PostMapping("/addProduct")
 	public ResponseEntity<String> addProduct(@RequestParam("image") MultipartFile image,
 			@RequestParam("productName") String productName, @RequestParam("category") String category,
-			@RequestParam("quantity") int quantity, @RequestParam("price") int price, @RequestParam("desc") String desc)
+			@RequestParam("stock") int stock, @RequestParam("price") int price, @RequestParam("desc") String desc)
 			throws IOException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long num = userService.findNumByEmail(authentication.getName());
 		UserDto userDto = userService.findByNum(num);
 		try {
-			productService.addProduct(productImageHandler.save(image), productName, category, price, quantity, desc, userDto);
+			productService.addProduct(productImageHandler.save(image), productName, category, price, stock, desc,
+					userDto);
 			return ResponseEntity.ok("success");
 		} catch (IOException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("product add fail: " + e.getMessage());
@@ -72,9 +73,9 @@ public class ProductApiController {
 			} else {
 				UserDto userDto = userService.findByNum(userNum);
 				ProductDto productDto = productService.findByNum(productNum);
-				int quantity = Integer.parseInt(data.get("quantity"));
+				int stock = Integer.parseInt(data.get("stock"));
 
-				cartService.addCart(userDto, productDto, quantity);
+				cartService.addCart(userDto, productDto, stock);
 
 				return Map.of("result", "1");
 			}

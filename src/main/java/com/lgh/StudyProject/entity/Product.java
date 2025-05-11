@@ -31,7 +31,7 @@ public class Product {
 	@Column(nullable = false)
 	private String category;
 	
-	private int quantity;
+	private int stock;
 	
 	private String description;
 	
@@ -50,11 +50,11 @@ public class Product {
 	public Product() {
 	}
 	
-	public Product(String productName, int price, String category, int quantity, String description, String imagePath, User user) {
+	public Product(String productName, int price, String category, int stock, String description, String imagePath, User user) {
 		this.productName = productName;
 		this.price = price;
 		this.category = category;
-		this.quantity = quantity;
+		this.stock = stock;
 		this.description = description;
 		this.imagePath = imagePath;
 		this.user = user;
@@ -76,8 +76,8 @@ public class Product {
 		return category;
 	}
 	
-	public int getQuantity() {
-		return quantity;
+	public int getStock() {
+		return stock;
 	}
 
 	public String getDescription() {
