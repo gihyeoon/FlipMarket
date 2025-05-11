@@ -34,8 +34,8 @@ public class MainController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String email = authentication.getName();
 		if (!email.equals("anonymousUser")) {
-			Long num = userService.findNumByEmail(email);
-			model.addAttribute("num", num);
+			Long userNum = userService.findNumByEmail(email);
+			model.addAttribute("num", userNum);
 		} else {
 			model.addAttribute("num", "");
 		}
