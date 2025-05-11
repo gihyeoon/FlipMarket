@@ -71,8 +71,6 @@ public class SecurityConfig {
 					logout.deleteCookies("JSESSIONID", "remember-me"); // 로그아웃 시 쿠기 삭제
 				});
 
-		System.out.println("필터 체인 로그");
-
 		return http.build();
 	}
 
