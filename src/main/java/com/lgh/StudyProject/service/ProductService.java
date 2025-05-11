@@ -38,16 +38,16 @@ public class ProductService {
 				.orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
 
 		return ProductDto.builder().num(product.getNum()).productName(product.getProductName())
-				.price(product.getPrice()).category(product.getCategory()).description(product.getDescription())
-				.imagePath(product.getImagePath()).build();
+				.price(product.getPrice()).category(product.getCategory()).quantity(product.getQuantity())
+				.description(product.getDescription()).imagePath(product.getImagePath()).build();
 	}
 
-	public void addProduct(String path, String productName, String category, int price, String desc, UserDto userDto)
-			throws IOException {
+	public void addProduct(String path, String productName, String category, int price, int quantity, String desc,
+			UserDto userDto) throws IOException {
 		User user = userRepository.findById(userDto.getNum())
 				.orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 
-		Product product = new Product(productName, price, category, desc, path, user);
+		Product product = new Product(productName, price, category, quantity, desc, path, user);
 		productRepository.save(product);
 	}
 

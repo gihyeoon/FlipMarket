@@ -10,6 +10,8 @@ public class ProductDto {
 
 	private String category;
 
+	private int quantity;
+
 	private String description;
 
 	private String imagePath;
@@ -18,11 +20,13 @@ public class ProductDto {
 		// TODO Auto-generated constructor stub
 	}
 
-	private ProductDto(Long num, String productName, int price, String category, String description, String imagePath) {
+	private ProductDto(Long num, String productName, int price, String category, int quantity, String description,
+			String imagePath) {
 		this.num = num;
 		this.productName = productName;
 		this.price = price;
 		this.category = category;
+		this.quantity = quantity;
 		this.description = description;
 		this.imagePath = imagePath;
 	}
@@ -43,6 +47,10 @@ public class ProductDto {
 		return category;
 	}
 
+	public int getQuantity() {
+		return quantity;
+	}
+
 	public String getDescription() {
 		return description;
 	}
@@ -56,6 +64,7 @@ public class ProductDto {
 		private String productName;
 		private int price;
 		private String category;
+		private int quantity;
 		private String description;
 		private String imagePath;
 
@@ -78,6 +87,11 @@ public class ProductDto {
 			this.category = category;
 			return this;
 		}
+		
+		public Builder quantity(int quantity) {
+			this.quantity = quantity;
+			return this;
+		}
 
 		public Builder description(String description) {
 			this.description = description;
@@ -90,7 +104,7 @@ public class ProductDto {
 		}
 
 		public ProductDto build() {
-			return new ProductDto(num, productName, price, category, description, imagePath);
+			return new ProductDto(num, productName, price, category, quantity, description, imagePath);
 		}
 	}
 
