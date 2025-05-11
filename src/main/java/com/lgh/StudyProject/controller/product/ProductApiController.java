@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.lgh.StudyProject.config.ProductImageHandler;
 import com.lgh.StudyProject.dto.ProductDto;
 import com.lgh.StudyProject.dto.UserDto;
+import com.lgh.StudyProject.service.CartService;
 import com.lgh.StudyProject.service.ProductService;
 import com.lgh.StudyProject.service.UserService;
 
@@ -30,9 +31,12 @@ public class ProductApiController {
 
 	private final UserService userService;
 
-	public ProductApiController(ProductService productService, UserService userService) {
+	private final CartService cartService;
+
+	public ProductApiController(ProductService productService, UserService userService, CartService cartService) {
 		this.productService = productService;
 		this.userService = userService;
+		this.cartService = cartService;
 	}
 
 	@PostMapping("/addProduct")
@@ -59,12 +63,19 @@ public class ProductApiController {
 		} else {
 			Long productNum = Long.parseLong(data.get("productNum"));
 			Long userNum = userService.findNumByEmail(authentication.getName());
-			UserDto userDto = userService.findByNum(userNum);
-			ProductDto productDto = productService.findByNum(productNum);
-
-			productService.addCart(userDto, productDto);
-
-			return Map.of("result", "1");
+			
+			int count = cartService.countCartByUserNumAndProductNum(userNum, productNum);
+			
+			if (count > 0) {
+				return Map.of("result", "2");
+			} else {
+				UserDto userDto = userService.findByNum(userNum);
+				ProductDto productDto = productService.findByNum(productNum);
+				
+				cartService.addCart(userDto, productDto);
+				
+				return Map.of("result", "1");
+			}
 		}
 	}
 

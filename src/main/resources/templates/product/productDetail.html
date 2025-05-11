@@ -64,6 +64,9 @@
 						alert("로그인이 되어있지 않습니다.");
 						window.location.href = "/login";
 						return false;
+					} else if (result.result == "2") {
+						alert("이미 장바구니에 등록되어있는 상품입니다.");
+						return false;
 					} else {
 						alert("장바구니에 추가되었습니다.");
 						window.location.href = "/main";

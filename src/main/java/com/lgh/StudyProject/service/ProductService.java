@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.lgh.StudyProject.dto.ProductDto;
 import com.lgh.StudyProject.dto.UserDto;
-import com.lgh.StudyProject.entity.Cart;
 import com.lgh.StudyProject.entity.Product;
 import com.lgh.StudyProject.entity.User;
 import com.lgh.StudyProject.repository.CartRepository;
@@ -24,13 +23,10 @@ public class ProductService {
 
 	private final ProductRepository productRepository;
 
-	private final CartRepository cartRepository;
-
 	public ProductService(UserRepository userRepository, ProductRepository productRepository,
 			CartRepository cartRepository) {
 		this.userRepository = userRepository;
 		this.productRepository = productRepository;
-		this.cartRepository = cartRepository;
 	}
 
 	public List<Product> findAll() {
@@ -53,16 +49,6 @@ public class ProductService {
 
 		Product product = new Product(productName, price, category, desc, path, user);
 		productRepository.save(product);
-	}
-
-	public void addCart(UserDto userDto, ProductDto productDto) {
-		User user = userRepository.findById(userDto.getNum())
-				.orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
-		Product product = productRepository.findById(productDto.getNum())
-				.orElseThrow(() -> new IllegalArgumentException("해당 상품은 존재하지 않습니다."));
-		Cart cart = new Cart(user, product);
-
-		cartRepository.save(cart);
 	}
 
 }
