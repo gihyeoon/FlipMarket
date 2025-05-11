@@ -1,5 +1,6 @@
 package com.lgh.StudyProject.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,13 +25,17 @@ public class Cart {
 	@JoinColumn(name = "product_num", referencedColumnName = "num")
 	private Product product;
 	
+	@Column(nullable = false)
+	private int quantity;
+	
 	public Cart() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Cart(User user, Product product) {
+	public Cart(User user, Product product, int quantity) {
 		this.user = user;
 		this.product = product;
+		this.quantity = quantity;
 	}
 	
 	public Long getNum() {
@@ -43,6 +48,10 @@ public class Cart {
 	
 	public Product getProduct() {
 		return product;
+	}
+	
+	public int getQuantity() {
+		return quantity;
 	}
 
 }
