@@ -9,7 +9,7 @@ import com.lgh.StudyProject.entity.Cart;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
-	@NativeQuery(value = "SELECT COUNT(*) FROM cart WHERE user_num = ?1 and productNum = ?2")
+	@NativeQuery(value = "SELECT COUNT(*) FROM cart WHERE user_num = ?1 and product_num = ?2")
 	int countCartByUserNumAndProductNum(Long userNum, Long productNum);
 
 }
