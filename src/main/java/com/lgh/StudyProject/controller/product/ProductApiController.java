@@ -3,8 +3,6 @@ package com.lgh.StudyProject.controller.product;
 import java.io.IOException;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,19 +38,23 @@ public class ProductApiController {
 	}
 
 	@PostMapping("/addProduct")
-	public ResponseEntity<String> addProduct(@RequestParam("image") MultipartFile image,
+	public Map<String, String> addProduct(@RequestParam("image") MultipartFile image,
 			@RequestParam("productName") String productName, @RequestParam("category") String category,
 			@RequestParam("stock") int stock, @RequestParam("price") int price, @RequestParam("desc") String desc)
 			throws IOException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Long num = userService.findNumByEmail(authentication.getName());
-		UserDto userDto = userService.findByNum(num);
-		try {
+		Long userNum = userService.findNumByEmail(authentication.getName());
+		UserDto userDto = userService.findByNum(userNum);
+
+		// 로그인한 사용자가 상품명과 카테고리로 이미 등록되어있는 상품이 있는지 확인한다.
+		int result = productService.countByProductNameAndCategory(productName, category, userNum);
+
+		if (result > 0) {
+			return Map.of("result", "1");
+		} else {
 			productService.addProduct(productImageHandler.save(image), productName, category, price, stock, desc,
 					userDto);
-			return ResponseEntity.ok("success");
-		} catch (IOException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("product add fail: " + e.getMessage());
+			return Map.of("result", "0");
 		}
 	}
 

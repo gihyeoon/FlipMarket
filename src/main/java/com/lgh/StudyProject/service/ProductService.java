@@ -43,6 +43,10 @@ public class ProductService {
 				.description(product.getDescription()).imagePath(product.getImagePath()).build();
 	}
 
+	public int countByProductNameAndCategory(String productName, String category, Long userNum) {
+		return productRepository.countByProductNameAndCategory(productName, category, userNum);
+	}
+
 	public List<ProductDto> findByUserNumNot(Long userNum) {
 		List<Object[]> results = productRepository.findByUserNumNot(userNum);
 

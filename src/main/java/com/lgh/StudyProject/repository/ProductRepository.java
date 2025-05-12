@@ -11,7 +11,10 @@ import com.lgh.StudyProject.entity.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+	@NativeQuery(value = "SELECT COUNT(*) FROM product WHERE product_name = ?1 and category = ?2 and user_num = ?3")
+	int countByProductNameAndCategory(String productName, String category, Long userNum);
+
 	@NativeQuery(value = "SELECT num, product_name, price, category, stock, description, image_path FROM product WHERE user_num <> ?1")
 	List<Object[]> findByUserNumNot(Long userNum);
-	
+
 }
