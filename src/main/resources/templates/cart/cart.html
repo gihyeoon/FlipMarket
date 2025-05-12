@@ -15,22 +15,27 @@
 		<h2 class="text-2xl font-bold mb-6">🛒 장바구니</h2>
 
 		<div class="space-y-4">
-			<div th:each="item : ${cartItems}" class="flex items-center border p-4 rounded-lg shadow-sm">
+			<div th:each="item, itemStat : ${cartItems}"
+				class="cart-items flex items-center border p-4 rounded-lg shadow-sm">
 				<img th:src="@{|/images/${item.imagePath}}" alt="상품 이미지" class="w-24 h-24 object-cover rounded-md mr-4">
 
 				<div class="flex-1">
 					<h3 class="text-lg font-semibold" th:text="${item.productName}"></h3>
 					<p class="text-sm text-gray-500" th:text="${item.category}"></p>
 
-					<div class="flex items-center mt-2">
-						<button class="px-2 py-1 bg-gray-200 rounded">-</button>
-						<span class="mx-2" th:text="${item.quantity}"></span>
-						<button class="px-2 py-1 bg-gray-200 rounded">+</button>
+					<div class="item-quantity flex items-center mt-2">
+						<button type="button" class="minus px-2 py-1 bg-gray-200 rounded"
+							onclick="minusQuantity(this)">-</button>
+						<span class="quantity mx-2" th:text="${item.quantity}"></span>
+						<button type="button" class="plus px-2 py-1 bg-gray-200 rounded"
+							onclick="plusQuantity(this)">+</button>
 					</div>
 				</div>
 
 				<div class="text-right ml-4">
-					<p class="text-lg font-bold text-blue-600" th:text="${item.price * item.quantity} + '원'">
+					<span class="unit-price" th:text="${item.price}" hidden></span>
+					<p class="total-unit-price text-lg font-bold text-blue-600"
+						th:text="${#numbers.formatInteger(item.price * item.quantity, 3, 'COMMA')} + '원'">
 					</p>
 					<button class="mt-2 text-sm text-red-500">삭제</button>
 				</div>
@@ -38,12 +43,68 @@
 		</div>
 
 		<div class="mt-8 text-right">
-			<p class="text-xl font-semibold">총합계: <span id="totalPrice" class="text-blue-700"></span></p>
+			<span id="originTotalPrice" th:text="${totalPrice}" hidden></span>
+			<span id="unFormattedTotalPrice" th:text="${totalPrice}" hidden></span>
+			<p class="text-xl font-semibold">총합계: <span id="totalPrice" class="text-blue-700"
+					th:text="${#numbers.formatInteger(totalPrice, 3, 'COMMA')} + '원'"></span></p>
 
 			<div class="mt-4 flex justify-end space-x-2">
 				<a href="/" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">메인으로</a>
-				<button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">주문하기</button>
+				<button type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onclick="purchase(event);">주문하기</button>
 			</div>
 		</div>
 	</div>
 </body>
+
+</html>
+
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+		function plusQuantity(button) {
+			let item = $(button).closest(".cart-items");
+			let quantity = item.find(".quantity");
+			let unitPrice = parseInt(item.find(".unit-price").text());
+			let count = parseInt(quantity.text());
+
+			count++;
+			quantity.text(count);
+
+			updateTotalUnitPrice(item, count, unitPrice);
+		}
+
+		function minusQuantity(button) {
+			let item = $(button).closest(".cart-items");
+			let quantity = item.find(".quantity");
+			let unitPrice = parseInt(item.find(".unit-price").text());
+			let count = parseInt(quantity.text());
+
+			if (count > 1) {
+				count--;
+				quantity.text(count);
+				updateTotalUnitPrice(item, count, unitPrice);
+			}
+		}
+
+		function updateTotalUnitPrice(item, count, unitPrice) {
+			const total = count * unitPrice;
+			const formattedTotal = total.toLocaleString();
+			item.find(".total-unit-price").text(formattedTotal + "원");
+			
+			refreshTotalPrice();
+		}
+		
+		function refreshTotalPrice() {
+			let total = 0;
+			
+			$(".cart-items").each(function () {
+				const quantity = parseInt($(this).find(".quantity").text());
+				const unitPrice = parseInt($(this).find(".unit-price").text());
+				total += quantity * unitPrice;
+			});
+			
+			const formattedTotalPrice = total.toLocaleString();
+			$("#totalPrice").text(formattedTotalPrice + "원");
+			$("#unFormattedTotalPrice").text(total);
+		}
+	</script>
+</th:block>
