@@ -20,7 +20,7 @@ public class ProductDto {
 		// TODO Auto-generated constructor stub
 	}
 
-	private ProductDto(Long num, String productName, int price, String category, int stock, String description,
+	public ProductDto(Long num, String productName, int price, String category, int stock, String description,
 			String imagePath) {
 		this.num = num;
 		this.productName = productName;

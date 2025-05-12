@@ -2,6 +2,7 @@ package com.lgh.StudyProject.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,16 @@ public class ProductService {
 		return ProductDto.builder().num(product.getNum()).productName(product.getProductName())
 				.price(product.getPrice()).category(product.getCategory()).stock(product.getStock())
 				.description(product.getDescription()).imagePath(product.getImagePath()).build();
+	}
+
+	public List<ProductDto> findByUserNumNot(Long userNum) {
+		List<Object[]> results = productRepository.findByUserNumNot(userNum);
+
+		return results.stream()
+				.map(r -> new ProductDto(Long.parseLong(r[0].toString()), r[1].toString(),
+						Integer.parseInt(r[2].toString()), r[3].toString(), Integer.parseInt(r[4].toString()),
+						r[5].toString(), r[6].toString()))
+				.collect(Collectors.toList());
 	}
 
 	public void addProduct(String path, String productName, String category, int price, int stock, String desc,

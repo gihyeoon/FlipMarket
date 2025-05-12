@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.lgh.StudyProject.dto.ProductDto;
 import com.lgh.StudyProject.entity.Product;
 import com.lgh.StudyProject.service.ProductService;
 import com.lgh.StudyProject.service.UserService;
@@ -33,14 +34,15 @@ public class MainController {
 	public String mainForm(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String email = authentication.getName();
+		Long userNum = 0L;
 		if (!email.equals("anonymousUser")) {
-			Long userNum = userService.findNumByEmail(email);
+			userNum = userService.findNumByEmail(email);
 			model.addAttribute("num", userNum);
 		} else {
 			model.addAttribute("num", "");
 		}
 
-		List<Product> productList = productService.findAll();
+		List<ProductDto> productList = productService.findByUserNumNot(userNum);
 
 		model.addAttribute("productList", productList);
 
