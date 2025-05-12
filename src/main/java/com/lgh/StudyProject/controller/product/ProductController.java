@@ -13,20 +13,22 @@ public class ProductController {
 
 	private final ProductService productService;
 
+	private final String baseUrl = "product/";
+
 	public ProductController(ProductService productService) {
 		this.productService = productService;
 	}
 
 	@GetMapping("/addProduct")
 	public String addProductForm() {
-		return "addProduct";
+		return baseUrl + "addProduct";
 	}
 
 	@GetMapping("/products")
-	public String getProductDetail(@RequestParam("num") Long num, Model model) {
-		ProductDto product = productService.findByNum(num);
+	public String getProductDetail(@RequestParam("num") Long productNum, Model model) {
+		ProductDto product = productService.findByNum(productNum);
 		model.addAttribute("product", product);
-		return "product/productDetail";
+		return baseUrl + "productDetail";
 	}
 
 }

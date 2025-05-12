@@ -40,8 +40,8 @@ public class UserApiController {
 	}
 
 	@GetMapping("/overlap/emailRegister")
-	public Map<String, String> emailRegister(@RequestParam(value = "email") String email) {
-		return Map.of("result", userService.checkDuplicateEmail(email) ? "1" : "0");
+	public Map<String, String> emailRegister(@RequestParam("email") String userEmail) {
+		return Map.of("result", userService.checkDuplicateEmail(userEmail) ? "1" : "0");
 	}
 
 	@PostMapping("/register")
@@ -53,6 +53,19 @@ public class UserApiController {
 			return ResponseEntity.ok("success");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Register Fail: " + e.getMessage());
+		}
+	}
+
+	@PostMapping("/api/validateUser")
+	public int validateUser(@RequestBody Map<String, String> data) {
+		Long userNum = userService.findNumByEmail(data.get("email"));
+		UserDto userDto = userService.findByNum(userNum);
+		String loginUserPwd = userDto.getPwd();
+
+		if (passwordEncoder.matches(data.get("enteredPwd"), loginUserPwd)) {
+			return 1;
+		} else {
+			return 0;
 		}
 	}
 

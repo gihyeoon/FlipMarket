@@ -1,29 +1,22 @@
 package com.lgh.StudyProject.controller.user;
 
-import java.util.Map;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lgh.StudyProject.dto.UserDto;
 import com.lgh.StudyProject.service.UserService;
 
-@Controller // Template을 사용할 경우에는 RestController는 사용하면 안된다.
+@Controller
 public class UserController {
 
 	private final UserService userService;
 
-	private final BCryptPasswordEncoder passwordEncoder;
+	private final String baseUrl = "user/";
 
-	public UserController(UserService userService, BCryptPasswordEncoder passwordEncoder) {
+	public UserController(UserService userService) {
 		this.userService = userService;
-		this.passwordEncoder = passwordEncoder;
 	}
 
 	@GetMapping("/register")
@@ -38,56 +31,42 @@ public class UserController {
 
 	@GetMapping("/findPassword")
 	public String findPasswordForm() {
-		return "findPassword";
+		return baseUrl + "findPassword";
 	}
 
 	@GetMapping("/mypage")
-	public String myPageForm(@RequestParam("num") Long num, Model model) {
-		UserDto userDto = userService.findByNum(num);
+	public String myPageForm(@RequestParam("num") Long userNum, Model model) {
+		UserDto userDto = userService.findByNum(userNum);
 		model.addAttribute("user", userDto);
-		return "mypage";
+		return baseUrl + "mypage";
 	}
 
 	@GetMapping("/mypage/reConfirmUserInfo")
-	public String reConfirmUserInfoForm(@RequestParam("num") Long num, Model model) {
-		UserDto userDto = userService.findByNum(num);
+	public String reConfirmUserInfoForm(@RequestParam("num") Long userNum, Model model) {
+		UserDto userDto = userService.findByNum(userNum);
 
 		model.addAttribute("num", userDto.getNum());
 		model.addAttribute("email", userDto.getEmail());
 		model.addAttribute("pwd", userDto.getPwd());
 
-		return "reConfirmUserInfo";
-	}
-
-	@ResponseBody
-	@PostMapping("/api/validateUser")
-	public int validateUser(@RequestBody Map<String, String> data) {
-		Long userNum = userService.findNumByEmail(data.get("email"));
-		UserDto userDto = userService.findByNum(userNum);
-		String loginUserPwd = userDto.getPwd();
-
-		if (passwordEncoder.matches(data.get("enteredPwd"), loginUserPwd)) {
-			return 1;
-		} else {
-			return 0;
-		}
+		return baseUrl + "reConfirmUserInfo";
 	}
 
 	@GetMapping("/mypage/editProfile")
-	public String editProfileForm(@RequestParam("num") Long num, Model model) {
-		UserDto userDto = userService.findByNum(num);
+	public String editProfileForm(@RequestParam("num") Long userNum, Model model) {
+		UserDto userDto = userService.findByNum(userNum);
 		model.addAttribute("user", userDto);
-		return "editProfile";
+		return baseUrl + "editProfile";
 	}
 
 	@GetMapping("/resetPassword")
-	public String resetPasswordForm(@RequestParam("email") String email, Model model) {
-		Long userNum = userService.findNumByEmail(email);
+	public String resetPasswordForm(@RequestParam("email") String userEmail, Model model) {
+		Long userNum = userService.findNumByEmail(userEmail);
 		UserDto userDto = userService.findByNum(userNum);
 
 		model.addAttribute("num", userDto.getNum());
 
-		return "resetPassword";
+		return baseUrl + "resetPassword";
 	}
 
 }
