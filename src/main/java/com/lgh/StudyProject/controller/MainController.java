@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.lgh.StudyProject.dto.ProductDto;
-import com.lgh.StudyProject.entity.Product;
 import com.lgh.StudyProject.service.ProductService;
 import com.lgh.StudyProject.service.UserService;
 
