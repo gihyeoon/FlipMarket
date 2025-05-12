@@ -25,8 +25,14 @@ public class CartController {
 	public String cartForm(@RequestParam("num") Long userNum, Model model) {
 		List<CartDto> cartItems = cartService.findAllByUserNum(userNum);
 
+		int totalPrice = 0;
+		for (int i = 0; i < cartItems.size(); i++) {
+			totalPrice += cartItems.get(i).getPrice() * cartItems.get(i).getQuantity();
+		}
+
 		model.addAttribute("userNum", userNum);
 		model.addAttribute("cartItems", cartItems);
+		model.addAttribute("totalPrice", totalPrice);
 
 		return baseUrl + "cart";
 	}
