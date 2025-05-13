@@ -57,5 +57,9 @@ public class CartService {
 	public int countCartByUserNumAndProductNum(Long userNum, Long productNum) {
 		return cartRepository.countCartByUserNumAndProductNum(userNum, productNum);
 	}
+	
+	public int deleteByNum(Long num) {
+		return cartRepository.deleteByNum(num);
+	}
 
 }

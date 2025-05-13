@@ -17,6 +17,8 @@
 		<div class="space-y-4">
 			<div th:each="item, itemStat : ${cartItems}"
 				class="cart-items flex items-center border p-4 rounded-lg shadow-sm">
+				<span class="num" th:text="${item.num}" hidden></span>
+
 				<img th:src="@{|/images/${item.imagePath}}" alt="상품 이미지" class="w-24 h-24 object-cover rounded-md mr-4">
 
 				<div class="flex-1">
@@ -37,7 +39,7 @@
 					<p class="total-unit-price text-lg font-bold text-blue-600"
 						th:text="${#numbers.formatInteger(item.price * item.quantity, 3, 'COMMA')} + '원'">
 					</p>
-					<button class="mt-2 text-sm text-red-500">삭제</button>
+					<button class="mt-2 text-sm text-red-500" onclick="deleteCart(this)">삭제</button>
 				</div>
 			</div>
 		</div>
@@ -50,7 +52,8 @@
 
 			<div class="mt-4 flex justify-end space-x-2">
 				<a href="/" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">메인으로</a>
-				<button type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onclick="purchase(event);">주문하기</button>
+				<button type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+					onclick="purchase(event);">주문하기</button>
 			</div>
 		</div>
 	</div>
@@ -89,22 +92,55 @@
 			const total = count * unitPrice;
 			const formattedTotal = total.toLocaleString();
 			item.find(".total-unit-price").text(formattedTotal + "원");
-			
+
 			refreshTotalPrice();
 		}
-		
+
 		function refreshTotalPrice() {
 			let total = 0;
-			
+
 			$(".cart-items").each(function () {
 				const quantity = parseInt($(this).find(".quantity").text());
 				const unitPrice = parseInt($(this).find(".unit-price").text());
 				total += quantity * unitPrice;
 			});
-			
+
 			const formattedTotalPrice = total.toLocaleString();
 			$("#totalPrice").text(formattedTotalPrice + "원");
 			$("#unFormattedTotalPrice").text(total);
+		}
+
+		function deleteCart(button) {
+			if (confirm("해당 상품을 장바구니에서 삭제하시겠습니까?")) {
+				const item = $(button).closest(".cart-items");
+				const num = item.find(".num").text();
+
+				$.ajax({
+					type: "POST",
+					url: "/api/cart/deleteCart",
+					data: JSON.stringify({num: num}),
+					contentType: "application/json",
+
+					success: function (result) {
+						if (result.result == "0") {
+							alert("삭제되었습니다.");
+							location.reload();
+						} else {
+							alert("삭제 실패 Server Error");
+							return false;
+						}
+					},
+					error: function (request, status, error) {
+						alert("장바구니 제거 오류\ncode: " + request.status + "\nerror: " + error);
+					}
+				});
+			} else {
+				return false;
+			}
+		}
+
+		function purchase(event) {
+			event.preventDefault();
 		}
 	</script>
 </th:block>

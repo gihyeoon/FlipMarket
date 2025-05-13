@@ -1,11 +1,15 @@
 package com.lgh.StudyProject.controller.cart;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lgh.StudyProject.dto.CartDto;
 import com.lgh.StudyProject.service.CartService;
@@ -35,6 +39,25 @@ public class CartController {
 		model.addAttribute("totalPrice", totalPrice);
 
 		return baseUrl + "cart";
+	}
+
+	@ResponseBody
+	@PostMapping("/api/cart/deleteCart")
+	public Map<String, String> deleteCart(@RequestBody Map<String, String> data) {
+		Long cartNum = Long.parseLong(data.get("num"));
+		int result = cartService.deleteByNum(cartNum);
+
+		if (result > 0) {
+			return Map.of("result", "0");
+		} else {
+			return Map.of("result", "1");
+		}
+	}
+
+	@ResponseBody
+	@PostMapping("/api/cart/purchase")
+	public Map<String, String> purchase(@RequestBody Map<String, String> data) {
+		return Map.of("result", "0");
 	}
 
 }
