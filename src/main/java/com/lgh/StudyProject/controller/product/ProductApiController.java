@@ -78,7 +78,6 @@ public class ProductApiController {
 				int quantity = Integer.parseInt(data.get("quantity"));
 
 				cartService.addCart(userDto, productDto, quantity);
-				productService.updateProductStock(productNum, productDto.getStock() - quantity);
 
 				return Map.of("result", "1");
 			}

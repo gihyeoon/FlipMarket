@@ -21,5 +21,5 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 	@Modifying
 	@NativeQuery(value = "delete from cart where num = ?1")
 	int deleteByNum(Long num);
-
+	
 }

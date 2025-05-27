@@ -60,12 +60,6 @@ public class CartController {
 	public Map<String, String> deleteCart(@RequestBody Map<String, String> data) {
 		Long cartNum = Long.parseLong(data.get("num"));
 
-		Long productNum = cartService.findByNum(cartNum).get().getProduct().getNum();
-		int stock = productService.findByNum(productNum).getStock();
-		int quantity = cartService.findByNum(cartNum).get().getQuantity();
-
-		productService.updateProductStock(productNum, stock + quantity);
-
 		int result = cartService.deleteByNum(cartNum);
 
 		if (result > 0) {
@@ -83,6 +77,7 @@ public class CartController {
 		Long cartNum = Long.parseLong(data.get("cartNum"));
 		Long userNum = userService.findNumByEmail(authentication.getName());
 		Long productNum = cartService.findByNum(cartNum).get().getProduct().getNum();
+		int stock = cartService.findByNum(cartNum).get().getProduct().getStock();
 		int totalPrice = Integer.parseInt(data.get("totalPrice"));
 		int quantity = Integer.parseInt(data.get("quantity"));
 
@@ -90,6 +85,17 @@ public class CartController {
 		ProductDto productDto = productService.findByNum(productNum);
 
 		try {
+			// 구매를 확정짓는 순간 장바구니에서 해당 상품은 삭제되어야함.
+			int delCnt = cartService.deleteByNum(cartNum);
+
+			if (delCnt < 1) {
+				return Map.of("result", "1");
+			}
+			
+			// 구매를 확정짓는 순간 해당 상품의 재고 또한 수정되어야함.
+			productService.updateProductStock(productNum, stock - quantity);
+
+			// 구매하게되면 purchase 테이블에 해당 정보들을 Insert 한다.
 			purchaseService.addPurchase(userDto, productDto, totalPrice, quantity);
 			return Map.of("result", "0");
 		} catch (Exception e) {
