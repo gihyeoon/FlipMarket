@@ -1,6 +1,7 @@
 package com.lgh.StudyProject.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -44,12 +45,12 @@ public class CartService {
 				.collect(Collectors.toList());
 	}
 
-	public void addCart(UserDto userDto, ProductDto productDto, int stock) {
+	public void addCart(UserDto userDto, ProductDto productDto, int quantity) {
 		User user = userRepository.findById(userDto.getNum())
 				.orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 		Product product = productRepository.findById(productDto.getNum())
 				.orElseThrow(() -> new IllegalArgumentException("해당 상품은 존재하지 않습니다."));
-		Cart cart = new Cart(user, product, stock);
+		Cart cart = new Cart(user, product, quantity);
 
 		cartRepository.save(cart);
 	}
@@ -60,6 +61,10 @@ public class CartService {
 	
 	public int deleteByNum(Long num) {
 		return cartRepository.deleteByNum(num);
+	}
+	
+	public Optional<Cart> findByNum(Long num) {
+		return cartRepository.findById(num);
 	}
 
 }

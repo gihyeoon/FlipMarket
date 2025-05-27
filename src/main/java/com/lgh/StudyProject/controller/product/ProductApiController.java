@@ -75,9 +75,10 @@ public class ProductApiController {
 			} else {
 				UserDto userDto = userService.findByNum(userNum);
 				ProductDto productDto = productService.findByNum(productNum);
-				int stock = Integer.parseInt(data.get("stock"));
+				int quantity = Integer.parseInt(data.get("quantity"));
 
-				cartService.addCart(userDto, productDto, stock);
+				cartService.addCart(userDto, productDto, quantity);
+				productService.updateProductStock(productNum, productDto.getStock() - quantity);
 
 				return Map.of("result", "1");
 			}

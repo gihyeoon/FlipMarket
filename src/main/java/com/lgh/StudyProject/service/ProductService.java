@@ -65,5 +65,9 @@ public class ProductService {
 		Product product = new Product(productName, price, category, stock, desc, path, user);
 		productRepository.save(product);
 	}
+	
+	public int updateProductStock(Long productNum, int quantity) {
+		return productRepository.updateProductStock(productNum, quantity);
+	}
 
 }

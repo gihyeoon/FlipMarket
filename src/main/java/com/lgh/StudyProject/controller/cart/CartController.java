@@ -12,17 +12,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lgh.StudyProject.dto.CartDto;
+import com.lgh.StudyProject.dto.ProductDto;
 import com.lgh.StudyProject.service.CartService;
+import com.lgh.StudyProject.service.ProductService;
 
 @Controller
 public class CartController {
 
 	private final CartService cartService;
+	
+	private final ProductService productService;
 
 	private final String baseUrl = "cart/";
 
-	public CartController(CartService cartService) {
+	public CartController(CartService cartService, ProductService productService) {
 		this.cartService = cartService;
+		this.productService = productService;
 	}
 
 	@GetMapping("/cart")
@@ -45,6 +50,13 @@ public class CartController {
 	@PostMapping("/api/cart/deleteCart")
 	public Map<String, String> deleteCart(@RequestBody Map<String, String> data) {
 		Long cartNum = Long.parseLong(data.get("num"));
+
+		Long productNum = cartService.findByNum(cartNum).get().getProduct().getNum();
+		int stock = productService.findByNum(productNum).getStock();
+		int quantity = cartService.findByNum(cartNum).get().getQuantity();
+		
+		productService.updateProductStock(productNum, stock + quantity);
+		
 		int result = cartService.deleteByNum(cartNum);
 
 		if (result > 0) {
