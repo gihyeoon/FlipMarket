@@ -57,6 +57,16 @@ public class ProductService {
 				.collect(Collectors.toList());
 	}
 
+	public List<ProductDto> findByKeywordAndUserNum(String keyword, Long userNum) {
+		List<Object[]> results = productRepository.findByKeywordAndUserNum(keyword, userNum);
+
+		return results.stream()
+				.map(r -> new ProductDto(Long.parseLong(r[0].toString()), r[1].toString(),
+						Integer.parseInt(r[2].toString()), r[3].toString(), Integer.parseInt(r[4].toString()),
+						r[5].toString(), r[6].toString()))
+				.collect(Collectors.toList());
+	}
+
 	public void addProduct(String path, String productName, String category, int price, int stock, String desc,
 			UserDto userDto) throws IOException {
 		User user = userRepository.findById(userDto.getNum())
@@ -65,7 +75,7 @@ public class ProductService {
 		Product product = new Product(productName, price, category, stock, desc, path, user);
 		productRepository.save(product);
 	}
-	
+
 	public int updateProductStock(Long productNum, int quantity) {
 		return productRepository.updateProductStock(productNum, quantity);
 	}

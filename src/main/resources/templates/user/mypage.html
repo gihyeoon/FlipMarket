@@ -1,24 +1,54 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-	<title>마이페이지</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<meta charset="UTF-8">
+	<title>회원정보 확인</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body>
-	<div>
-		아이디 : <span id="email" th:text="${user.email}"></span><br>
-		비밀번호 : <span id="pwd">********</span><br>
-		이름 : <span id="name" th:text="${user.name}"></span><br>
-		나이 : <span id="age" th:text="${user.age}"></span><br>
-		연락처 : <span id="phoneNum" th:text="${user.phoneNum}"></span><br>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+	<div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+		<h2 class="text-2xl font-bold text-center text-blue-600 mb-6">회원정보</h2>
+
+		<div class="space-y-4 text-sm">
+			<div class="flex justify-between border-b pb-2">
+				<span class="font-medium text-gray-700">이메일</span>
+				<span class="text-gray-900" th:text="${user.email}"></span>
+			</div>
+			<div class="flex justify-between border-b pb-2">
+				<span class="font-medium text-gray-700">비밀번호</span>
+				<span class="text-gray-400">●●●●●●●●</span>
+			</div>
+			<div class="flex justify-between border-b pb-2">
+				<span class="font-medium text-gray-700">이름</span>
+				<span class="text-gray-900" th:text="${user.name}"></span>
+			</div>
+			<div class="flex justify-between border-b pb-2">
+				<span class="font-medium text-gray-700">나이</span>
+				<span class="text-gray-900" th:text="${user.age}"></span>
+			</div>
+			<div class="flex justify-between">
+				<span class="font-medium text-gray-700">연락처</span>
+				<span class="text-gray-900" th:text="${user.phoneNum}"></span>
+			</div>
+		</div>
+
+		<div class="mt-8 flex justify-between">
+			<a th:href="@{/mypage/reConfirmUserInfo(num=${user.num})}"
+				class="bg-yellow-400 text-white px-4 py-2 rounded-md hover:bg-yellow-500 transition text-sm font-semibold">
+				회원정보 수정
+			</a>
+			<a th:href="@{/main}"
+				class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition text-sm font-semibold">
+				메인으로
+			</a>
+		</div>
 	</div>
-	<a th:href="@{/mypage/reConfirmUserInfo(num=${user.num})}">회원정보 수정</a>
-	<form method="get" th:action="@{/main}">
-		<div><input type="submit" value="Main" /></div>
-	</form>
+
 </body>
 
 </html>

@@ -40,7 +40,17 @@
 
 	<!-- 상품 리스트 영역 -->
 	<main class="max-w-7xl mx-auto px-4 py-8">
-		<h2 class="text-2xl font-semibold mb-6">전체 상품</h2>
+		<div class="flex items-center justify-between mb-6">
+			<h2 class="text-2xl font-semibold mb-6">전체 상품</h2>
+
+			<form th:action="@{/main}" method="get" class="flex items-center space-x-2">
+				<input type="text" name="keyword" placeholder="상품명 검색"
+					class="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+					th:value="${param.keyword}" />
+				<button type="submit"
+					class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">검색</button>
+			</form>
+		</div>
 
 		<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 			<div th:each="list : ${productList}"

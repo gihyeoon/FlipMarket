@@ -17,7 +17,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	@NativeQuery(value = "SELECT num, product_name, price, category, stock, description, image_path FROM product WHERE user_num <> ?1 AND stock > 0")
 	List<Object[]> findByUserNumNot(Long userNum);
-	
+
+	@NativeQuery(value = "select num, product_name, price, category, stock, description, image_path FROM product where user_num <> ?2 and stock > 0 and product_name like ?1")
+	List<Object[]> findByKeywordAndUserNum(String keyword, Long userNum);
+
 	@NativeQuery(value = "update product set stock = ?2 where num = ?1")
 	@Modifying
 	int updateProductStock(Long productNum, int stock);

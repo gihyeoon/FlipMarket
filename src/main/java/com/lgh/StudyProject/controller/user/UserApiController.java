@@ -56,7 +56,7 @@ public class UserApiController {
 		}
 	}
 
-	@PostMapping("/api/validateUser")
+	@PostMapping("/validateUser")
 	public int validateUser(@RequestBody Map<String, String> data) {
 		Long userNum = userService.findNumByEmail(data.get("email"));
 		UserDto userDto = userService.findByNum(userNum);
