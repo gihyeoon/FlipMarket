@@ -41,7 +41,7 @@ public class CartService {
 		return results.stream()
 				.map(r -> new CartDto(Long.parseLong(r[0].toString()), r[1].toString(), r[2].toString(),
 						r[3].toString(), r[4].toString(), Integer.parseInt(r[5].toString()),
-						Integer.parseInt(r[6].toString())))
+						Integer.parseInt(r[6].toString()), Integer.parseInt(r[7].toString())))
 				.collect(Collectors.toList());
 	}
 

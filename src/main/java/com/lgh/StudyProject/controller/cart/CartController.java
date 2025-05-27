@@ -3,6 +3,8 @@ package com.lgh.StudyProject.controller.cart;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,21 +15,28 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lgh.StudyProject.dto.CartDto;
 import com.lgh.StudyProject.dto.ProductDto;
-import com.lgh.StudyProject.service.CartService;
-import com.lgh.StudyProject.service.ProductService;
+import com.lgh.StudyProject.dto.UserDto;
+import com.lgh.StudyProject.service.*;
 
 @Controller
 public class CartController {
 
+	private final PurchaseService purchaseService;
+
 	private final CartService cartService;
-	
+
+	private final UserService userService;
+
 	private final ProductService productService;
 
 	private final String baseUrl = "cart/";
 
-	public CartController(CartService cartService, ProductService productService) {
+	public CartController(CartService cartService, UserService userService, ProductService productService,
+			PurchaseService purchaseService) {
 		this.cartService = cartService;
+		this.userService = userService;
 		this.productService = productService;
+		this.purchaseService = purchaseService;
 	}
 
 	@GetMapping("/cart")
@@ -54,9 +63,9 @@ public class CartController {
 		Long productNum = cartService.findByNum(cartNum).get().getProduct().getNum();
 		int stock = productService.findByNum(productNum).getStock();
 		int quantity = cartService.findByNum(cartNum).get().getQuantity();
-		
+
 		productService.updateProductStock(productNum, stock + quantity);
-		
+
 		int result = cartService.deleteByNum(cartNum);
 
 		if (result > 0) {
@@ -69,7 +78,24 @@ public class CartController {
 	@ResponseBody
 	@PostMapping("/api/cart/purchase")
 	public Map<String, String> purchase(@RequestBody Map<String, String> data) {
-		return Map.of("result", "0");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		Long cartNum = Long.parseLong(data.get("cartNum"));
+		Long userNum = userService.findNumByEmail(authentication.getName());
+		Long productNum = cartService.findByNum(cartNum).get().getProduct().getNum();
+		int totalPrice = Integer.parseInt(data.get("totalPrice"));
+		int quantity = Integer.parseInt(data.get("quantity"));
+
+		UserDto userDto = userService.findByNum(userNum);
+		ProductDto productDto = productService.findByNum(productNum);
+
+		try {
+			purchaseService.addPurchase(userDto, productDto, totalPrice, quantity);
+			return Map.of("result", "0");
+		} catch (Exception e) {
+			return Map.of("result", "1");
+		}
+
 	}
 
 }

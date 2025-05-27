@@ -18,6 +18,7 @@
 			<div th:each="item, itemStat : ${cartItems}"
 				class="cart-items flex items-center border p-4 rounded-lg shadow-sm">
 				<span class="num" th:text="${item.num}" hidden></span>
+				<span class="stock" th:text="${item.stock}" hidden></span>
 
 				<img th:src="@{|/images/${item.imagePath}}" alt="상품 이미지" class="w-24 h-24 object-cover rounded-md mr-4">
 
@@ -36,6 +37,7 @@
 
 				<div class="text-right ml-4">
 					<span class="unit-price" th:text="${item.price}" hidden></span>
+					<p class="total-unit-price-unformatted" th:text="${item.price * item.quantity}" hidden></p>
 					<p class="total-unit-price text-lg font-bold text-blue-600"
 						th:text="${#numbers.formatInteger(item.price * item.quantity, 3, 'COMMA')} + '원'">
 					</p>
@@ -51,7 +53,7 @@
 					th:text="${#numbers.formatInteger(totalPrice, 3, 'COMMA')} + '원'"></span></p>
 
 			<div class="mt-4 flex justify-end space-x-2">
-				<a href="/" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">메인으로</a>
+				<a th:href="@{/main}" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">메인으로</a>
 				<button type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
 					onclick="purchase(event);">주문하기</button>
 			</div>
@@ -65,9 +67,15 @@
 	<script th:inline="javascript">
 		function plusQuantity(button) {
 			let item = $(button).closest(".cart-items");
+			const stock = item.find(".stock");
 			let quantity = item.find(".quantity");
 			let unitPrice = parseInt(item.find(".unit-price").text());
 			let count = parseInt(quantity.text());
+			
+			if (count == stock.text()) {
+				alert("수량이 초과되었습니다.");
+				return false;
+			}
 
 			count++;
 			quantity.text(count);
@@ -91,8 +99,9 @@
 		function updateTotalUnitPrice(item, count, unitPrice) {
 			const total = count * unitPrice;
 			const formattedTotal = total.toLocaleString();
+			item.find(".total-unit-price-unformatted").text(total);
 			item.find(".total-unit-price").text(formattedTotal + "원");
-
+			
 			refreshTotalPrice();
 		}
 
@@ -141,6 +150,44 @@
 
 		function purchase(event) {
 			event.preventDefault();
+			
+			if (confirm("해당 상품들을 구매하시겠습니까?")) {
+				$(".cart-items").each(function () {
+					const cartNum = $(this).find(".num").text();
+					const totalPrice = parseInt($(this).find(".total-unit-price-unformatted").text());
+					const quantity = parseInt($(this).find(".quantity").text());
+					
+					const data = {
+						cartNum: cartNum,
+						totalPrice: totalPrice,
+						quantity: quantity
+					};
+					
+					$.ajax({
+						type: "POST",
+						url: "/api/cart/purchase",
+						data: JSON.stringify(data),
+						contentType: "application/json",
+						
+						success: function (result) {
+							// 0: 정상 작동하였을 경우
+							if (result.result == "0") {
+								
+							} else {
+								alert("오류 발생!!");
+								return false;
+							}
+						},
+						error: function (request, status, error) {
+							alert("구매 오류\ncode: " + request.status + "\nerror: " + error);
+						}
+					});
+				})
+				alert("구매가 완료되었습니다.");
+				window.location.href = "/main";
+			} else {
+				return false;
+			}
 		}
 	</script>
 </th:block>
