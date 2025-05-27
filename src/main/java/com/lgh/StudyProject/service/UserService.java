@@ -67,5 +67,9 @@ public class UserService {
 	public int countUserByEmail(String email) {
 		return userRepository.countUserByEmail(email);
 	}
+	
+	public void deleteByNum(Long userNum) {
+		userRepository.deleteById(userNum);
+	}
 
 }

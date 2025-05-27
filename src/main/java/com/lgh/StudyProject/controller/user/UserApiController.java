@@ -186,7 +186,15 @@ public class UserApiController {
 		} else {
 			return Map.of("result", "1");
 		}
-
+	}
+	
+	@PostMapping("/mypage/editProfile/deleteAccount")
+	public Map<String, String> deleteAccount(@RequestBody Map<String, String> data) {
+		Long userNum = Long.parseLong(data.get("userNum"));
+		
+		userService.deleteByNum(userNum);
+		
+		return Map.of("result", "0");
 	}
 
 }

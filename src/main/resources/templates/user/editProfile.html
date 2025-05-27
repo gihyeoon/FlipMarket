@@ -85,11 +85,10 @@
 			</div>
 		</div>
 
-		<!-- 메인으로 이동 -->
-		<div class="text-center mt-6">
-			<a th:href="@{/main}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-				메인으로 이동
-			</a>
+		<!-- 버튼들 -->
+		<div class="flex justify-between items-center pt-6 border-t">
+			<button onclick="location.href='/'" class="text-gray-600 hover:underline">메인으로</button>
+			<button id="delete-account-btn" onclick="deleteAccount(event);" class="text-red-600 hover:underline font-medium">회원탈퇴</button>
 		</div>
 	</div>
 </body>
@@ -272,6 +271,29 @@
 					alert("비밀번호 번호 변경 오류\n code: " + request.status + "\n error: " + error);
 				}
 			});
+		}
+
+		function deleteAccount(event) {
+			event.preventDefault();
+
+			if (confirm("정말로 회원탈퇴 하시겠습니까? 탈퇴 후에는 복구가 불가능합니다.")) {
+				$.ajax({
+					type: "POST",
+					url: "/api/mypage/editProfile/deleteAccount",
+					data: JSON.stringify({userNum: $("#num").text()}),
+					contentType: "application/json",
+
+					success: function (result) {
+						alert("회원 탈퇴가 완료되었습니다.");
+						window.location.href = "/logout";
+					},
+					error: function (request, status, error) {
+						alert("계정 탈퇴 오류\n code: " + request.status + "\n error: " + error);
+					}
+				})
+			} else {
+				return false;
+			}
 		}
 	</script>
 </th:block>
