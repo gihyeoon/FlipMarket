@@ -56,7 +56,7 @@ public class SecurityConfig {
 		http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/", "/login", "/findPassword", "/resetPassword", "/register", "/main",
-								"/products/**", "/api/**", "/images/**", "/**.jpg", "/**.png")
+								"/products", "/api/**", "/images/**", "/**.jpg", "/**.png")
 						.permitAll().anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
 						.defaultSuccessUrl("/main", true).permitAll().failureHandler((request, response, exception) -> {
