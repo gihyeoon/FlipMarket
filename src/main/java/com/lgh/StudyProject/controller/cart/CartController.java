@@ -29,7 +29,7 @@ public class CartController {
 
 	private final ProductService productService;
 
-	private final String baseUrl = "cart/";
+	private static final String BASE_URL = "cart/";
 
 	public CartController(CartService cartService, UserService userService, ProductService productService,
 			PurchaseService purchaseService) {
@@ -40,7 +40,7 @@ public class CartController {
 	}
 
 	@GetMapping("/cart")
-	public String cartForm(@RequestParam("num") Long userNum, Model model) {
+	public String showCartPage(@RequestParam("num") Long userNum, Model model) {
 		List<CartDto> cartItems = cartService.findAllByUserNum(userNum);
 
 		int totalPrice = 0;
@@ -52,7 +52,7 @@ public class CartController {
 		model.addAttribute("cartItems", cartItems);
 		model.addAttribute("totalPrice", totalPrice);
 
-		return baseUrl + "cart";
+		return BASE_URL + "cart";
 	}
 
 	@ResponseBody

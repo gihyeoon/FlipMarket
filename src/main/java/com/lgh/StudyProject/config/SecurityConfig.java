@@ -46,11 +46,8 @@ public class SecurityConfig {
 
 	@Bean
 	AuthenticationProvider authenticationProvider() {
-		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-
-		provider.setUserDetailsService(customUserDetailsService);
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customUserDetailsService);
 		provider.setPasswordEncoder(passwordEncoder());
-
 		return provider;
 	}
 
@@ -79,7 +76,7 @@ public class SecurityConfig {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
 
 		corsConfiguration.setAllowedOrigins(List.of("http://localhost:8080"));
-		corsConfiguration.setAllowedMethods(List.of("GET", "POST"));
+		corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
 		corsConfiguration.setAllowCredentials(true);
 		corsConfiguration.setAllowedHeaders(List.of("*"));
 		corsConfiguration.setMaxAge(3600L);

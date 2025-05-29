@@ -16,10 +16,7 @@ import com.lgh.StudyProject.repository.CartRepository;
 import com.lgh.StudyProject.repository.ProductRepository;
 import com.lgh.StudyProject.repository.UserRepository;
 
-import jakarta.transaction.Transactional;
-
 @Service
-@Transactional
 public class CartService {
 
 	private final CartRepository cartRepository;
@@ -35,6 +32,12 @@ public class CartService {
 		this.productRepository = productRepository;
 	}
 
+	// 장바구니 조회 (조건1: 장바구니 번호)
+	public Optional<Cart> findByNum(Long num) {
+		return cartRepository.findById(num);
+	}
+
+	// 로그인한 사용자의 장바구니 조회
 	public List<CartDto> findAllByUserNum(Long userNum) {
 		List<Object[]> results = cartRepository.findByUserNum(userNum);
 
@@ -45,6 +48,7 @@ public class CartService {
 				.collect(Collectors.toList());
 	}
 
+	// 장바구니 신규 등록
 	public void addCart(UserDto userDto, ProductDto productDto, int quantity) {
 		User user = userRepository.findById(userDto.getNum())
 				.orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
@@ -55,16 +59,14 @@ public class CartService {
 		cartRepository.save(cart);
 	}
 
+	// 장바구니에 신규 등록 시 이미 등록되어있는 상품일 경우를 확인하기 위한 조회 (조건1: 로그인한 사용자, 조건2: 상품번호)
 	public int countCartByUserNumAndProductNum(Long userNum, Long productNum) {
 		return cartRepository.countCartByUserNumAndProductNum(userNum, productNum);
 	}
-	
+
+	// 장바구니 삭제
 	public int deleteByNum(Long num) {
 		return cartRepository.deleteByNum(num);
-	}
-	
-	public Optional<Cart> findByNum(Long num) {
-		return cartRepository.findById(num);
 	}
 
 }

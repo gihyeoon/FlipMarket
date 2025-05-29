@@ -24,5 +24,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	@NativeQuery(value = "update product set stock = ?2 where num = ?1")
 	@Modifying
 	int updateProductStock(Long productNum, int stock);
-
+	
+	@NativeQuery(value = "SELECT num, product_name, price, category, stock, description, image_path FROM product WHERE user_num = ?1 ORDER BY updated_at LIMIT 3")
+	List<Object[]> findByUserNum(Long userNum);
+	
 }

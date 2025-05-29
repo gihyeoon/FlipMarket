@@ -27,6 +27,7 @@ public class PurchaseService {
 		this.purchaseRepository = purchaseRepository;
 	}
 
+	// 결제 신규 등록
 	public void addPurchase(UserDto userDto, ProductDto productDto, int totalPrice, int quantity) {
 		User user = userRepository.findById(userDto.getNum())
 				.orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));

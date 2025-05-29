@@ -14,10 +14,7 @@ import com.lgh.StudyProject.repository.CartRepository;
 import com.lgh.StudyProject.repository.ProductRepository;
 import com.lgh.StudyProject.repository.UserRepository;
 
-import jakarta.transaction.Transactional;
-
 @Service
-@Transactional
 public class ProductService {
 
 	private final UserRepository userRepository;
@@ -30,10 +27,12 @@ public class ProductService {
 		this.productRepository = productRepository;
 	}
 
+	// 모든 상품 조회
 	public List<Product> findAll() {
 		return productRepository.findAll();
 	}
 
+	// 상품 상세 조회 (조건1: 상품번호)
 	public ProductDto findByNum(Long num) {
 		Product product = productRepository.findById(num)
 				.orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
@@ -47,6 +46,7 @@ public class ProductService {
 		return productRepository.countByProductNameAndCategory(productName, category, userNum);
 	}
 
+	// 메인화면 기본 조회 (조건1: 로그인한 사용자는 제외)
 	public List<ProductDto> findByUserNumNot(Long userNum) {
 		List<Object[]> results = productRepository.findByUserNumNot(userNum);
 
@@ -57,6 +57,7 @@ public class ProductService {
 				.collect(Collectors.toList());
 	}
 
+	// 메인화면 검색 조회 (조건1: 상품명, 조건2: 로그인한 사용자는 제외)
 	public List<ProductDto> findByKeywordAndUserNum(String keyword, Long userNum) {
 		List<Object[]> results = productRepository.findByKeywordAndUserNum(keyword, userNum);
 
@@ -67,6 +68,7 @@ public class ProductService {
 				.collect(Collectors.toList());
 	}
 
+	// 상품 신규 등록
 	public void addProduct(String path, String productName, String category, int price, int stock, String desc,
 			UserDto userDto) throws IOException {
 		User user = userRepository.findById(userDto.getNum())
@@ -78,6 +80,17 @@ public class ProductService {
 
 	public int updateProductStock(Long productNum, int quantity) {
 		return productRepository.updateProductStock(productNum, quantity);
+	}
+	
+	// 로그인한 사용자가 가장 최근에 등록했던 3개의 상품들을 조회 (조건1: 로그인한 사용자)
+	public List<ProductDto> findByUserNum(Long userNum) {
+		List<Object[]> results = productRepository.findByUserNum(userNum);
+
+		return results.stream()
+				.map(r -> new ProductDto(Long.parseLong(r[0].toString()), r[1].toString(),
+						Integer.parseInt(r[2].toString()), r[3].toString(), Integer.parseInt(r[4].toString()),
+						r[5].toString(), r[6].toString()))
+				.collect(Collectors.toList());
 	}
 
 }

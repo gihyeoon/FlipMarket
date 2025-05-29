@@ -13,22 +13,29 @@ public class ProductController {
 
 	private final ProductService productService;
 
-	private final String baseUrl = "product/";
+	private static final String BASE_URL = "product/";
 
 	public ProductController(ProductService productService) {
 		this.productService = productService;
 	}
 
 	@GetMapping("/addProduct")
-	public String addProductForm() {
-		return baseUrl + "addProduct";
+	public String showAddProductPage() {
+		return BASE_URL + "addProduct";
 	}
 
 	@GetMapping("/products")
-	public String getProductDetail(@RequestParam("num") Long productNum, Model model) {
+	public String showProductDetailPage(@RequestParam("num") Long productNum, Model model) {
 		ProductDto product = productService.findByNum(productNum);
 		model.addAttribute("product", product);
-		return baseUrl + "productDetail";
+		return BASE_URL + "productDetail";
+	}
+	
+	@GetMapping("/products/editProduct")
+	public String showEditProductPage(@RequestParam("num") Long productNum, Model model) {
+		ProductDto productDto = productService.findByNum(productNum);
+		model.addAttribute("product", productDto);
+		return BASE_URL + "editProduct";
 	}
 
 }

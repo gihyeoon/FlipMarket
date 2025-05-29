@@ -41,7 +41,7 @@ public class UserApiController {
 
 	@GetMapping("/overlap/emailRegister")
 	public Map<String, String> emailRegister(@RequestParam("email") String userEmail) {
-		return Map.of("result", userService.checkDuplicateEmail(userEmail) ? "1" : "0");
+		return Map.of("result", userService.countUserByEmail(userEmail) > 0 ? "1" : "0");
 	}
 
 	@PostMapping("/register")
