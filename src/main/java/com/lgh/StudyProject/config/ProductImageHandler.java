@@ -22,7 +22,7 @@ public class ProductImageHandler {
 
 		// 나중에 실제 서버 운용해서 이미지 파일을 저장하게 될 때는 그 파일을 저장하는 로직을 추가해야함.
 		System.out.println(filePath);
-
+		
 		image.transferTo(new File(filePath));
 
 		return newFileName;
