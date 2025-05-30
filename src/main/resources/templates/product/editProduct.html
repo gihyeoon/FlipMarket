@@ -16,7 +16,7 @@
 
 		<form method="post" enctype="multipart/form-data" class="space-y-6">
 			<!-- 상품 번호 (숨김 처리) -->
-			<input type="hidden" th:field="*{product.num}" />
+			<input type="hidden" id="num" th:field="*{product.num}" />
 
 			<!-- 상품명 -->
 			<div>
@@ -37,9 +37,10 @@
 			<!-- 카테고리 -->
 			<div>
 				<label for="category" class="block text-sm font-semibold text-gray-700 mb-1">카테고리</label>
-				<select id="category" th:field="*{product.category}"
+				<select id="category" th:field="*{product.category}" onchange="toggleCustomCategory();"
 					class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
 					<option value="전자기기">전자기기</option>
+					<option value="식품">식품</option>
 					<option value="의류">의류</option>
 					<option value="도서">도서</option>
 					<option value="기타">기타</option>
@@ -79,7 +80,7 @@
 			<!-- 이미지 수정 -->
 			<div>
 				<label for="image" class="block text-sm font-semibold text-gray-700 mb-1">이미지 변경 (선택)</label>
-				<input type="file" id="image" name="image" accept="image/*" class="				block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
+				<input type="file" id="image" name="image" accept="image/*" class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
 				                file:rounded-md file:border-0 file:text-white file:bg-blue-600
 				                hover:file:bg-blue-700 transition" />
 			</div>
@@ -88,7 +89,8 @@
 			<div class="flex justify-between mt-8">
 				<a th:href="@{/main}"
 					class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition">메인으로</a>
-				<button type="button" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+				<button type="button" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+					onclick="editProduct(event);">
 					상품 수정
 				</button>
 			</div>
@@ -101,20 +103,98 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		$(document).ready(function () {
-			function toggleCustomCategory() {
-				if ($('#category').val() === '기타') {
-					$('#customCategoryWrapper').removeClass('hidden');
-				} else {
-					$('#customCategoryWrapper').addClass('hidden');
-				}
+		function toggleCustomCategory() {
+			if ($('#category').val() === '기타') {
+				$('#customCategoryWrapper').removeClass('hidden');
+			} else {
+				$('#customCategoryWrapper').addClass('hidden');
+			}
+		}
+
+		function editProduct(event) {
+			event.preventDefault();
+
+			const formData = new FormData();
+			let realCategory = "";
+
+			const productNum = $("#num").val();
+			const productName = $("#productName").val();
+			const category = $("#category option:selected").val();
+			const customeCategory = $("#customCategory").val();
+			const stock = $("#stock").val();
+			const price = $("#price").val();
+			const desc = $("#description").val();
+
+			if (productName == "") {
+				alert("상품명을 적어주세요.");
+				return false;
 			}
 
-			// 변경 이벤트 감지
-			$('#category').on('change', toggleCustomCategory);
+			if (price == "") {
+				alert("가격을 입력해주세요.");
+				return false;
+			}
 
-			// 페이지 로드시 초기 체크
-			toggleCustomCategory();
-		});
+			if (stock == "") {
+				alert("수량을 입력해주세요.");
+				return false;
+			}
+
+			if (category == "") {
+				alert("카테고리를 선택해주세요.");
+				return false;
+			}
+
+			if (category == "기타" && customeCategory == "") {
+				alert("카테고리를 직접 입력해주세요.");
+				return false;
+			}
+
+			if (desc == "") {
+				alert("설명을 적어주세요.");
+				return false;
+			}
+
+			// 만약 이미지를 수정하였을 경우에만 formData에 값을 넘겨준다.
+			if (document.getElementById("image").files.length > 0) {
+				formData.append("image", $("#image")[0].files[0]);
+			}
+			// 그 외의 경우는 null 값을 넘겨준다. 
+			else {
+				formData.append("image", null);
+			}
+
+			// 카테고리를 "기타"로 선택했을 경우 직접 입력한 카테고리를 사용
+			if (category == "기타") {
+				realCategory = customeCategory;
+			}
+			// 그 외의 경우는 선택박스에 있는 카테고리를 사용 
+			else {
+				realCategory = category;
+			}
+
+			formData.append("num", productNum);
+			formData.append("productName", productName);
+			formData.append("category", realCategory);
+			formData.append("stock", stock);
+			formData.append("price", price);
+			formData.append("desc", desc);
+
+			$.ajax({
+				type: "POST",
+				url: "/api/editProduct",
+				data: formData,
+				contentType: false,
+				processData: false,
+
+				success: function (result) {
+					alert("상품 수정이 완료되었습니다.");
+					location.reload();
+				},
+				error: function (request, status, error) {
+					alert("상품 등록 오류\n code: " + request.status + "\n error: " + error);
+				}
+			});
+		}
 	</script>
 </th:block>

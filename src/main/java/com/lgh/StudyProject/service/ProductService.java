@@ -14,6 +14,8 @@ import com.lgh.StudyProject.repository.CartRepository;
 import com.lgh.StudyProject.repository.ProductRepository;
 import com.lgh.StudyProject.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ProductService {
 
@@ -78,10 +80,11 @@ public class ProductService {
 		productRepository.save(product);
 	}
 
+	// 상품의 재고 수량을 업데이트 => 사용자가 해당 상품을 구매할 경우 해당 상품의 재고수량을 마이너스한다.
 	public int updateProductStock(Long productNum, int quantity) {
 		return productRepository.updateProductStock(productNum, quantity);
 	}
-	
+
 	// 로그인한 사용자가 가장 최근에 등록했던 3개의 상품들을 조회 (조건1: 로그인한 사용자)
 	public List<ProductDto> findByUserNum(Long userNum) {
 		List<Object[]> results = productRepository.findByUserNum(userNum);
@@ -91,6 +94,13 @@ public class ProductService {
 						Integer.parseInt(r[2].toString()), r[3].toString(), Integer.parseInt(r[4].toString()),
 						r[5].toString(), r[6].toString()))
 				.collect(Collectors.toList());
+	}
+	
+	// 상품 수정 화면에서 해당 상품을 수정
+	@Transactional
+	public int updateProduct(String imagePath, String productName, String category, int stock, int price,
+			String description, Long productNum) {
+		return productRepository.updateProduct(imagePath, productName, category, stock, price, description, productNum);
 	}
 
 }

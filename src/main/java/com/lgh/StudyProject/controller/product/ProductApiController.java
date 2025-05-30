@@ -84,4 +84,21 @@ public class ProductApiController {
 		}
 	}
 
+	@PostMapping("/editProduct")
+	public Map<String, String> editProduct(@RequestParam(value = "image", required = false) MultipartFile image,
+			@RequestParam("num") Long productNum, @RequestParam("productName") String productName,
+			@RequestParam("category") String category, @RequestParam("stock") int stock,
+			@RequestParam("price") int price, @RequestParam("desc") String desc) throws IOException {
+		// 상품 이미지를 수정하지 않았을 경우
+		if (image == null) {
+			String originImagePath = productService.findByNum(productNum).getImagePath();
+			productService.updateProduct(originImagePath, productName, category, stock, price, desc, productNum);
+		} else {
+			productService.updateProduct(productImageHandler.save(image), productName, category, stock, price, desc,
+					productNum);
+		}
+
+		return Map.of("result", "0");
+	}
+
 }
