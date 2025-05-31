@@ -39,7 +39,7 @@
 			<!-- 카테고리 -->
 			<div>
 				<label class="block text-sm font-medium mb-1">카테고리</label>
-				<select id="category" name="category" class="w-full border rounded-md px-3 py-2">
+				<select id="category" name="category" class="w-full border rounded-md px-3 py-2" onchange="toggleCustomCategory();">
 					<option value="" selected>카테고리 선택</option>
 					<option value="식품">식품</option>
 					<option value="전자기기">전자기기</option>
@@ -47,6 +47,13 @@
 					<option value="도서">도서</option>
 					<option value="기타">기타</option>
 				</select>
+			</div>
+
+			<!-- 기타 카테고리 입력란 (초기에는 숨김 처리) -->
+			<div id="customCategoryWrapper" class="mt-2 hidden">
+				<label for="customCategory" class="block text-sm font-semibold text-gray-700 mb-1">기타 카테고리 입력</label>
+				<input type="text" id="customCategory" name="customCategory"
+					class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" />
 			</div>
 
 			<!-- 설명 -->
@@ -80,6 +87,14 @@
 </html>
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
+		function toggleCustomCategory() {
+			if ($('#category').val() === '기타') {
+				$('#customCategoryWrapper').removeClass('hidden');
+			} else {
+				$('#customCategoryWrapper').addClass('hidden');
+			}
+		}
+
 		function previewImage(event) {
 			const input = event.target;
 			const preview = $("#imagePreview");
@@ -99,9 +114,11 @@
 			event.preventDefault();
 
 			const formData = new FormData(); // 파일을 업로드할 것이면 FormData를 써야한다.
+			let realCategory = "";
 
 			const productName = $("#product_name").val();
 			const category = $("#category option:selected").val();
+			const customeCategory = $("#customCategory").val();
 			const stock = $("#stock").val();
 			const price = $("#price").val();
 			const desc = $("#description").val();
@@ -126,6 +143,11 @@
 				return false;
 			}
 
+			if (category == "기타" && customeCategory == "") {
+				alert("카테고리를 직접 입력해주세요.");
+				return false;
+			}
+
 			if (desc == "") {
 				alert("설명을 적어주세요.");
 				return false;
@@ -136,9 +158,18 @@
 				return false;
 			}
 
+			// 카테고리를 "기타"로 선택했을 경우 직접 입력한 카테고리를 사용
+			if (category == "기타") {
+				realCategory = customeCategory;
+			}
+			// 그 외의 경우는 선택박스에 있는 카테고리를 사용 
+			else {
+				realCategory = category;
+			}
+
 			formData.append("image", $("#image")[0].files[0]);
 			formData.append("productName", productName);
-			formData.append("category", category);
+			formData.append("category", realCategory);
 			formData.append("stock", stock);
 			formData.append("price", price);
 			formData.append("desc", desc);
