@@ -95,12 +95,18 @@ public class ProductService {
 						r[5].toString(), r[6].toString()))
 				.collect(Collectors.toList());
 	}
-	
+
 	// 상품 수정 화면에서 해당 상품을 수정
 	@Transactional
 	public int updateProduct(String imagePath, String productName, String category, int stock, int price,
 			String description, Long productNum) {
 		return productRepository.updateProduct(imagePath, productName, category, stock, price, description, productNum);
+	}
+
+	// 상품 삭제
+	@Transactional
+	public void deleteProduct(Long productNum) {
+		productRepository.deleteById(productNum);
 	}
 
 }

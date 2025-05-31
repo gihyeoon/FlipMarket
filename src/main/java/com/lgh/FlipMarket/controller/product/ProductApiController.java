@@ -100,5 +100,12 @@ public class ProductApiController {
 
 		return Map.of("result", "0");
 	}
+	
+	@PostMapping("/deleteProduct")
+	public Map<String, String> deleteProduct(@RequestBody Map<String, String> data) {
+		Long productNum = Long.parseLong(data.get("num"));
+		productService.deleteProduct(productNum);
+		return Map.of("result", "0");
+	}
 
 }
