@@ -8,6 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 
 <body class="bg-gray-50 flex items-center justify-center min-h-screen px-4">
@@ -45,6 +46,24 @@
 					placeholder="이름 입력" />
 			</div>
 
+			<!-- 주소 입력 폼 -->
+			<div class="mb-4">
+				<label class="block text-sm font-medium text-gray-700">주소</label>
+				<div class="flex space-x-2">
+					<input type="text" id="postcode" class="w-1/3 px-4 py-2 border rounded" placeholder="우편번호" readonly>
+					<button type="button" onclick="execDaumPostcode()"
+						class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">주소찾기</button>
+				</div>
+				<input type="text" id="address" class="w-full mt-2 px-4 py-2 border rounded" placeholder="기본 주소"
+					readonly>
+				<input type="text" id="detailAddress" class="w-full mt-2 px-4 py-2 border rounded" placeholder="상세 주소">
+
+				<span id="addressType" hidden></span>
+				<span id="userSelectedType" hidden></span>
+				<span id="jibunAddress" hidden></span>
+				<span id="buildingName" hidden></span>
+			</div>
+
 			<!-- 가입 버튼 -->
 			<button type="submit" onclick="register(event);"
 				class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition">가입하기</button>
@@ -59,6 +78,21 @@
 </html>
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
+		// DAUM API
+		function execDaumPostcode() {
+			new daum.Postcode({
+				oncomplete: function (data) {
+					$("#postcode").val(data.zonecode);
+					$("#address").val(data.address);
+					$("#addressType").text(data.addressType);
+					$("#userSelectedType").text(data.userSelectedType);
+					$("#jibunAddress").text(data.jibunAddress);
+					$("#buildingName").text(data.buildingNAme);
+					$("#detailAddress").focus();
+				}
+			}).open();
+		}
+
 		// 이메일 중복체크 로직
 		function checkEmailDuplicate() {
 			event.preventDefault();
@@ -112,11 +146,29 @@
 			const email = $("#email").val();
 			const pwd = $("#pwd").val();
 			const name = $("#name").val();
+			// 우편번호
+			const zonecode = $("#postcode").val();
+			// 도로명 주소
+			const address = $("#address").val();
+			// 세부 주소
+			const detailAddress = $("#detailAddress").val();
+			// 주소 타입 (R: 도로명, J: 지번)
+			const userSelectedType = $("#userSelectedType").text();
+			// 지번 주소
+			const jibunAddress = $("#jibunAddress").text();
+			// 건물명
+			const buildingName = $("#buildingName").text();
 
 			const data = {
 				email: email,
 				pwd: pwd,
 				name: name,
+				zonecode: zonecode,
+				address: address,
+				detailAddress: detailAddress,
+				userSelectedType: userSelectedType,
+				jibunAddress: jibunAddress,
+				buildingName: buildingName,
 			};
 
 			if (!$("#emailOverlay").is(":disabled")) {
@@ -133,6 +185,17 @@
 			if (name == "") {
 				alert("이름을 입력해주세요.");
 				$("#name").focus();
+				return false;
+			}
+			
+			if (zonecode == "") {
+				alert("주소를 입력해주세요.");
+				return false;
+			}
+			
+			if (detailAddress == "") {
+				alert("상세 주소를 입력해주세요.");
+				$("#detailAddress").focus();
 				return false;
 			}
 

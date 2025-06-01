@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lgh.FlipMarket.dto.UserDto;
 import com.lgh.FlipMarket.entity.User;
 import com.lgh.FlipMarket.repository.UserRepository;
+import com.lgh.FlipMarket.service.AddressService;
 import com.lgh.FlipMarket.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,12 +34,15 @@ public class UserApiController {
 
 	private final UserService userService;
 
+	private final AddressService addressService;
+
 	private final BCryptPasswordEncoder passwordEncoder;
 
-	public UserApiController(UserRepository userRepository, UserService userService,
+	public UserApiController(UserRepository userRepository, UserService userService, AddressService addressService,
 			BCryptPasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.userService = userService;
+		this.addressService = addressService;
 		this.passwordEncoder = passwordEncoder;
 	}
 
@@ -48,11 +52,24 @@ public class UserApiController {
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<String> register(@RequestBody UserDto userDto) {
-		String encodedPwd = passwordEncoder.encode(userDto.getPwd());
-		userDto.setPwd(encodedPwd);
+	public ResponseEntity<String> register(@RequestBody Map<String, String> data) {
+		UserDto userDto = UserDto.builder().name(data.get("name")).email(data.get("email"))
+				.pwd(passwordEncoder.encode(data.get("pwd"))).build();
 		try {
+			// 사용자 등록
 			userService.register(userDto);
+
+			// 사용자 주소지 등록
+			String zonecode = data.get("zonecode");
+			String address = data.get("address");
+			String detailAddress = data.get("detailAddress");
+			String userSelectedType = data.get("userSelectedType");
+			String jibunAddress = data.get("jibunAddress");
+			String buildingName = data.get("buildingName");
+
+			addressService.addAddress(zonecode, address, jibunAddress, detailAddress, buildingName, userSelectedType,
+					true, userDto);
+
 			return ResponseEntity.ok("success");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Register Fail: " + e.getMessage());
