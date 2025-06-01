@@ -20,26 +20,20 @@ public class UserService {
 	// 마이페이지에서 로그인한 사용자 조회 시 사용
 	public UserDto findByNum(Long num) {
 		User user = userRepository.findById(num).orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
-		
-		return UserDto.builder()
-				.num(user.getNum())
-				.email(user.getEmail())
-				.name(user.getName())
-				.pwd(user.getPwd())
-				.age(user.getAge())
-				.phoneNum(user.getPhoneNum())
-				.build();
+
+		return UserDto.builder().num(user.getNum()).email(user.getEmail()).name(user.getName()).pwd(user.getPwd())
+				.provider(user.getProvider()).build();
 	}
-	
+
 	// 아이디(이메일)을 통해 사용자 번호 조회
 	public Long findNumByEmail(String email) {
 		return userRepository.findByEmail(email).get().getNum();
 	}
-	
+
 	// 회원가입
 	public void register(UserDto userDto) {
-		User user = new User(userDto.getEmail(), userDto.getPwd(), userDto.getName(), userDto.getAge(),
-				userDto.getPhoneNum(), "USER");
+		User user = new User(userDto.getEmail(), userDto.getPwd(), userDto.getName(), userDto.getProvider(),
+				userDto.getProviderId(), "USER");
 		userRepository.save(user);
 	}
 
@@ -73,7 +67,7 @@ public class UserService {
 	public int countUserByEmail(String email) {
 		return userRepository.countUserByEmail(email);
 	}
-	
+
 	// 회원탈퇴
 	@Transactional
 	public void deleteByNum(Long userNum) {

@@ -34,10 +34,9 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String name;
 	
-	@Column(nullable = false)
-	private int age;
+	private String provider;
 	
-	private String phoneNum;
+	private String providerId;
 	
 	private String role;
 	
@@ -51,20 +50,20 @@ public class User implements UserDetails {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public User(String email, String pwd, String name, int age, String phoneNum) {
+	public User(String email, String pwd, String name, String provider, String providerId) {
 		this.email = email;
 		this.pwd = pwd;
 		this.name = name;
-		this.age = age;
-		this.phoneNum = phoneNum;
+		this.provider = provider;
+		this.providerId = providerId;
 	}
 	
-	public User(String email, String pwd, String name, int age, String phoneNum, String role) {
+	public User(String email, String pwd, String name, String provider, String providerId, String role) {
 		this.email = email;
 		this.pwd = pwd;
 		this.name = name;
-		this.age = age;
-		this.phoneNum = phoneNum;
+		this.provider = provider;
+		this.providerId = providerId;
 		this.role = role;
 	}
 	
@@ -80,16 +79,16 @@ public class User implements UserDetails {
 		return pwd;
 	}
 	
-	public String getPhoneNum() {
-		return phoneNum;
-	}
-	
-	public int getAge() {
-		return age;
-	}
-	
 	public String getName() {
 		return name;
+	}
+	
+	public String getProvider() {
+		return provider;
+	}
+	
+	public String getProviderId() {
+		return providerId;
 	}
 
 	public String getRole() {
@@ -133,10 +132,6 @@ public class User implements UserDetails {
 	
     public void setEmail(String email) {
     	this.email = email;
-    }
-    
-    public void setPhoneNum(String phoneNum) {
-    	this.phoneNum = phoneNum;
     }
     
     public void setPwd(String pwd) {
