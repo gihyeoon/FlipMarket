@@ -16,9 +16,7 @@
 		<h2 class="text-2xl font-bold text-center text-blue-600 mb-6">회원정보 수정</h2>
 
 		<span id="num" th:text="${user.num}" hidden></span>
-		<span id="originAge" th:text="${user.age}" hidden></span>
 		<span id="originEmail" th:text="${user.email}" hidden></span>
-		<span id="originPhoneNum" th:text="${user.phoneNum}" hidden></span>
 
 		<!-- 아이디 -->
 		<div class="mb-6">
@@ -42,24 +40,6 @@
 			<label class="block text-sm font-medium text-gray-700 mb-1">이름</label>
 			<input type="text" th:value="${user.name}" readonly
 				class="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-500">
-		</div>
-
-		<!-- 휴대폰 번호 -->
-		<div class="mb-6">
-			<label class="block text-sm font-medium text-gray-700 mb-1">휴대폰 번호</label>
-			<div class="flex gap-2">
-				<input type="tel" id="newPhoneNum" th:value="${user.phoneNum}" disabled
-					class="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-500" maxlength="13"
-					oninput="formatPhoneNumber(this);">
-				<button id="edit-phone-btn"
-					class="text-sm px-3 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500">
-					휴대폰 변경
-				</button>
-			</div>
-			<button id="save-phone-btn" onclick="updatePhoneNum(event);"
-				class="mt-2 hidden w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
-				휴대폰 저장
-			</button>
 		</div>
 
 		<!-- 비밀번호 변경 -->
@@ -104,36 +84,10 @@
 			$('#save-username-btn').removeClass('hidden');
 		});
 
-		// 휴대폰 수정 가능하게
-		$('#edit-phone-btn').click(function () {
-			$('#newPhoneNum').prop('disabled', false).removeClass('bg-gray-100 text-gray-500').focus();
-			$('#save-phone-btn').removeClass('hidden');
-		});
-
 		// 비밀번호 섹션 토글
 		$('#toggle-password-section').click(function () {
 			$('#password-section').toggleClass('hidden');
 		});
-
-		// 휴대폰 번호 입력 시 하이픈 자동 입력 함수
-		function formatPhoneNumber(input) {
-			let numbers = input.value.replace(/\D/g, ''); // 숫자만 남기기
-
-			if (numbers.length > 11) {
-				numbers = numbers.slice(0, 11); // 11자리로 제한
-			}
-
-			let formatted = '';
-			if (numbers.length <= 3) {
-				formatted = numbers;
-			} else if (numbers.length <= 7) {
-				formatted = numbers.slice(0, 3) + '-' + numbers.slice(3);
-			} else {
-				formatted = numbers.slice(0, 3) + '-' + numbers.slice(3, 7) + "-" + numbers.slice(7);
-			}
-
-			input.value = formatted;
-		}
 
 		function updateEmail(event) {
 			event.preventDefault();
@@ -177,46 +131,6 @@
 				},
 				error: function (request, status, error) {
 					alert("이메일 변경 오류\n code: " + request.status + "\n error: " + error);
-				}
-			});
-		}
-
-		function updatePhoneNum(event) {
-			event.preventDefault();
-
-			const num = $("#num").text();
-			const originPhoneNum = $("#originPhoneNum").text();
-			const newPhoneNum = $("#newPhoneNum").val();
-
-			const data = {
-				num: num,
-				phoneNum: newPhoneNum,
-			}
-
-			if (newPhoneNum == "") {
-				alert("변경할 새로운 휴대폰 번호를 입력해주세요.");
-				$("#newPhoneNum").focus();
-				return false;
-			}
-
-			if (originPhoneNum == newPhoneNum) {
-				alert("기존 휴대폰 번호와 일치합니다. 다시 입력해주세요.");
-				$("#newPhoneNum").focus();
-				return false;
-			}
-
-			$.ajax({
-				type: "POST",
-				url: "/api/mypage/editProfile/updatePhoneNum",
-				data: JSON.stringify(data),
-				contentType: "application/json",
-
-				success: function (result) {
-					alert("휴대폰 번호 변경 완료되었습니다.");
-					location.reload();
-				},
-				error: function (request, status, error) {
-					alert("휴대폰 번호 변경 오류\n code: " + request.status + "\n error: " + error);
 				}
 			});
 		}
