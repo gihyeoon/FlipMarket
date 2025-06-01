@@ -17,6 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.lgh.FlipMarket.service.CustomOAuth2UserService;
 import com.lgh.FlipMarket.service.CustomUserDetailsService;
 
 @Configuration
@@ -25,8 +26,12 @@ public class SecurityConfig {
 
 	private final CustomUserDetailsService customUserDetailsService;
 
-	public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
+	private final CustomOAuth2UserService oAuth2UserService;
+
+	public SecurityConfig(CustomUserDetailsService customUserDetailsService,
+			CustomOAuth2UserService oAuth2UserService) {
 		this.customUserDetailsService = customUserDetailsService;
+		this.oAuth2UserService = oAuth2UserService;
 	}
 
 	@Bean
@@ -63,6 +68,11 @@ public class SecurityConfig {
 							System.out.println("로그인 실패 : " + exception.getMessage());
 							response.sendRedirect("/login?error");
 						}))
+				.oauth2Login(oauth2 -> {
+					oauth2.loginPage("/login");
+					oauth2.userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService));
+					oauth2.successHandler(new CustomeOAuth2SuccessHandler());
+				})
 				.logout(logout -> {
 					logout.logoutSuccessUrl("/main");
 					logout.deleteCookies("JSESSIONID", "remember-me"); // 로그아웃 시 쿠기 삭제
