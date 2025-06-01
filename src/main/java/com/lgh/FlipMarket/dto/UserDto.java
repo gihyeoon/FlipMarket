@@ -38,10 +38,6 @@ public class UserDto {
 		return email;
 	}
 
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
-	}
-
 	public String getPwd() {
 		return pwd;
 	}
