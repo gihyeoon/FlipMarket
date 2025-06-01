@@ -12,61 +12,52 @@
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 	<div class="max-w-4xl mx-auto p-6 bg-white shadow rounded-lg mt-10 space-y-8">
 
-	  <!-- 회원정보 확인 섹션 -->
-	  <section>
-	    <h2 class="text-2xl font-bold text-gray-800 mb-6">회원정보 확인</h2>
+		<!-- 회원정보 확인 섹션 -->
+		<section>
+			<h2 class="text-2xl font-bold text-gray-800 mb-6">회원정보 확인</h2>
 
-	    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-	      <div>
-	        <label class="block font-medium text-gray-700">아이디</label>
-	        <p class="mt-1 text-gray-900" th:text="${user.email}"></p>
-	      </div>
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+				<div>
+					<label class="block font-medium text-gray-700">아이디</label>
+					<p class="mt-1 text-gray-900" th:text="${user.email}"></p>
+				</div>
 
-	      <div>
-	        <label class="block font-medium text-gray-700">이름</label>
-	        <p class="mt-1 text-gray-900" th:text="${user.name}"></p>
-	      </div>
+				<div>
+					<label class="block font-medium text-gray-700">이름</label>
+					<p class="mt-1 text-gray-900" th:text="${user.name}"></p>
+				</div>
+			</div>
 
-	      <div>
-	        <label class="block font-medium text-gray-700">나이</label>
-	        <p class="mt-1 text-gray-900" th:text="${user.age}"></p>
-	      </div>
+			<div class="mt-6 flex gap-4">
+				<a th:href="@{/mypage/reConfirmUserInfo(num=${user.num})}"
+					class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">회원정보 수정</a>
+				<a th:href="@{/main}"
+					class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition">메인으로</a>
+			</div>
+		</section>
 
-	      <div>
-	        <label class="block font-medium text-gray-700">연락처</label>
-	        <p class="mt-1 text-gray-900" th:text="${user.phoneNum}"></p>
-	      </div>
-	    </div>
+		<!-- 최근 등록 상품 위젯 -->
+		<section>
+			<h3 class="text-xl font-semibold text-gray-800 mb-4">최근 등록한 상품</h3>
 
-	    <div class="mt-6 flex gap-4">
-	      <a th:href="@{/mypage/reConfirmUserInfo(num=${user.num})}" 
-	         class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">회원정보 수정</a>
-	      <a th:href="@{/main}" 
-	         class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition">메인으로</a>
-	    </div>
-	  </section>
+			<div class="grid grid-cols-1 sm:grid-cols-3 gap-4"
+				th:if="${recentProducts != null and #lists.size(recentProducts) > 0}">
+				<div th:each="product : ${recentProducts}"
+					class="border rounded shadow p-3 bg-gray-50 hover:shadow-md transition cursor-pointer">
+					<a th:href="@{/products/editProduct(num=${product.num})}">
+						<img th:src="@{|/images/${product.imagePath}|}" alt="상품 이미지"
+							class="w-full h-40 object-contain mb-2 rounded" />
+						<h4 class="font-medium text-gray-900" th:text="${product.productName}">상품명</h4>
+						<p class="text-blue-600 font-semibold mt-1"
+							th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + '원'">가격</p>
+					</a>
+				</div>
+			</div>
 
-	  <!-- 최근 등록 상품 위젯 -->
-	    <section>
-	      <h3 class="text-xl font-semibold text-gray-800 mb-4">최근 등록한 상품</h3>
-
-	      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" th:if="${recentProducts != null and #lists.size(recentProducts) > 0}">
-	        <div th:each="product : ${recentProducts}"
-	             class="border rounded shadow p-3 bg-gray-50 hover:shadow-md transition cursor-pointer">
-	          <a th:href="@{/products/editProduct(num=${product.num})}">
-	            <img th:src="@{|/images/${product.imagePath}|}" alt="상품 이미지" 
-	                 class="w-full h-40 object-contain mb-2 rounded" />
-	            <h4 class="font-medium text-gray-900" th:text="${product.productName}">상품명</h4>
-	            <p class="text-blue-600 font-semibold mt-1" 
-	               th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + '원'">가격</p>
-	          </a>
-	        </div>
-	      </div>
-
-	      <p class="text-gray-500" th:if="${recentProducts == null or #lists.isEmpty(recentProducts)}">
-	        최근 등록한 상품이 없습니다.
-	      </p>
-	    </section>
+			<p class="text-gray-500" th:if="${recentProducts == null or #lists.isEmpty(recentProducts)}">
+				최근 등록한 상품이 없습니다.
+			</p>
+		</section>
 
 	</div>
 
