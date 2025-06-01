@@ -43,6 +43,27 @@
 				class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition">로그인</button>
 		</form>
 
+		<!-- 구글 로그인 버튼 -->
+		<div class="mt-6 flex items-center justify-center space-x-2">
+			<span class="text-gray-400">또는</span>
+		</div>
+
+		<a href="/oauth2/authorization/google"
+			class="mt-4 w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md py-3 hover:shadow-md transition bg-white">
+			<!-- 구글 로고 SVG -->
+			<svg class="w-6 h-6" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
+				<path fill="#4285F4"
+					d="M533.5 278.4c0-18.4-1.6-36-4.7-53.2H272v100.8h146.9c-6.4 34.5-26 63.9-55.6 83.5v69.3h89.8c52.7-48.5 83.4-120 83.4-200.4z" />
+				<path fill="#34A853"
+					d="M272 544.3c75.6 0 139.1-25 185.5-67.9l-89.8-69.3c-25 17-56.9 27-95.7 27-73.5 0-135.8-49.6-158.1-116.5H22.7v72.9c46.1 90.7 140.7 153.8 249.3 153.8z" />
+				<path fill="#FBBC05"
+					d="M113.9 321.6c-5.3-15.5-8.3-32-8.3-49s3-33.5 8.3-49V150.8H22.7c-18.5 36.7-29.1 77.8-29.1 121s10.6 84.3 29.1 121l91.2-72.2z" />
+				<path fill="#EA4335"
+					d="M272 107.7c41 0 77.9 14 106.9 41.5l80.1-80.1C408.8 24.6 345.3 0 272 0 163.5 0 69 63.1 22.7 153.8l91.2 72.9c22.2-66.9 84.5-116.5 158.1-116.5z" />
+			</svg>
+			<span class="text-gray-700 font-semibold">구글 계정으로 로그인</span>
+		</a>
+
 		<div class="mt-6 text-center text-sm text-gray-600">
 			아직 회원이 아니신가요? <a th:href="@{/register}" class="text-blue-600 hover:underline">회원가입</a>
 		</div>
