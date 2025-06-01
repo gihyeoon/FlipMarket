@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,14 +34,24 @@ public class MainController {
 	@GetMapping("/main")
 	public String mainForm(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String email = authentication.getName();
+		String email = "";
 		Long userNum = 0L;
 
-		if (!email.equals("anonymousUser")) {
+		if (authentication.getPrincipal() instanceof OAuth2User) {
+			OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+			email = (String) oauth2User.getAttributes().get("email");
 			userNum = userService.findNumByEmail(email);
 			model.addAttribute("num", userNum);
+			System.out.println("소셜 로그인 이메일 : " + email);
 		} else {
-			model.addAttribute("num", "");
+			email = authentication.getName();
+
+			if (!email.equals("anonymousUser")) {
+				userNum = userService.findNumByEmail(email);
+				model.addAttribute("num", userNum);
+			} else {
+				model.addAttribute("num", "");
+			}
 		}
 
 		List<ProductDto> productList;
