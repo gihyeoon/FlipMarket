@@ -8,6 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
@@ -16,59 +17,162 @@
 		<h2 class="text-2xl font-bold text-center text-blue-600 mb-6">회원정보 수정</h2>
 
 		<span id="num" th:text="${user.num}" hidden></span>
-		<span id="originEmail" th:text="${user.email}" hidden></span>
 
-		<!-- 아이디 -->
-		<div class="mb-6">
-			<label class="block text-sm font-medium text-gray-700 mb-1">아이디</label>
-			<div class="flex gap-2">
-				<input type="text" id="newEmail" th:value="${user.email}" disabled
+		<!-- 소셜 계정일 경우 -->
+		<div th:if="${user.provider != null}">
+			<!-- 아이디 -->
+			<div class="mb-6">
+				<label class="block text-sm font-medium text-gray-700 mb-1">아이디</label>
+				<div class="flex gap-2">
+					<input type="text" id="newEmail" th:value="${user.email}" readonly
+						class="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-500">
+				</div>
+			</div>
+
+			<!-- 이름 (읽기 전용) -->
+			<div class="mb-6">
+				<label class="block text-sm font-medium text-gray-700 mb-1">이름</label>
+				<input type="text" th:value="${user.name}" readonly
 					class="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-500">
-				<button id="edit-username-btn"
-					class="text-sm px-3 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500">
-					아이디 변경
-				</button>
 			</div>
-			<button id="save-username-btn" onclick="updateEmail(event);"
-				class="mt-2 hidden w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
-				아이디 저장
-			</button>
+
 		</div>
 
-		<!-- 이름 (읽기 전용) -->
-		<div class="mb-6">
-			<label class="block text-sm font-medium text-gray-700 mb-1">이름</label>
-			<input type="text" th:value="${user.name}" readonly
-				class="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-500">
+		<!-- 일반 회원일 경우 -->
+		<div th:if="${user.provider == null}">
+			<span id="originEmail" th:text="${user.email}" hidden></span>
+
+			<!-- 아이디 -->
+			<div class="mb-6">
+				<label class="block text-sm font-medium text-gray-700 mb-1">아이디</label>
+				<div class="flex gap-2">
+					<input type="text" id="newEmail" th:value="${user.email}" disabled
+						class="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-500">
+					<button id="edit-username-btn"
+						class="text-sm px-3 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500">
+						아이디 변경
+					</button>
+				</div>
+				<button id="save-username-btn" onclick="updateEmail(event);"
+					class="mt-2 hidden w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
+					아이디 저장
+				</button>
+			</div>
+
+			<!-- 이름 (읽기 전용) -->
+			<div class="mb-6">
+				<label class="block text-sm font-medium text-gray-700 mb-1">이름</label>
+				<input type="text" th:value="${user.name}" readonly
+					class="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-500">
+			</div>
+
+			<!-- 비밀번호 변경 -->
+			<div class="mb-6">
+				<button id="toggle-password-section" class="text-sm text-blue-600 hover:underline">비밀번호 변경</button>
+				<div id="password-section" class="mt-3 space-y-3 hidden">
+					<div>
+						<label class="block text-sm text-gray-600 mb-1">현재 비밀번호</label>
+						<input type="password" id="pwd" class="w-full border border-gray-300 rounded-md px-3 py-2">
+					</div>
+					<div>
+						<label class="block text-sm text-gray-600 mb-1">새 비밀번호</label>
+						<input type="password" id="newPwd" class="w-full border border-gray-300 rounded-md px-3 py-2">
+					</div>
+					<div>
+						<label class="block text-sm text-gray-600 mb-1">비밀번호 재입력</label>
+						<input type="password" id="newPwdReConf"
+							class="w-full border border-gray-300 rounded-md px-3 py-2">
+					</div>
+					<button class="mt-2 w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
+						onclick="updatePwd(event);">
+						비밀번호 저장
+					</button>
+				</div>
+			</div>
 		</div>
 
-		<!-- 비밀번호 변경 -->
+		<!-- 주소 리스트 조회 -->
 		<div class="mb-6">
-			<button id="toggle-password-section" class="text-sm text-blue-600 hover:underline">비밀번호 변경</button>
-			<div id="password-section" class="mt-3 space-y-3 hidden">
-				<div>
-					<label class="block text-sm text-gray-600 mb-1">현재 비밀번호</label>
-					<input type="password" id="pwd" class="w-full border border-gray-300 rounded-md px-3 py-2">
-				</div>
-				<div>
-					<label class="block text-sm text-gray-600 mb-1">새 비밀번호</label>
-					<input type="password" id="newPwd" class="w-full border border-gray-300 rounded-md px-3 py-2">
-				</div>
-				<div>
-					<label class="block text-sm text-gray-600 mb-1">비밀번호 재입력</label>
-					<input type="password" id="newPwdReConf" class="w-full border border-gray-300 rounded-md px-3 py-2">
-				</div>
-				<button class="mt-2 w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
-					onclick="updatePwd(event);">
-					비밀번호 저장
+			<label class="block text-sm font-medium text-gray-700 mb-2">등록된 주소지</label>
+			<ul class="space-y-3">
+				<li th:each="address : ${addressList}"
+					class="flex items-center justify-between bg-gray-50 p-3 rounded-md border border-gray-200">
+					<div th:if="${address.roadAddress == ''}">
+						<span class="text-gray-800 text-sm" th:text="${address.jibunAddress}"></span>
+					</div>
+					<div th:if="${address.roadAddress != ''}">
+						<span class="text-gray-800 text-sm" th:text="${address.roadAddress}"></span>
+					</div>
+					<div class="flex items-center space-x-2">
+						<label class="inline-flex items-center text-sm text-gray-600">
+							<input type="radio" name="defaultAddressId" th:value="${address.num}"
+								th:onchange="'setDefaultAddress(' + ${address.num} + ')'"
+								th:checked="${address.isDefault}" class="form-radio text-blue-600">
+							<span class="ml-2">기본 주소</span>
+						</label>
+						<button type="button" class="text-sm text-red-500 hover:underline"
+							th:onclick="'deleteAddress(' + ${address.num} + ')'">
+							삭제
+						</button>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+		<!-- 주소 추가 영역 -->
+		<div id="addressAddForm" class="mb-6 border border-gray-200 p-4 rounded-lg bg-gray-50">
+			<span id="addressType" hidden></span>
+			<span id="userSelectedType" hidden></span>
+			<span id="jibunAddress" hidden></span>
+			<span id="buildingName" hidden></span>
+
+			<h3 class="text-base font-semibold text-gray-700 mb-4">주소 추가</h3>
+
+			<!-- 우편번호 + 검색 버튼 -->
+			<div class="mb-4 flex gap-2">
+				<input type="text" id="zonecode" name="zonecode" placeholder="우편번호" readonly
+					class="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-700" />
+				<button type="button" onclick="execDaumPostcode()"
+					class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+					주소 검색
+				</button>
+			</div>
+
+			<!-- 기본주소 (도로명주소) -->
+			<div class="mb-4">
+				<input type="text" id="address" name="address" placeholder="기본 주소 (도로명주소)" readonly
+					class="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-700" />
+			</div>
+
+			<!-- 상세주소 -->
+			<div class="mb-4">
+				<input type="text" id="detailAddress" name="detailAddress" placeholder="상세 주소"
+					class="w-full border border-gray-300 rounded-md px-3 py-2" />
+			</div>
+
+			<!-- 기본 주소로 설정 -->
+			<div class="mb-4">
+				<label class="inline-flex items-center">
+					<input type="checkbox" id="isDefault" name="isDefault" class="form-checkbox text-blue-600" />
+					<span class="ml-2 text-sm text-gray-700">기본 주소로 설정</span>
+				</label>
+			</div>
+
+			<!-- 저장 버튼 -->
+			<div class="text-right">
+				<button type="button" onclick="saveAddress()"
+					class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
+					주소 저장
 				</button>
 			</div>
 		</div>
+
 
 		<!-- 버튼들 -->
 		<div class="flex justify-between items-center pt-6 border-t">
 			<button onclick="location.href='/'" class="text-gray-600 hover:underline">메인으로</button>
-			<button id="delete-account-btn" onclick="deleteAccount(event);" class="text-red-600 hover:underline font-medium">회원탈퇴</button>
+			<button id="delete-account-btn" onclick="deleteAccount(event);"
+				class="text-red-600 hover:underline font-medium">회원탈퇴</button>
 		</div>
 	</div>
 </body>
@@ -78,6 +182,21 @@
 </html>
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
+		// DAUM API
+		function execDaumPostcode() {
+			new daum.Postcode({
+				oncomplete: function (data) {
+					$("#zonecode").val(data.zonecode);
+					$("#address").val(data.address);
+					$("#addressType").text(data.addressType);
+					$("#userSelectedType").text(data.userSelectedType);
+					$("#jibunAddress").text(data.jibunAddress);
+					$("#buildingName").text(data.buildingNAme);
+					$("#detailAddress").focus();
+				}
+			}).open();
+		}
+
 		// 아이디 수정 가능하게
 		$('#edit-username-btn').click(function () {
 			$('#newEmail').prop('disabled', false).removeClass('bg-gray-100 text-gray-500').focus();
@@ -208,6 +327,98 @@
 			} else {
 				return false;
 			}
+		}
+
+		function deleteAddress(addressNum) {
+			if (confirm("해당 주소를 삭제하시겠습니까?")) {
+				$.ajax({
+					type: "POST",
+					url: "/api/deleteAddress",
+					data: JSON.stringify({addressNum: addressNum}),
+					contentType: "application/json",
+
+					success: function (result) {
+						alert("주소 삭제 완료되었습니다.");
+						location.reload();
+					},
+					error: function (request, status, error) {
+						alert("주소 삭제 오류\n code: " + request.status + "\n error: " + error);
+					}
+				});
+			}
+		}
+
+		function setDefaultAddress(addressNum) {
+			const userNum = $("#num").text();
+			const data = {
+				userNum: userNum,
+				addressNum: addressNum,
+			}
+			
+			if (confirm("해당 주소를 기본 주소로 설정하시겠습니까?")) {
+				$.ajax({
+					type: "POST",
+					url: "/api/setDefaultAddress",
+					data: JSON.stringify(data),
+					contentType: "application/json",
+
+					success: function (result) {
+						location.reload();
+					},
+					error: function (request, status, error) {
+						alert("주소 삭제 오류\n code: " + request.status + "\n error: " + error);
+					}
+				});
+			}
+		}
+
+		function saveAddress() {
+			const userNum = $("#num").text();
+			const zonecode = $("#zonecode").val();
+			const address = $("#address").val();
+			const addressType = $("#addressType").text();
+			const userSelectedType = $("#userSelectedType").text();
+			const jibunAddress = $("#jibunAddress").text();
+			const buildingName = $("#buildingName").text();
+			const detailAddress = $("#detailAddress").val();
+			const isDefault = $("#isDefault").prop("checked");
+
+			const data = {
+				userNum: userNum,
+				zonecode: zonecode,
+				address: address,
+				addressType: addressType,
+				userSelectedType: userSelectedType,
+				jibunAddress: jibunAddress,
+				buildingName: buildingName,
+				detailAddress: detailAddress,
+				isDefault: isDefault,
+			}
+
+			if (zonecode == "") {
+				alert("주소를 입력해주세요.");
+				return false;
+			}
+
+			if (detailAddress == "") {
+				alert("상세 주소를 입력해주세요.");
+				return false;
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "/api/addAddress",
+				data: JSON.stringify(data),
+				contentType: "application/json",
+
+				success: function (result) {
+					alert("주소 추가 완료되었습니다.");
+					location.reload();
+				},
+				error: function (request, status, error) {
+					alert("주소 추가 오류\n code: " + request.status + "\n error: " + error);
+				}
+			});
 		}
 	</script>
 </th:block>
