@@ -1,4 +1,4 @@
-package com.lgh.FlipMarket.service;
+package com.lgh.FlipMarket.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

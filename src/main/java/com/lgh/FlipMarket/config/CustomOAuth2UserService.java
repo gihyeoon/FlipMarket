@@ -1,4 +1,4 @@
-package com.lgh.FlipMarket.service;
+package com.lgh.FlipMarket.config;
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.lgh.FlipMarket.dto.UserDto;
+import com.lgh.FlipMarket.service.UserService;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
