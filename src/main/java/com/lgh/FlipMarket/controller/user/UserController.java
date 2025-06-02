@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.lgh.FlipMarket.dto.AddressDto;
 import com.lgh.FlipMarket.dto.ProductDto;
 import com.lgh.FlipMarket.dto.UserDto;
+import com.lgh.FlipMarket.service.AddressService;
 import com.lgh.FlipMarket.service.ProductService;
 import com.lgh.FlipMarket.service.UserService;
 
@@ -22,11 +24,14 @@ public class UserController {
 
 	private final ProductService productService;
 
+	private final AddressService addressService;
+
 	private static final String BASE_URL = "user/";
 
-	public UserController(UserService userService, ProductService productService) {
+	public UserController(UserService userService, ProductService productService, AddressService addressService) {
 		this.userService = userService;
 		this.productService = productService;
+		this.addressService = addressService;
 	}
 
 	@GetMapping("/register")
@@ -55,7 +60,7 @@ public class UserController {
 		model.addAttribute("recentProducts", recentProducts);
 		return BASE_URL + "mypage";
 	}
-	
+
 	@GetMapping("/api/validateUserByOAuth2/{provider}")
 	public String validateUserByOAuth2(@PathVariable(value = "provider") String provider,
 			@RequestParam("num") Long userNum, HttpServletRequest request) {
@@ -69,7 +74,7 @@ public class UserController {
 
 		model.addAttribute("email", userDto.getEmail());
 		model.addAttribute("provider", userDto.getProvider());
-		model.addAttribute("num", userDto.getNum());
+		model.addAttribute("num", userNum);
 		model.addAttribute("pwd", userDto.getPwd());
 
 		return BASE_URL + "reConfirmUserInfo";
@@ -78,7 +83,9 @@ public class UserController {
 	@GetMapping("/mypage/editProfile")
 	public String showEditProfilePage(@RequestParam("num") Long userNum, Model model) {
 		UserDto userDto = userService.findByNum(userNum);
+		List<AddressDto> addressList = addressService.findByUserNum(userNum);
 		model.addAttribute("user", userDto);
+		model.addAttribute("addressList", addressList);
 		return BASE_URL + "editProfile";
 	}
 
