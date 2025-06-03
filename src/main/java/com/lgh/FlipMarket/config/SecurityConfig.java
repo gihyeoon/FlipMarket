@@ -17,6 +17,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.lgh.FlipMarket.config.oauth2.CustomOAuth2UserService;
+import com.lgh.FlipMarket.config.oauth2.CustomeOAuth2SuccessHandler;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -25,12 +28,15 @@ public class SecurityConfig {
 
 	private final CustomOAuth2UserService oAuth2UserService;
 
-	public SecurityConfig(CustomUserDetailsService customUserDetailsService,
-			CustomOAuth2UserService oAuth2UserService) {
+	private final CustomeOAuth2SuccessHandler auth2SuccessHandler;
+
+	public SecurityConfig(CustomUserDetailsService customUserDetailsService, CustomOAuth2UserService oAuth2UserService,
+			CustomeOAuth2SuccessHandler auth2SuccessHandler) {
 		this.customUserDetailsService = customUserDetailsService;
 		this.oAuth2UserService = oAuth2UserService;
+		this.auth2SuccessHandler = auth2SuccessHandler;
 	}
-
+	
 	@Bean
 	AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 		return configuration.getAuthenticationManager();
@@ -68,9 +74,8 @@ public class SecurityConfig {
 				.oauth2Login(oauth2 -> {
 					oauth2.loginPage("/login");
 					oauth2.userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService));
-					oauth2.successHandler(new CustomeOAuth2SuccessHandler());
-				})
-				.logout(logout -> {
+					oauth2.successHandler(auth2SuccessHandler);
+				}).logout(logout -> {
 					logout.logoutSuccessUrl("/main");
 					logout.deleteCookies("JSESSIONID", "remember-me"); // 로그아웃 시 쿠기 삭제
 				});

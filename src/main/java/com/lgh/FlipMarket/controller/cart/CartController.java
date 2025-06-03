@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,9 +74,25 @@ public class CartController {
 	@PostMapping("/api/cart/purchase")
 	public Map<String, String> purchase(@RequestBody Map<String, String> data) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = "";
+
+		if (authentication.getPrincipal() instanceof OAuth2User) {
+			OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+			// 네이버 로그인일 경우
+			if ((String) oauth2User.getAttributes().get("email") == null) {
+				Map<String, Object> response = (Map<String, Object>) oauth2User.getAttributes().get("response");
+				email = (String) response.get("email");
+			}
+			// 구글 로그인일 경우
+			else {
+				email = (String) oauth2User.getAttributes().get("email");
+			}
+		} else {
+			email = authentication.getName();
+		}
 
 		Long cartNum = Long.parseLong(data.get("cartNum"));
-		Long userNum = userService.findNumByEmail(authentication.getName());
+		Long userNum = userService.findNumByEmail(email);
 		Long productNum = cartService.findByNum(cartNum).get().getProduct().getNum();
 		int stock = cartService.findByNum(cartNum).get().getProduct().getStock();
 		int totalPrice = Integer.parseInt(data.get("totalPrice"));
@@ -91,7 +108,7 @@ public class CartController {
 			if (delCnt < 1) {
 				return Map.of("result", "1");
 			}
-			
+
 			// 구매를 확정짓는 순간 해당 상품의 재고 또한 수정되어야함.
 			productService.updateProductStock(productNum, stock - quantity);
 

@@ -1,6 +1,7 @@
 package com.lgh.FlipMarket.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +40,15 @@ public class MainController {
 
 		if (authentication.getPrincipal() instanceof OAuth2User) {
 			OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-			email = (String) oauth2User.getAttributes().get("email");
+			// 네이버 로그인일 경우
+			if ((String) oauth2User.getAttributes().get("email") == null) {
+				Map<String, Object> response = (Map<String, Object>) oauth2User.getAttributes().get("response");
+				email = (String) response.get("email");
+			}
+			// 구글 로그인일 경우
+			else {
+				email = (String) oauth2User.getAttributes().get("email");
+			}
 			userNum = userService.findNumByEmail(email);
 			model.addAttribute("num", userNum);
 			System.out.println("소셜 로그인 이메일 : " + email);

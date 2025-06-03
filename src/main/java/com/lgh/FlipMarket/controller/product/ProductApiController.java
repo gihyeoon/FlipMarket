@@ -50,7 +50,15 @@ public class ProductApiController {
 
 		if (authentication.getPrincipal() instanceof OAuth2User) {
 			OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-			email = (String) oauth2User.getAttributes().get("email");
+			// 네이버 로그인일 경우
+			if ((String) oauth2User.getAttributes().get("email") == null) {
+				Map<String, Object> response = (Map<String, Object>) oauth2User.getAttributes().get("response");
+				email = (String) response.get("email");
+			}
+			// 구글 로그인일 경우
+			else {
+				email = (String) oauth2User.getAttributes().get("email");
+			}
 		} else {
 			email = authentication.getName();
 		}
@@ -81,7 +89,15 @@ public class ProductApiController {
 				&& !(authentication instanceof AnonymousAuthenticationToken)) {
 			if (authentication.getPrincipal() instanceof OAuth2User) {
 				OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-				email = (String) oauth2User.getAttributes().get("email");
+				// 네이버 로그인일 경우
+				if ((String) oauth2User.getAttributes().get("email") == null) {
+					Map<String, Object> response = (Map<String, Object>) oauth2User.getAttributes().get("response");
+					email = (String) response.get("email");
+				}
+				// 구글 로그인일 경우
+				else {
+					email = (String) oauth2User.getAttributes().get("email");
+				}
 			} else {
 				email = authentication.getName();
 			}
