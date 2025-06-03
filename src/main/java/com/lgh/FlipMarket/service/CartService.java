@@ -16,6 +16,8 @@ import com.lgh.FlipMarket.repository.CartRepository;
 import com.lgh.FlipMarket.repository.ProductRepository;
 import com.lgh.FlipMarket.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CartService {
 
@@ -65,6 +67,7 @@ public class CartService {
 	}
 
 	// 장바구니 삭제
+	@Transactional
 	public int deleteByNum(Long num) {
 		return cartRepository.deleteByNum(num);
 	}

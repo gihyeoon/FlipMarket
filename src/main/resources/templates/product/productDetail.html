@@ -37,7 +37,8 @@
 					<label for="quantity" class="font-medium">수량</label>
 					<input type="number" id="quantity" name="quantity" value="1" min="1" max="10"
 						class="w-16 text-center border rounded-md">
-					<p class="text-gray-500 text-sm" id="stock" th:text="'남은 수량: ' + ${product.stock}"></p>
+					<p class="text-gray-500 text-sm" id="stockText" th:text="'남은 수량: ' + ${product.stock}"></p>
+					<span id="stock" th:text="${product.stock}" hidden></span>
 				</div>
 
 				<!-- 예: 구매하기 버튼 -->
@@ -68,7 +69,7 @@
 				quantity: quantity
 			}
 			
-			console.log(quantity)
+			console.log("수량: " + quantity + "  / 재고 : " + stock);
 
 			if (quantity > stock) {
 				alert("수량이 초과되었습니다.");
