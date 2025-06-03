@@ -2,6 +2,8 @@ package com.lgh.FlipMarket.controller.address;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +21,8 @@ public class AddressApiController {
 	private final AddressService addressService;
 
 	private final UserService userService;
+	
+	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
 	public AddressApiController(AddressService addressService, UserService userService) {
 		this.addressService = addressService;
@@ -54,14 +58,10 @@ public class AddressApiController {
 
 		// 만약 추가한 주소지를 기본 배송지로 설정했다면 기존의 기본 배송지를 false로 설정한다.
 		if (isDefault) {
-			int updateCnt = addressService.updateDefaultAddress(userNum);
-
-			if (updateCnt < 0) {
-				return ResponseEntity.ok("기본 배송지가 존재하지 않음");
-			} else {
-				return ResponseEntity.ok("기본 배송지 수정 완료");
-			}
+			addressService.updateDefaultAddress(userNum);
 		}
+		
+		log.info("기본 주소 선택 여부: " + isDefault);
 
 		addressService.addAddress(data.get("zonecode"), data.get("roadAddress"), data.get("jibunAddress"),
 				data.get("detailAddress"), data.get("buildingName"), data.get("addressType"), isDefault, userDto);
