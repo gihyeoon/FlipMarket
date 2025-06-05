@@ -69,6 +69,42 @@
 				class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition">가입하기</button>
 		</form>
 
+		<!-- 소셜 로그인 구역 추가 -->
+		<div class="mt-6">
+			<div class="flex items-center justify-center mb-4">
+				<hr class="w-full border-t border-gray-300">
+				<span class="px-3 text-gray-500 text-sm">또는</span>
+				<hr class="w-full border-t border-gray-300">
+			</div>
+
+			<!-- 구글 로그인 버튼 -->
+			<button type="button" onclick="window.location.href='/oauth2/authorization/google'"
+				class="mt-4 w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md py-3 hover:shadow-md transition bg-white">
+				<!-- 구글 로고 SVG -->
+				<svg class="w-6 h-6" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
+					<path fill="#4285F4"
+						d="M533.5 278.4c0-18.4-1.6-36-4.7-53.2H272v100.8h146.9c-6.4 34.5-26 63.9-55.6 83.5v69.3h89.8c52.7-48.5 83.4-120 83.4-200.4z" />
+					<path fill="#34A853"
+						d="M272 544.3c75.6 0 139.1-25 185.5-67.9l-89.8-69.3c-25 17-56.9 27-95.7 27-73.5 0-135.8-49.6-158.1-116.5H22.7v72.9c46.1 90.7 140.7 153.8 249.3 153.8z" />
+					<path fill="#FBBC05"
+						d="M113.9 321.6c-5.3-15.5-8.3-32-8.3-49s3-33.5 8.3-49V150.8H22.7c-18.5 36.7-29.1 77.8-29.1 121s10.6 84.3 29.1 121l91.2-72.2z" />
+					<path fill="#EA4335"
+						d="M272 107.7c41 0 77.9 14 106.9 41.5l80.1-80.1C408.8 24.6 345.3 0 272 0 163.5 0 69 63.1 22.7 153.8l91.2 72.9c22.2-66.9 84.5-116.5 158.1-116.5z" />
+				</svg>
+				<span>구글 계정으로 회원가입</span>
+			</button>
+
+			<!-- 네이버 로그인 버튼 -->
+			<button type="button" onclick="window.location.href='/oauth2/authorization/naver'"
+				class="mt-4 w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md py-3 hover:shadow-md transition bg-white">
+				<!-- 네이버 로고 (SVG 대체 이미지) -->
+				<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+					<path fill="#03C75A" d="M10 10h8.6l9.3 13.6V10h9.9v28h-8.6l-9.3-13.6V38H10V10z" />
+				</svg>
+				<span>네이버 계정으로 회원가입</span>
+			</button>
+		</div>
+
 		<!-- 메인으로 이동 -->
 		<div class="mt-6 text-center text-sm text-gray-600">
 			<a th:href="@{/}" class="text-blue-600 hover:underline">메인 페이지로 이동</a>
@@ -187,12 +223,12 @@
 				$("#name").focus();
 				return false;
 			}
-			
+
 			if (zonecode == "") {
 				alert("주소를 입력해주세요.");
 				return false;
 			}
-			
+
 			if (detailAddress == "") {
 				alert("상세 주소를 입력해주세요.");
 				$("#detailAddress").focus();
