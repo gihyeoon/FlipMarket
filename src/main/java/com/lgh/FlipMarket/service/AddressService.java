@@ -25,23 +25,27 @@ public class AddressService {
 		this.addressRepository = addressRepository;
 		this.userRepository = userRepository;
 	}
-	
+
 	// 로그인한 사용자의 주소지들의 기본 배송지 여부를 false로 수정
 	@Transactional
 	public int updateDefaultAddress(Long userNum) {
 		return addressRepository.updateDefaultAddress(userNum);
 	}
-	
+
 	// 기본 주소지 설정
 	@Transactional
 	public int setDefaultAddress(Long addressNum) {
 		return addressRepository.setDefaultAddress(addressNum);
 	}
-	
+
 	// 주소 삭제
 	@Transactional
 	public void deleteAddress(Long addressNum) {
 		addressRepository.deleteById(addressNum);
+	}
+	
+	public int countByUserNum(Long userNum) {
+		return addressRepository.countByUserNum(userNum);
 	}
 
 	// 주소지 등록
@@ -63,6 +67,20 @@ public class AddressService {
 						r[2] == null ? "" : r[2].toString(), r[3].toString(), r[4].toString(), r[5].toString(),
 						r[6].toString(), Boolean.parseBoolean(r[7].toString())))
 				.collect(Collectors.toList());
+	}
+
+	// 로그인한 사용자의 주소지들 중 기본 배송지인 것만 조회
+	public AddressDto findByUserNumDefault(Long userNum) {
+		int cnt = addressRepository.countByUserNumDefault(userNum);
+		if (cnt < 1) {
+			return AddressDto.builder().roadAddress("").jibunAddress("").build();
+		} else {
+			Address address = addressRepository.findByUserNumDefault(userNum)
+					.orElseThrow(() -> new IllegalArgumentException("주소지 조회 오류"));
+			return AddressDto.builder().roadAddress(address.getRoadAddress()).jibunAddress(address.getJibunAddress())
+					.build();
+		}
+
 	}
 
 }

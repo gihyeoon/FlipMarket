@@ -21,7 +21,7 @@ public class AddressApiController {
 	private final AddressService addressService;
 
 	private final UserService userService;
-	
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
 	public AddressApiController(AddressService addressService, UserService userService) {
@@ -40,13 +40,13 @@ public class AddressApiController {
 	public ResponseEntity<?> setDefaultAddress(@RequestBody Map<String, String> data) {
 		Long userNum = Long.parseLong(data.get("userNum"));
 		Long addressNum = Long.parseLong(data.get("addressNum"));
-		
+
 		// 먼저 기본 배송지로 설정되었던 주소들을 false로 바꾼다.
 		addressService.updateDefaultAddress(userNum);
-		
+
 		// 선택한 주소를 기본 배송지로 설정한다.
 		addressService.setDefaultAddress(addressNum);
-		
+
 		return ResponseEntity.ok("기본 주소 설정 완료");
 	}
 
@@ -56,11 +56,16 @@ public class AddressApiController {
 		boolean isDefault = Boolean.parseBoolean(data.get("isDefault"));
 		UserDto userDto = userService.findByNum(userNum);
 
+		// 만약 사용자가 이전에 등록한 주소들이 없다면 지금 등록할 주소지를 기본 배송지로 설정한다.
+		if (addressService.countByUserNum(userNum) < 1) {
+			isDefault = true;
+		}
+
 		// 만약 추가한 주소지를 기본 배송지로 설정했다면 기존의 기본 배송지를 false로 설정한다.
 		if (isDefault) {
 			addressService.updateDefaultAddress(userNum);
 		}
-		
+
 		log.info("기본 주소 선택 여부: " + isDefault);
 
 		addressService.addAddress(data.get("zonecode"), data.get("roadAddress"), data.get("jibunAddress"),
