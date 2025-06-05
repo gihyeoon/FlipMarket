@@ -36,6 +36,7 @@
 
 			<!-- 카테고리 -->
 			<div>
+				<span id="categoryText" th:text="${product.category}" hidden></span>
 				<label for="category" class="block text-sm font-semibold text-gray-700 mb-1">카테고리</label>
 				<select id="category" th:field="*{product.category}" onchange="toggleCustomCategory();"
 					class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
@@ -110,6 +111,16 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
+		$(document).ready(function() {
+			const category = $("#categoryText").text();
+			
+			if (category != "전자기기" && category != "식품" && category != "도서" && category != "의류") {
+				$("#category").val("기타");
+				$("#customCategory").val(category);
+				toggleCustomCategory();
+			}
+		});
+		
 		function toggleCustomCategory() {
 			if ($('#category').val() === '기타') {
 				$('#customCategoryWrapper').removeClass('hidden');
