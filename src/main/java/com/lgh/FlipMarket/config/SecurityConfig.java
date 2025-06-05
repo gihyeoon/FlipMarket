@@ -18,7 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.lgh.FlipMarket.config.oauth2.CustomOAuth2UserService;
-import com.lgh.FlipMarket.config.oauth2.CustomeOAuth2SuccessHandler;
+import com.lgh.FlipMarket.config.oauth2.CustomOAuth2SuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -28,10 +28,10 @@ public class SecurityConfig {
 
 	private final CustomOAuth2UserService oAuth2UserService;
 
-	private final CustomeOAuth2SuccessHandler auth2SuccessHandler;
+	private final CustomOAuth2SuccessHandler auth2SuccessHandler;
 
 	public SecurityConfig(CustomUserDetailsService customUserDetailsService, CustomOAuth2UserService oAuth2UserService,
-			CustomeOAuth2SuccessHandler auth2SuccessHandler) {
+			CustomOAuth2SuccessHandler auth2SuccessHandler) {
 		this.customUserDetailsService = customUserDetailsService;
 		this.oAuth2UserService = oAuth2UserService;
 		this.auth2SuccessHandler = auth2SuccessHandler;

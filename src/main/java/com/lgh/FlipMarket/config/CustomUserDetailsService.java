@@ -23,8 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		System.out.println("로그인 시도");
-		log.info(username);
+		log.info("로그인 이메일 : " + username);
 		User user = userRepository.findByEmail(username)
 				.orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다.")); // orElseThrow 메서드는 중괄호를 이용하여 범위를 정해주지 못한다.
 		return org.springframework.security.core.userdetails.User.builder()
