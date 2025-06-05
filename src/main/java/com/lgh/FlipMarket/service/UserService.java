@@ -22,7 +22,7 @@ public class UserService {
 		User user = userRepository.findById(num).orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 
 		return UserDto.builder().num(user.getNum()).email(user.getEmail()).name(user.getName()).pwd(user.getPwd())
-				.provider(user.getProvider()).build();
+				.provider(user.getProvider()).createdAt(user.getCreatedAt()).build();
 	}
 
 	// 아이디(이메일)을 통해 사용자 번호 조회

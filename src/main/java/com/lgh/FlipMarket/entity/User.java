@@ -93,6 +93,10 @@ public class User implements UserDetails {
 	public String getRole() {
 		return role;
 	}
+	
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

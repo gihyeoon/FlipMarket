@@ -65,5 +65,64 @@ public class AddressDto {
 	public boolean isDefault() {
 		return isDefault;
 	}
+	
+	public static class Builder {
+		private Long num;
+		private String zonecode;
+		private String roadAddress;
+		private String jibunAddress;
+		private String detailAddress;
+		private String buildingName;
+		private String addressType;
+		private boolean isDefault;
+
+		public Builder num(Long num) {
+			this.num = num;
+			return this;
+		}
+
+		public Builder zonecode(String zonecode) {
+			this.zonecode = zonecode;
+			return this;
+		}
+
+		public Builder roadAddress(String roadAddress) {
+			this.roadAddress = roadAddress;
+			return this;
+		}
+
+		public Builder jibunAddress(String jibunAddress) {
+			this.jibunAddress = jibunAddress;
+			return this;
+		}
+
+		public Builder detailAddress(String detailAddress) {
+			this.detailAddress = detailAddress;
+			return this;
+		}
+
+		public Builder buildingName(String buildingName) {
+			this.buildingName = buildingName;
+			return this;
+		}
+		
+		public Builder addressType(String addressType) {
+			this.addressType = addressType;
+			return this;
+		}
+
+		public Builder isDefault(boolean isDefault) {
+			this.isDefault = isDefault;
+			return this;
+		}
+
+		public AddressDto build() {
+			return new AddressDto(num, zonecode, roadAddress, jibunAddress, detailAddress, buildingName, addressType, isDefault);
+		}
+	}
+
+	public static Builder builder() {
+		return new Builder();
+	}
 
 }

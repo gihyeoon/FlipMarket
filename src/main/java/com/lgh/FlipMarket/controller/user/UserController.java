@@ -52,12 +52,25 @@ public class UserController {
 	@GetMapping("/mypage")
 	public String showMypage(@RequestParam("num") Long userNum, Model model) {
 		UserDto userDto = userService.findByNum(userNum);
+		AddressDto addressDto = addressService.findByUserNumDefault(userNum);
+		String address = "";
+		
+		if (addressDto.getRoadAddress() == null && addressDto.getJibunAddress() != null) {
+			address = addressDto.getJibunAddress();
+		} else if (addressDto.getRoadAddress() != null && addressDto.getJibunAddress() == null) {
+			address = addressDto.getRoadAddress();
+		} else {
+			address = "등록된 주소지가 없습니다.";
+		}
+		
+		System.out.println("등록된 기본 주소지 : " + address);
 
 		// 사용자가 가장 최근에 등록한 3개의 상품들만 조회
 		List<ProductDto> recentProducts = productService.findByUserNum(userNum);
 
 		model.addAttribute("user", userDto);
 		model.addAttribute("recentProducts", recentProducts);
+		model.addAttribute("address", address);
 		return BASE_URL + "mypage";
 	}
 

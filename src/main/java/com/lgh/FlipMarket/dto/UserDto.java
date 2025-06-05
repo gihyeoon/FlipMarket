@@ -1,5 +1,7 @@
 package com.lgh.FlipMarket.dto;
 
+import java.time.LocalDateTime;
+
 public class UserDto {
 
 	private Long num;
@@ -13,17 +15,20 @@ public class UserDto {
 	private String provider;
 
 	private String providerId;
+	
+	private LocalDateTime createdAt;
 
 	public UserDto() {
 	}
 
-	private UserDto(Long num, String name, String email, String pwd, String provider, String providerId) {
+	private UserDto(Long num, String name, String email, String pwd, String provider, String providerId, LocalDateTime createdAt) {
 		this.num = num;
 		this.name = name;
 		this.email = email;
 		this.pwd = pwd;
 		this.provider = provider;
 		this.providerId = providerId;
+		this.createdAt = createdAt;
 	}
 
 	public Long getNum() {
@@ -49,6 +54,10 @@ public class UserDto {
 	public String getProviderId() {
 		return providerId;
 	}
+	
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
 
 	public static class Builder {
 		private Long num;
@@ -57,6 +66,7 @@ public class UserDto {
 		private String pwd;
 		private String provider;
 		private String providerId;
+		private LocalDateTime createdAt;
 
 		public Builder num(Long num) {
 			this.num = num;
@@ -87,9 +97,14 @@ public class UserDto {
 			this.providerId = providerId;
 			return this;
 		}
+		
+		public Builder createdAt(LocalDateTime createdAt) {
+			this.createdAt = createdAt;
+			return this;
+		}
 
 		public UserDto build() {
-			return new UserDto(num, name, email, pwd, provider, providerId);
+			return new UserDto(num, name, email, pwd, provider, providerId, createdAt);
 		}
 	}
 
