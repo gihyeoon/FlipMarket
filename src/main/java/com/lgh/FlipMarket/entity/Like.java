@@ -23,10 +23,12 @@ public class Like {
 	@ManyToOne
 	@JoinColumn(name = "product_num", referencedColumnName = "num")
 	private Product product;
+	
+	public Like() {
+		// TODO Auto-generated constructor stub
+	}
 
-	public Like(Long num, User user, Product product) {
-		super();
-		this.num = num;
+	public Like(User user, Product product) {
 		this.user = user;
 		this.product = product;
 	}
