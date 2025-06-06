@@ -15,13 +15,15 @@ public class ProductDto {
 	private String description;
 
 	private String imagePath;
+	
+	private int likeCount = 0;
 
 	public ProductDto() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public ProductDto(Long num, String productName, int price, String category, int stock, String description,
-			String imagePath) {
+			String imagePath, int likeCount) {
 		this.num = num;
 		this.productName = productName;
 		this.price = price;
@@ -29,6 +31,7 @@ public class ProductDto {
 		this.stock = stock;
 		this.description = description;
 		this.imagePath = imagePath;
+		this.likeCount = likeCount;
 	}
 
 	public Long getNum() {
@@ -58,6 +61,10 @@ public class ProductDto {
 	public String getImagePath() {
 		return imagePath;
 	}
+	
+	public int getLikeCount() {
+		return likeCount;
+	}
 
 	public static class Builder {
 		private Long num;
@@ -67,6 +74,7 @@ public class ProductDto {
 		private int stock;
 		private String description;
 		private String imagePath;
+		private int likeCount;
 
 		public Builder num(Long num) {
 			this.num = num;
@@ -102,9 +110,14 @@ public class ProductDto {
 			this.imagePath = imagePath;
 			return this;
 		}
+		
+		public Builder likeCount(int likeCount) {
+			this.likeCount = likeCount;
+			return this;
+		}
 
 		public ProductDto build() {
-			return new ProductDto(num, productName, price, category, stock, description, imagePath);
+			return new ProductDto(num, productName, price, category, stock, description, imagePath, likeCount);
 		}
 	}
 

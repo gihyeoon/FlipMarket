@@ -37,6 +37,8 @@ public class Product {
 	
 	private String imagePath;
 	
+	private int likeCount;
+	
 	@ManyToOne
 	@JoinColumn(name = "")
 	private User user;
@@ -50,13 +52,14 @@ public class Product {
 	public Product() {
 	}
 	
-	public Product(String productName, int price, String category, int stock, String description, String imagePath, User user) {
+	public Product(String productName, int price, String category, int stock, String description, String imagePath, int likeCount, User user) {
 		this.productName = productName;
 		this.price = price;
 		this.category = category;
 		this.stock = stock;
 		this.description = description;
 		this.imagePath = imagePath;
+		this.likeCount = likeCount;
 		this.user = user;
 	}
 	
@@ -86,6 +89,10 @@ public class Product {
 
 	public String getImagePath() {
 		return imagePath;
+	}
+	
+	public int getLikeCount() {
+		return likeCount;
 	}
 	
 }

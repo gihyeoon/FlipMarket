@@ -55,7 +55,7 @@ public class ProductService {
 		return results.stream()
 				.map(r -> new ProductDto(Long.parseLong(r[0].toString()), r[1].toString(),
 						Integer.parseInt(r[2].toString()), r[3].toString(), Integer.parseInt(r[4].toString()),
-						r[5].toString(), r[6].toString()))
+						r[5].toString(), r[6].toString(), Integer.parseInt(r[7].toString())))
 				.collect(Collectors.toList());
 	}
 
@@ -66,7 +66,7 @@ public class ProductService {
 		return results.stream()
 				.map(r -> new ProductDto(Long.parseLong(r[0].toString()), r[1].toString(),
 						Integer.parseInt(r[2].toString()), r[3].toString(), Integer.parseInt(r[4].toString()),
-						r[5].toString(), r[6].toString()))
+						r[5].toString(), r[6].toString(), Integer.parseInt(r[7].toString())))
 				.collect(Collectors.toList());
 	}
 
@@ -76,7 +76,7 @@ public class ProductService {
 		User user = userRepository.findById(userDto.getNum())
 				.orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 
-		Product product = new Product(productName, price, category, stock, desc, path, user);
+		Product product = new Product(productName, price, category, stock, desc, path, 0, user);
 		productRepository.save(product);
 	}
 
@@ -92,7 +92,7 @@ public class ProductService {
 		return results.stream()
 				.map(r -> new ProductDto(Long.parseLong(r[0].toString()), r[1].toString(),
 						Integer.parseInt(r[2].toString()), r[3].toString(), Integer.parseInt(r[4].toString()),
-						r[5].toString(), r[6].toString()))
+						r[5].toString(), r[6].toString(), Integer.parseInt(r[7].toString())))
 				.collect(Collectors.toList());
 	}
 
