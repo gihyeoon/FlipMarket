@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lgh.FlipMarket.dto.ProductDto;
+import com.lgh.FlipMarket.service.LikeService;
 import com.lgh.FlipMarket.service.ProductService;
 import com.lgh.FlipMarket.service.UserService;
 
@@ -21,10 +22,13 @@ public class MainController {
 	private final UserService userService;
 
 	private final ProductService productService;
+	
+	private final LikeService likeService;
 
-	public MainController(UserService userService, ProductService productService) {
+	public MainController(UserService userService, ProductService productService, LikeService likeService) {
 		this.userService = userService;
 		this.productService = productService;
+		this.likeService = likeService;
 	}
 
 	@GetMapping("/")
@@ -72,6 +76,11 @@ public class MainController {
 		}
 
 		model.addAttribute("productList", productList);
+		
+		// 로그인한 사용자가 좋아요 누른 상품 번호들을 View로 넘김
+		List<String> likeProductList = likeService.findByUserNum(userNum);
+		
+		model.addAttribute("likeProductList", likeProductList);
 
 		return "main";
 	}

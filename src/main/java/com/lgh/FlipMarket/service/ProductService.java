@@ -108,5 +108,11 @@ public class ProductService {
 	public void deleteProduct(Long productNum) {
 		productRepository.deleteById(productNum);
 	}
+	
+	// 상품의 좋아요 개수 수정
+	@Transactional
+	public int updateProductLikeCount(int likeCount, Long productNum) {
+		return productRepository.updateProductLikeCount(likeCount, productNum);
+	}
 
 }

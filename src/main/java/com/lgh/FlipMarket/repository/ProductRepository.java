@@ -31,5 +31,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	@NativeQuery(value = "UPDATE product SET image_path = ?1, product_name = ?2, category = ?3, stock = ?4, price = ?5, description = ?6 WHERE num = ?7")
 	@Modifying
 	int updateProduct(String imagePath, String productName, String category, int stock, int price, String description, Long productNum);
+	
+	@NativeQuery(value = "UPDATE product SET like_count = ?1 WHERE num = ?2")
+	@Modifying
+	int updateProductLikeCount(int likeCount, Long productNum);
 
 }
