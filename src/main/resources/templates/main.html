@@ -7,9 +7,12 @@
 	<title>FlipMarket - 메인</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body class="bg-gray-100">
+
+	<span id="userNum" th:text="${num}" hidden></span>
 
 	<!-- Header / Navigation -->
 	<header class="bg-white shadow">
@@ -68,25 +71,25 @@
 				<div class="absolute bottom-4 right-4 flex items-center space-x-1">
 					<!-- 좋아요 아이콘 -->
 					<button type="button" class="text-gray-400 hover:text-red-500 transition duration-200"
-						th:onclick="'likeProduct(' + ${list.num} + ')'">
+						th:onclick="'likeProduct(' + ${list.num} + ', ' + ${list.likeCount} + ')'">
 
 						<!-- 조건에 따라 하트 아이콘 다르게 렌더링 -->
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"
-							stroke="none" hidden>
-							<!-- 채워진 하트 (filled) -->
-							<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
-						                     2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09 
-						                     C13.09 3.81 14.76 3 16.5 3 
-						                     19.58 3 22 5.42 22 8.5 
-						                     c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+						<svg xmlns="http://www.w3.org/2000/svg" class="filledHeart h-6 w-6" fill="currentColor"
+							viewBox="0 0 24 24" th:if="${likeProductList.contains(list.num)}">
+							<path fill-rule="evenodd" d="M12.001 4.529c2.349-2.532 6.148-2.532 
+														                 8.497 0 2.348 2.531 2.348 6.637 0 
+														                 9.169l-7.272 7.846a.75.75 0 01-1.09 
+														                 0l-7.273-7.846c-2.348-2.532-2.348-6.638 
+														                 0-9.169 2.349-2.532 6.149-2.532 
+														                 8.498 0z" clip-rule="evenodd" />
 						</svg>
 
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-							stroke="currentColor">
-							<!-- 비어 있는 하트 (outline) -->
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636
-						                   l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364
-						                   l-7.682-7.682a4.5 4.5 0 010-6.364z" />
+						<svg xmlns="http://www.w3.org/2000/svg" class="outlineHeart h-6 w-6" fill="none"
+							viewBox="0 0 24 24" stroke="currentColor" th:unless="${likeProductList.contains(list.num)}">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M21.752 7.155a5.753 5.753 0 00-9.402-1.518L12 6.084l-.35-.447a5.753 
+							                 5.753 0 00-9.401 1.518 6.12 6.12 0 001.291 
+							                 6.78l7.593 7.593a.75.75 0 001.065 
+							                 0l7.594-7.593a6.12 6.12 0 001.29-6.78z" />
 						</svg>
 					</button>
 					<!-- 좋아요 수 -->
@@ -102,8 +105,33 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		function likeProduct(productNum) {
+		function likeProduct(productNum, likeCount) {
+			const userNum = $("#userNum").text();
 
+			if (userNum == "") {
+				alert("로그인이 필요한 서비스입니다.");
+				return false;
+			}
+
+			const data = {
+				userNum: userNum,
+				productNum: productNum,
+				likeCount: likeCount,
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "/api/likeProduct",
+				data: JSON.stringify(data),
+				contentType: "application/json",
+
+				success: function (result) {
+					location.reload();
+				},
+				error: function (request, status, error) {
+					alert("좋아요 수정 오류\n code: " + request.status + "\n error: " + error);
+				}
+			});
 		}
 	</script>
 </th:block>
