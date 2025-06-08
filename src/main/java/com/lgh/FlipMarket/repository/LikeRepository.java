@@ -12,7 +12,7 @@ import com.lgh.FlipMarket.entity.Like;
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
 	@NativeQuery("SELECT product_num FROM like_product WHERE user_num = ?1")
-	List<String> findByUserNum(Long userNum);
+	List<Long> findByUserNum(Long userNum);
 
 	@NativeQuery("SELECT COUNT(*) FROM like_product WHERE user_num = ?1 AND product_num = ?2")
 	int countByUserNumAndProductNum(Long userNum, Long productNum);

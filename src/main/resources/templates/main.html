@@ -7,6 +7,7 @@
 	<title>FlipMarket - 메인</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
@@ -74,23 +75,13 @@
 						th:onclick="'likeProduct(' + ${list.num} + ', ' + ${list.likeCount} + ')'">
 
 						<!-- 조건에 따라 하트 아이콘 다르게 렌더링 -->
-						<svg xmlns="http://www.w3.org/2000/svg" class="filledHeart h-6 w-6" fill="currentColor"
-							viewBox="0 0 24 24" th:if="${likeProductList.contains(list.num)}">
-							<path fill-rule="evenodd" d="M12.001 4.529c2.349-2.532 6.148-2.532 
-														                 8.497 0 2.348 2.531 2.348 6.637 0 
-														                 9.169l-7.272 7.846a.75.75 0 01-1.09 
-														                 0l-7.273-7.846c-2.348-2.532-2.348-6.638 
-														                 0-9.169 2.349-2.532 6.149-2.532 
-														                 8.498 0z" clip-rule="evenodd" />
-						</svg>
+						<div class="filledHeart h-6 w-6" th:if="${likeProductList.contains(list.num)}">
+							<i class="fa-solid fa-heart" style="color: red;"></i>
+						</div>
 
-						<svg xmlns="http://www.w3.org/2000/svg" class="outlineHeart h-6 w-6" fill="none"
-							viewBox="0 0 24 24" stroke="currentColor" th:unless="${likeProductList.contains(list.num)}">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M21.752 7.155a5.753 5.753 0 00-9.402-1.518L12 6.084l-.35-.447a5.753 
-							                 5.753 0 00-9.401 1.518 6.12 6.12 0 001.291 
-							                 6.78l7.593 7.593a.75.75 0 001.065 
-							                 0l7.594-7.593a6.12 6.12 0 001.29-6.78z" />
-						</svg>
+						<div class="outlineHeart h-6 w-6" th:unless="${likeProductList.contains(list.num)}">
+							<i class="fa-regular fa-heart"></i>
+						</div>
 					</button>
 					<!-- 좋아요 수 -->
 					<span class="text-sm text-gray-500" th:text="${list.likeCount}"></span>

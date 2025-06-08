@@ -30,8 +30,8 @@ public class LikeService {
 	}
 
 	// 로그인한 사용자가 좋아요를 누른 상품 번호만 가져옴
-	public List<String> findByUserNum(Long userNum) {
-		List<String> likeProductList = likeRepository.findByUserNum(userNum);
+	public List<Long> findByUserNum(Long userNum) {
+		List<Long> likeProductList = likeRepository.findByUserNum(userNum);
 		return likeProductList;
 	}
 
