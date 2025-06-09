@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lgh.FlipMarket.config.mail.MailService;
 import com.lgh.FlipMarket.dto.UserDto;
 import com.lgh.FlipMarket.entity.User;
 import com.lgh.FlipMarket.repository.UserRepository;
@@ -37,13 +38,16 @@ public class UserApiController {
 	private final AddressService addressService;
 
 	private final BCryptPasswordEncoder passwordEncoder;
+	
+	private final MailService mailService;
 
 	public UserApiController(UserRepository userRepository, UserService userService, AddressService addressService,
-			BCryptPasswordEncoder passwordEncoder) {
+			BCryptPasswordEncoder passwordEncoder, MailService mailService) {
 		this.userRepository = userRepository;
 		this.userService = userService;
 		this.addressService = addressService;
 		this.passwordEncoder = passwordEncoder;
+		this.mailService = mailService;
 	}
 
 	@GetMapping("/overlap/emailRegister")
@@ -199,13 +203,17 @@ public class UserApiController {
 	@PostMapping("/resetPassword")
 	public Map<String, String> countUserBefResetPassword(@RequestBody Map<String, String> data) {
 		String email = data.get("email");
-		int cnt = userService.countUserByEmail(email);
-
-		if (cnt == 0) {
-			return Map.of("result", "0");
-		} else {
-			return Map.of("result", "1");
-		}
+		
+		mailService.sendTempPassword(email, "임시 비밀번호입니다.", "testtest");
+		
+		return Map.of("result", "1");
+//		int cnt = userService.countUserByEmail(email);
+//
+//		if (cnt == 0) {
+//			return Map.of("result", "0");
+//		} else {
+//			return Map.of("result", "1");
+//		}
 	}
 
 	@PostMapping("/mypage/editProfile/deleteAccount")
