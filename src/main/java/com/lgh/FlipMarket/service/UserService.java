@@ -48,6 +48,7 @@ public class UserService {
 	}
 
 	// 회원정보 수정 페이지에서의 비밀번호 수정
+	@Transactional
 	public int updatePwd(String newPwd, Long num) {
 		return userRepository.updatePwd(newPwd, num);
 	}

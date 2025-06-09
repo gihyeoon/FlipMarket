@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lgh.FlipMarket.config.RandomPasswordGenerator;
 import com.lgh.FlipMarket.config.mail.MailService;
 import com.lgh.FlipMarket.dto.UserDto;
 import com.lgh.FlipMarket.entity.User;
@@ -209,13 +210,21 @@ public class UserApiController {
 			return Map.of("result", "0");
 		} else {
 			// 소셜 계정은 비밀번호 개념이 없기 때문에 재설정이 불가능하게 한다.
-			String provider = userService.findByNum(userService.findNumByEmail(email)).getProvider();
+			Long userNum = userService.findNumByEmail(email);
+			String provider = userService.findByNum(userNum).getProvider();
 
 			if (provider != null) {
 				return Map.of("result", "2", "provider", provider);
 			}
 
-			mailService.sendTempPassword(email, "임시 비밀번호입니다.", "testtest");
+			// 임시 비밀번호를 해당 메일로 보내줌.
+			String tempPassword = RandomPasswordGenerator.generateRandomString(16);
+			
+			mailService.sendTempPassword(email, "임시 비밀번호입니다.", tempPassword);
+			
+			// 그리고 실제 DB에도 해당 임시 비밀번호를 UPDATE
+			userService.updatePwd(passwordEncoder.encode(tempPassword), userNum);
+			
 			return Map.of("result", "1");
 		}
 	}
