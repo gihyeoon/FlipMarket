@@ -38,7 +38,7 @@ public class UserApiController {
 	private final AddressService addressService;
 
 	private final BCryptPasswordEncoder passwordEncoder;
-	
+
 	private final MailService mailService;
 
 	public UserApiController(UserRepository userRepository, UserService userService, AddressService addressService,
@@ -203,17 +203,21 @@ public class UserApiController {
 	@PostMapping("/resetPassword")
 	public Map<String, String> countUserBefResetPassword(@RequestBody Map<String, String> data) {
 		String email = data.get("email");
-		
-		mailService.sendTempPassword(email, "임시 비밀번호입니다.", "testtest");
-		
-		return Map.of("result", "1");
-//		int cnt = userService.countUserByEmail(email);
-//
-//		if (cnt == 0) {
-//			return Map.of("result", "0");
-//		} else {
-//			return Map.of("result", "1");
-//		}
+		int cnt = userService.countUserByEmail(email);
+
+		if (cnt == 0) {
+			return Map.of("result", "0");
+		} else {
+			// 소셜 계정은 비밀번호 개념이 없기 때문에 재설정이 불가능하게 한다.
+			String provider = userService.findByNum(userService.findNumByEmail(email)).getProvider();
+
+			if (provider != null) {
+				return Map.of("result", "2", "provider", provider);
+			}
+
+			mailService.sendTempPassword(email, "임시 비밀번호입니다.", "testtest");
+			return Map.of("result", "1");
+		}
 	}
 
 	@PostMapping("/mypage/editProfile/deleteAccount")
