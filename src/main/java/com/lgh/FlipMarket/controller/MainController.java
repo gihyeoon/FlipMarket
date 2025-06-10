@@ -1,11 +1,7 @@
 package com.lgh.FlipMarket.controller;
 
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +11,6 @@ import com.lgh.FlipMarket.config.AuthenticationUserId;
 import com.lgh.FlipMarket.dto.ProductDto;
 import com.lgh.FlipMarket.service.LikeService;
 import com.lgh.FlipMarket.service.ProductService;
-import com.lgh.FlipMarket.service.UserService;
 
 @Controller
 public class MainController {

@@ -82,6 +82,7 @@ public class ProductService {
 	}
 
 	// 상품의 재고 수량을 업데이트 => 사용자가 해당 상품을 구매할 경우 해당 상품의 재고수량을 마이너스한다.
+	@Transactional
 	public int updateProductStock(Long productNum, int quantity) {
 		return productRepository.updateProductStock(productNum, quantity);
 	}

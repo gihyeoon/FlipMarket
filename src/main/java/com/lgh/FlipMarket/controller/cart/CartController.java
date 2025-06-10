@@ -3,9 +3,6 @@ package com.lgh.FlipMarket.controller.cart;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.lgh.FlipMarket.config.AuthenticationUserId;
 import com.lgh.FlipMarket.dto.CartDto;
 import com.lgh.FlipMarket.dto.ProductDto;
 import com.lgh.FlipMarket.dto.UserDto;
-import com.lgh.FlipMarket.service.*;
+import com.lgh.FlipMarket.service.CartService;
+import com.lgh.FlipMarket.service.ProductService;
+import com.lgh.FlipMarket.service.PurchaseService;
+import com.lgh.FlipMarket.service.UserService;
 
 @Controller
 public class CartController {
@@ -30,14 +31,17 @@ public class CartController {
 
 	private final ProductService productService;
 
+	private final AuthenticationUserId authenticationUserId;
+
 	private static final String BASE_URL = "cart/";
 
 	public CartController(CartService cartService, UserService userService, ProductService productService,
-			PurchaseService purchaseService) {
+			PurchaseService purchaseService, AuthenticationUserId authenticationUserId) {
 		this.cartService = cartService;
 		this.userService = userService;
 		this.productService = productService;
 		this.purchaseService = purchaseService;
+		this.authenticationUserId = authenticationUserId;
 	}
 
 	@GetMapping("/cart")
@@ -73,26 +77,8 @@ public class CartController {
 	@ResponseBody
 	@PostMapping("/api/cart/purchase")
 	public Map<String, String> purchase(@RequestBody Map<String, String> data) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String email = "";
-
-		if (authentication.getPrincipal() instanceof OAuth2User) {
-			OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-			// 네이버 로그인일 경우
-			if ((String) oauth2User.getAttributes().get("email") == null) {
-				Map<String, Object> response = (Map<String, Object>) oauth2User.getAttributes().get("response");
-				email = (String) response.get("email");
-			}
-			// 구글 로그인일 경우
-			else {
-				email = (String) oauth2User.getAttributes().get("email");
-			}
-		} else {
-			email = authentication.getName();
-		}
-
+		Long userNum = authenticationUserId.getUserNum();
 		Long cartNum = Long.parseLong(data.get("cartNum"));
-		Long userNum = userService.findNumByEmail(email);
 		Long productNum = cartService.findByNum(cartNum).get().getProduct().getNum();
 		int stock = cartService.findByNum(cartNum).get().getProduct().getStock();
 		int totalPrice = Integer.parseInt(data.get("totalPrice"));
@@ -116,6 +102,7 @@ public class CartController {
 			purchaseService.addPurchase(userDto, productDto, totalPrice, quantity);
 			return Map.of("result", "0");
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Map.of("result", "1");
 		}
 

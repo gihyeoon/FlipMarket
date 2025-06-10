@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.lgh.FlipMarket.config.AuthenticationUserId;
 import com.lgh.FlipMarket.config.ProductImageHandler;
 import com.lgh.FlipMarket.dto.ProductDto;
 import com.lgh.FlipMarket.dto.UserDto;
@@ -33,10 +34,14 @@ public class ProductApiController {
 
 	private final CartService cartService;
 
-	public ProductApiController(ProductService productService, UserService userService, CartService cartService) {
+	private final AuthenticationUserId authenticationUserId;
+
+	public ProductApiController(ProductService productService, UserService userService, CartService cartService,
+			AuthenticationUserId authenticationUserId) {
 		this.productService = productService;
 		this.userService = userService;
 		this.cartService = cartService;
+		this.authenticationUserId = authenticationUserId;
 	}
 
 	@PostMapping("/addProduct")
@@ -44,26 +49,7 @@ public class ProductApiController {
 			@RequestParam("productName") String productName, @RequestParam("category") String category,
 			@RequestParam("stock") int stock, @RequestParam("price") int price, @RequestParam("desc") String desc)
 			throws IOException {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String email = "";
-		Long userNum = 0L;
-
-		if (authentication.getPrincipal() instanceof OAuth2User) {
-			OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-			// 네이버 로그인일 경우
-			if ((String) oauth2User.getAttributes().get("email") == null) {
-				Map<String, Object> response = (Map<String, Object>) oauth2User.getAttributes().get("response");
-				email = (String) response.get("email");
-			}
-			// 구글 로그인일 경우
-			else {
-				email = (String) oauth2User.getAttributes().get("email");
-			}
-		} else {
-			email = authentication.getName();
-		}
-		userNum = userService.findNumByEmail(email);
-
+		Long userNum = authenticationUserId.getUserNum();
 		UserDto userDto = userService.findByNum(userNum);
 
 		// 로그인한 사용자가 상품명과 카테고리로 이미 등록되어있는 상품이 있는지 확인한다.
@@ -80,34 +66,13 @@ public class ProductApiController {
 
 	@PostMapping("/addCart")
 	public Map<String, String> addCart(@RequestBody Map<String, String> data) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String email = "";
+		Long userNum = authenticationUserId.getUserNum();
 		Long productNum = Long.parseLong(data.get("productNum"));
+		int count = cartService.countCartByUserNumAndProductNum(userNum, productNum);
 
-		// 로그인이 되어있을 경우
-		if (authentication != null && authentication.isAuthenticated()
-				&& !(authentication instanceof AnonymousAuthenticationToken)) {
-			if (authentication.getPrincipal() instanceof OAuth2User) {
-				OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-				// 네이버 로그인일 경우
-				if ((String) oauth2User.getAttributes().get("email") == null) {
-					Map<String, Object> response = (Map<String, Object>) oauth2User.getAttributes().get("response");
-					email = (String) response.get("email");
-				}
-				// 구글 로그인일 경우
-				else {
-					email = (String) oauth2User.getAttributes().get("email");
-				}
-			} else {
-				email = authentication.getName();
-			}
-		} else {
+		if (userNum == 0) {
 			return Map.of("result", "0");
 		}
-
-		Long userNum = userService.findNumByEmail(email);
-
-		int count = cartService.countCartByUserNumAndProductNum(userNum, productNum);
 
 		if (count > 0) {
 			return Map.of("result", "2");
