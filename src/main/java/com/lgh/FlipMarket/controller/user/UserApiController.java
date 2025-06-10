@@ -171,6 +171,7 @@ public class UserApiController {
 		}
 	}
 
+	@Deprecated
 	@PostMapping("/resetPassword/updatePwd")
 	public Map<String, String> resetPassword(@RequestBody Map<String, String> data) {
 		Long num = Long.parseLong(data.get("num"));
@@ -201,8 +202,8 @@ public class UserApiController {
 		}
 	}
 
-	@PostMapping("/resetPassword")
-	public Map<String, String> countUserBefResetPassword(@RequestBody Map<String, String> data) {
+	@PostMapping("/updateTempPassword")
+	public Map<String, String> updateTempPassword(@RequestBody Map<String, String> data) {
 		String email = data.get("email");
 		int cnt = userService.countUserByEmail(email);
 

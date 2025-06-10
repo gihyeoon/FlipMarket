@@ -102,6 +102,7 @@ public class UserController {
 		return BASE_URL + "editProfile";
 	}
 
+	@Deprecated
 	@GetMapping("/resetPassword")
 	public String showResetPasswordPage(@RequestParam("email") String userEmail, Model model) {
 		Long userNum = userService.findNumByEmail(userEmail);
