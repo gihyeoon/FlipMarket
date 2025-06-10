@@ -1,7 +1,7 @@
 # 📌 프로젝트 목표
 - 전역 이후 개발에 감을 다시 잡기 위해 진행
 - Spring Security, JPA 실전 적용
-- 실용적인 CRUD 및 보안 흐름 구현
+- CRUD 및 보안 흐름 구현
 - 이후에는 로그인 연동, 상품별 통계 차트 등을 구현해볼 예정
 
 # 🛒 FlipMarket
@@ -13,6 +13,7 @@ Spring Boot 기반의 **상품 사고팔기 서비스**입니다.
 
 ## 🚀 사용 기술 (Tech Stack)
 
+- **Frontend**: Tailwind CSS
 - **Backend**: Java 24, Spring Boot, Spring Security, JPA (Hibernate)
 - **Database**: MySQL
 - **Build Tool**: Gradle
@@ -23,8 +24,10 @@ Spring Boot 기반의 **상품 사고팔기 서비스**입니다.
 ## 🧩 주요 기능
 
 - 회원가입 / 로그인 / 로그아웃 / 정보 수정
+- 소셜 로그인 (구글, 네이버)
 - 상품 등록 / 수정 / 삭제 (이미지 업로드 구현 완료)
 - 상품 목록 조회 / 검색
+- 메일 전송 시스템 (임시 비밀번호 지급)
 - 상품별 통계 조회 (추가 예정)
 
 ---
