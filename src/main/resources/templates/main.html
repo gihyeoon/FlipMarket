@@ -99,7 +99,7 @@
 		function likeProduct(productNum, likeCount) {
 			const userNum = $("#userNum").text();
 
-			if (userNum == "") {
+			if (userNum == 0) {
 				alert("로그인이 필요한 서비스입니다.");
 				return false;
 			}
