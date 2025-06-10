@@ -1,11 +1,15 @@
 package com.lgh.FlipMarket.controller.product;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.lgh.FlipMarket.config.AuthenticationUserId;
 import com.lgh.FlipMarket.dto.ProductDto;
+import com.lgh.FlipMarket.service.LikeService;
 import com.lgh.FlipMarket.service.ProductService;
 
 @Controller
@@ -13,10 +17,17 @@ public class ProductController {
 
 	private final ProductService productService;
 
+	private final LikeService likeService;
+
+	private final AuthenticationUserId authenticationUserId;
+
 	private static final String BASE_URL = "product/";
 
-	public ProductController(ProductService productService) {
+	public ProductController(ProductService productService, LikeService likeService,
+			AuthenticationUserId authenticationUserId) {
 		this.productService = productService;
+		this.likeService = likeService;
+		this.authenticationUserId = authenticationUserId;
 	}
 
 	@GetMapping("/addProduct")
@@ -26,11 +37,19 @@ public class ProductController {
 
 	@GetMapping("/products")
 	public String showProductDetailPage(@RequestParam("num") Long productNum, Model model) {
+		Long userNum = authenticationUserId.getUserNum();
+
+		// 로그인한 사용자가 좋아요 누른 상품 번호들을 View로 넘김
+		List<Long> likeProductList = likeService.findByUserNum(userNum);
 		ProductDto product = productService.findByNum(productNum);
+
+		model.addAttribute("likeProductList", likeProductList);
 		model.addAttribute("product", product);
+		model.addAttribute("userNum", userNum);
+
 		return BASE_URL + "productDetail";
 	}
-	
+
 	@GetMapping("/products/editProduct")
 	public String showEditProductPage(@RequestParam("num") Long productNum, Model model) {
 		ProductDto productDto = productService.findByNum(productNum);

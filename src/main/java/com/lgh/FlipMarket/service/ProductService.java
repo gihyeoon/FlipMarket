@@ -41,7 +41,8 @@ public class ProductService {
 
 		return ProductDto.builder().num(product.getNum()).productName(product.getProductName())
 				.price(product.getPrice()).category(product.getCategory()).stock(product.getStock())
-				.description(product.getDescription()).imagePath(product.getImagePath()).build();
+				.description(product.getDescription()).imagePath(product.getImagePath())
+				.likeCount(product.getLikeCount()).build();
 	}
 
 	public int countByProductNameAndCategory(String productName, String category, Long userNum) {
@@ -108,7 +109,7 @@ public class ProductService {
 	public void deleteProduct(Long productNum) {
 		productRepository.deleteById(productNum);
 	}
-	
+
 	// 상품의 좋아요 개수 수정
 	@Transactional
 	public int updateProductLikeCount(int likeCount, Long productNum) {

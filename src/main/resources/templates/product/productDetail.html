@@ -7,11 +7,13 @@
 	<title th:text="${product.productName} + ' - 상품 상세'"></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body class="bg-gray-50 text-gray-800">
 	<span id="productNum" th:text="${product.num}" hidden></span>
+	<span id="userNum" th:text="${userNum}" hidden></span>
 
 	<div class="max-w-4xl mx-auto py-10 px-4">
 		<!-- 뒤로가기 버튼 -->
@@ -32,13 +34,36 @@
 				<hr>
 				<p class="text-sm text-gray-700 whitespace-pre-line" th:text="${product.description}"></p>
 
-				<!-- 수량 선택 -->
-				<div class="flex items-center space-x-4">
-					<label for="quantity" class="font-medium">수량</label>
-					<input type="number" id="quantity" name="quantity" value="1" min="1" max="10"
-						class="w-16 text-center border rounded-md">
-					<p class="text-gray-500 text-sm" id="stockText" th:text="'남은 수량: ' + ${product.stock}"></p>
-					<span id="stock" th:text="${product.stock}" hidden></span>
+				<div class="flex items-center justify-between">
+					<!-- 수량 선택 -->
+					<div class="flex items-center space-x-4">
+						<label for="quantity" class="font-medium">수량</label>
+						<input type="number" id="quantity" name="quantity" value="1" min="1" max="10"
+							class="w-16 text-center border rounded-md">
+						<p class="text-gray-500 text-sm" id="stockText" th:text="'남은 수량: ' + ${product.stock}"></p>
+						<span id="stock" th:text="${product.stock}" hidden></span>
+					</div>
+
+					<!-- 좋아요 영역 -->
+					<div class="flex items-center space-x-1 pl-4">
+						<!-- 좋아요 버튼 -->
+						<button type="button" class="text-gray-400 hover:text-red-500 transition duration-200"
+							th:onclick="'likeProduct(' + ${product.num} + ', ' + ${product.likeCount} + ')'"
+							aria-label="좋아요 버튼">
+
+							<!-- 조건에 따라 하트 아이콘 다르게 렌더링 -->
+							<div class="h-6 w-6" th:if="${likeProductList.contains(product.num)}">
+								<i class="fa-solid fa-heart" style="color: red;"></i>
+							</div>
+
+							<div class="h-6 w-6" th:unless="${likeProductList.contains(product.num)}">
+								<i class="fa-regular fa-heart"></i>
+							</div>
+						</button>
+
+						<!-- 좋아요 수 -->
+						<span class="text-sm text-gray-500" th:text="${product.likeCount}"></span>
+					</div>
 				</div>
 
 				<!-- 예: 구매하기 버튼 -->
@@ -57,6 +82,35 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
+		function likeProduct(productNum, likeCount) {
+			const userNum = $("#userNum").text();
+			
+			const data = {
+				productNum: productNum,
+				likeCount: likeCount,
+				userNum: userNum,
+			}
+			
+			if (userNum == 0) {
+				alert("로그인 이후 사용 가능한 서비스입니다.");
+				return false;
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "/api/likeProduct",
+				data: JSON.stringify(data),
+				contentType: "application/json",
+
+				success: function (result) {
+					location.reload();
+				},
+				error: function (request, status, error) {
+					alert("좋아요 수정 오류\n code: " + request.status + "\n error: " + error);
+				}
+			});
+		}
+
 		function addCart(event) {
 			event.preventDefault();
 
@@ -68,7 +122,7 @@
 				productNum: productNum,
 				quantity: quantity
 			}
-			
+
 			console.log("수량: " + quantity + "  / 재고 : " + stock);
 
 			if (quantity > stock) {
@@ -88,7 +142,7 @@
 						alert("로그인이 되어있지 않습니다.");
 						window.location.href = "/login";
 						return false;
-					// 이미 장바구니에 등록되어있을 경우
+						// 이미 장바구니에 등록되어있을 경우
 					} else if (result.result == "2") {
 						alert("이미 장바구니에 등록되어있는 상품입니다.");
 						return false;
