@@ -9,6 +9,16 @@
 	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<style>
+		#productScroll::-webkit-scrollbar {
+			display: none;
+		}
+		
+		#productScroll {
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+		}
+	</style>
 </head>
 
 <body class="bg-gray-100">
@@ -56,35 +66,36 @@
 			</form>
 		</div>
 
-		<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-			<div th:each="list : ${productList}"
-				class="bg-white rounded-xl shadow hover:shadow-md transition p-4 cursor-pointer relative">
-				<a th:href="@{/products(num=${list.num})}">
-					<img th:src="@{|/images/${list.imagePath}}" alt="상품 이미지"
-						class="w-full h-64 object-contain rounded-md mb-3" />
-					<div class="text-lg font-medium text-gray-900" th:text="${list.productName}">상품명</div>
-					<div class="text-sm text-gray-500" th:text="${list.category}">카테고리</div>
-					<div class="text-blue-600 font-semibold mt-1"
-						th:text="${#numbers.formatInteger(list.price, 3, 'COMMA')} + '원'">가격</div>
-				</a>
+		<!-- 수평 스크롤 가능한 영역 -->
+		<div id="productScroll" class="overflow-x-auto pb-4 cursor-grab scrollbar-hide scroll-smooth">
+			<!-- 가로로 카드 나열 -->
+			<div class="flex space-x-4 min-w-max px-1">
+				<div th:each="list : ${productList}"
+					class="min-w-[220px] bg-white rounded-xl shadow hover:shadow-md transition p-4 cursor-pointer relative">
+					<a th:href="@{/products(num=${list.num})}">
+						<img th:src="@{|/images/${list.imagePath}|}" alt="상품 이미지"
+							class="w-64 h-64 object-contain rounded-md mb-3" />
+						<div class="text-lg font-medium text-gray-900" th:text="${list.productName}">상품명</div>
+						<div class="text-sm text-gray-500" th:text="${list.category}">카테고리</div>
+						<div class="text-blue-600 font-semibold mt-1"
+							th:text="${#numbers.formatInteger(list.price, 3, 'COMMA')} + '원'">가격</div>
+					</a>
 
-				<!-- 좋아요 영역 -->
-				<div class="absolute bottom-4 right-4 flex items-center space-x-1">
-					<!-- 좋아요 아이콘 -->
-					<button type="button" class="text-gray-400 hover:text-red-500 transition duration-200"
-						th:onclick="'likeProduct(' + ${list.num} + ', ' + ${list.likeCount} + ')'">
+					<!-- 좋아요 영역 -->
+					<div class="absolute bottom-4 right-4 flex items-center space-x-1">
+						<button type="button" class="text-gray-400 hover:text-red-500 transition duration-200"
+							th:onclick="'likeProduct(' + ${list.num} + ', ' + ${list.likeCount} + ')'">
 
-						<!-- 조건에 따라 하트 아이콘 다르게 렌더링 -->
-						<div class="filledHeart h-6 w-6" th:if="${likeProductList.contains(list.num)}">
-							<i class="fa-solid fa-heart" style="color: red;"></i>
-						</div>
-
-						<div class="outlineHeart h-6 w-6" th:unless="${likeProductList.contains(list.num)}">
-							<i class="fa-regular fa-heart"></i>
-						</div>
-					</button>
-					<!-- 좋아요 수 -->
-					<span class="text-sm text-gray-500" th:text="${list.likeCount}"></span>
+							<!-- 조건에 따라 하트 아이콘 다르게 렌더링 -->
+							<div class="filledHeart h-6 w-6" th:if="${likeProductList.contains(list.num)}">
+								<i class="fa-solid fa-heart" style="color: red;"></i>
+							</div>
+							<div class="outlineHeart h-6 w-6" th:unless="${likeProductList.contains(list.num)}">
+								<i class="fa-regular fa-heart"></i>
+							</div>
+						</button>
+						<span class="text-sm text-gray-500" th:text="${list.likeCount}"></span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -96,6 +107,42 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
+		$(function () {
+			const productScrollbar = $("#productScroll");
+
+			let isDragging = false;
+			let startX = 0;
+			let scrollLeft = 0;
+			
+			// 클릭 방지용 변수
+			let dragMoved = false;
+			
+			productScrollbar
+			.on("mousedown", function (e) {
+				isDragging = true;
+				dragMoved = false;
+				productScrollbar.addClass("cursor-grabbing");
+				startX = e.pageX;
+				scrollLeft = productScrollbar.scrollLeft();
+				e.preventDefault();
+			})
+			.on("mouseleave mouseup", function () {
+				isDragging = false;
+				productScrollbar.removeClass("cursor-grabbing");
+			})
+			.on("mousemove", function (e) {
+				if (!isDragging) return;
+				const x = e.pageX;
+				const walk = (x - startX) * 1.5 // 민감도 설정
+				if (Math.abs(walk) > 5) dragMoved = true;
+				productScrollbar.scrollLeft(scrollLeft - walk);
+			})
+			.on("click", "a", function (e) {
+				if (dragMoved) e.preventDefault();
+			});
+		})
+
+
 		function likeProduct(productNum, likeCount) {
 			const userNum = $("#userNum").text();
 
