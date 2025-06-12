@@ -50,6 +50,7 @@ public class ProductService {
 	}
 
 	// 메인화면 기본 조회 (조건1: 로그인한 사용자는 제외)
+	@Deprecated
 	public List<ProductDto> findByUserNumNot(Long userNum) {
 		List<Object[]> results = productRepository.findByUserNumNot(userNum);
 
@@ -61,8 +62,31 @@ public class ProductService {
 	}
 
 	// 메인화면 검색 조회 (조건1: 상품명, 조건2: 로그인한 사용자는 제외)
+	@Deprecated
 	public List<ProductDto> findByKeywordAndUserNum(String keyword, Long userNum) {
 		List<Object[]> results = productRepository.findByKeywordAndUserNum(keyword, userNum);
+
+		return results.stream()
+				.map(r -> new ProductDto(Long.parseLong(r[0].toString()), r[1].toString(),
+						Integer.parseInt(r[2].toString()), r[3].toString(), Integer.parseInt(r[4].toString()),
+						r[5].toString(), r[6].toString(), Integer.parseInt(r[7].toString())))
+				.collect(Collectors.toList());
+	}
+
+	// 좋아요 수가 많은 순으로 30개의 상품을 조회
+	public List<ProductDto> findTop30LikeByUserNum(Long userNum) {
+		List<Object[]> results = productRepository.findTop30LikeByUserNum(userNum);
+
+		return results.stream()
+				.map(r -> new ProductDto(Long.parseLong(r[0].toString()), r[1].toString(),
+						Integer.parseInt(r[2].toString()), r[3].toString(), Integer.parseInt(r[4].toString()),
+						r[5].toString(), r[6].toString(), Integer.parseInt(r[7].toString())))
+				.collect(Collectors.toList());
+	}
+
+	// 조회 수가 많은 순으로 30개의 상품을 조회
+	public List<ProductDto> findTop30ViewCountByUserNum(Long userNum) {
+		List<Object[]> results = productRepository.findTop30ViewCountByUserNum(userNum);
 
 		return results.stream()
 				.map(r -> new ProductDto(Long.parseLong(r[0].toString()), r[1].toString(),
