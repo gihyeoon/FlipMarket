@@ -18,6 +18,15 @@
 			-ms-overflow-style: none;
 			scrollbar-width: none;
 		}
+
+		#viewCountScroll::-webkit-scrollbar {
+			display: none;
+		}
+
+		#viewCountScroll {
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+		}
 	</style>
 </head>
 
@@ -108,7 +117,7 @@
 				많이 본 상품
 			</h2>
 			<!-- 수평 스크롤 가능한 영역 -->
-			<div id="productScroll" class="overflow-x-auto pb-4 cursor-grab scrollbar-hide scroll-smooth">
+			<div id="viewCountScroll" class="overflow-x-auto pb-4 cursor-grab scrollbar-hide scroll-smooth">
 				<!-- 가로로 카드 나열 -->
 				<div class="flex space-x-4 min-w-max px-1">
 					<div th:each="list : ${top30ViewCountProductList}"
@@ -184,6 +193,40 @@
 				});
 		})
 
+		$(function () {
+			const viewCountScrollbar = $("#viewCountScroll");
+
+			let isDragging = false;
+			let startX = 0;
+			let scrollLeft = 0;
+
+			// 클릭 방지용 변수
+			let dragMoved = false;
+
+			viewCountScrollbar
+				.on("mousedown", function (e) {
+					isDragging = true;
+					dragMoved = false;
+					viewCountScrollbar.addClass("cursor-grabbing");
+					startX = e.pageX;
+					scrollLeft = viewCountScrollbar.scrollLeft();
+					e.preventDefault();
+				})
+				.on("mouseleave mouseup", function () {
+					isDragging = false;
+					viewCountScrollbar.removeClass("cursor-grabbing");
+				})
+				.on("mousemove", function (e) {
+					if (!isDragging) return;
+					const x = e.pageX;
+					const walk = (x - startX) * 1.5 // 민감도 설정
+					if (Math.abs(walk) > 5) dragMoved = true;
+					viewCountScrollbar.scrollLeft(scrollLeft - walk);
+				})
+				.on("click", "a", function (e) {
+					if (dragMoved) e.preventDefault();
+				});
+		});
 
 		function likeProduct(productNum, likeCount) {
 			const userNum = $("#userNum").text();
