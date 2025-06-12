@@ -21,6 +21,7 @@ import com.lgh.FlipMarket.dto.UserDto;
 import com.lgh.FlipMarket.service.CartService;
 import com.lgh.FlipMarket.service.ProductService;
 import com.lgh.FlipMarket.service.UserService;
+import com.lgh.FlipMarket.service.ViewCountService;
 
 @RestController
 @RequestMapping("/api")
@@ -34,13 +35,16 @@ public class ProductApiController {
 
 	private final CartService cartService;
 
+	private final ViewCountService viewCountService;
+
 	private final AuthenticationUserId authenticationUserId;
 
 	public ProductApiController(ProductService productService, UserService userService, CartService cartService,
-			AuthenticationUserId authenticationUserId) {
+			ViewCountService viewCountService, AuthenticationUserId authenticationUserId) {
 		this.productService = productService;
 		this.userService = userService;
 		this.cartService = cartService;
+		this.viewCountService = viewCountService;
 		this.authenticationUserId = authenticationUserId;
 	}
 
@@ -109,6 +113,16 @@ public class ProductApiController {
 		Long productNum = Long.parseLong(data.get("num"));
 		productService.deleteProduct(productNum);
 		return Map.of("result", "0");
+	}
+
+	@PostMapping("/addViewCount")
+	public Map<String, String> addViewCount(@RequestBody Map<String, String> data) {
+		Long userNum = Long.parseLong(data.get("userNum"));
+		Long productNum = Long.parseLong(data.get("productNum"));
+		
+		viewCountService.save(userNum, productNum);
+		
+		return Map.of("result", "1");
 	}
 
 }

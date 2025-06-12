@@ -82,6 +82,33 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
+		$(document).ready(function () {
+			const userNum = $("#userNum").text();
+			const productNum = $("#productNum").text();
+			
+			if (userNum == 0) {
+				return false;
+			}
+			
+			const data = {
+				userNum: userNum,
+				productNum: productNum,
+			}
+			
+			$.ajax({
+				type: "POST",
+				url: "/api/addViewCount",
+				data: JSON.stringify(data),
+				contentType: "application/json",
+				
+				success: function (result) {
+				},
+				error: function (request, status, error) {
+					alert("조회수 증가 오류\n code: " + request.status + "\n error: " + error);
+				}
+			});
+		});
+		
 		function likeProduct(productNum, likeCount) {
 			const userNum = $("#userNum").text();
 			
