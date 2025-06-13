@@ -14,7 +14,7 @@
 	<div th:replace="~{/fragments/header :: header}"></div>
 	
 	<form class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg mx-auto">
-		<span th:text="${num}" id="num" hidden></span>
+		<span th:text="${userNum}" id="num" hidden></span>
 
 		<h2 class="text-2xl font-bold mb-6 text-center text-blue-600">본인 확인</h2>
 
@@ -31,7 +31,7 @@
 				아래 버튼을 눌러 소셜 인증을 진행해주세요.
 			</p>
 			<!-- Google 버튼 -->
-			<a th:if="${provider == 'google'}" th:href="@{'/api/validateUserByOAuth2/google?num=' + ${num}}"
+			<a th:if="${provider == 'google'}" th:href="@{'/api/validateUserByOAuth2/google?num=' + ${userNum}}"
 				class="inline-flex items-center justify-center gap-3 px-6 py-3 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition font-semibold text-gray-700">
 				<!-- Google 로고 SVG -->
 				<svg class="w-6 h-6" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -48,7 +48,7 @@
 			</a>
 
 			<!-- Kakao 버튼 -->
-			<a th:if="${provider == 'kakao'}" th:href="@{'/api/validateUserByOAuth2/kakao?num=' + ${num}}"
+			<a th:if="${provider == 'kakao'}" th:href="@{'/api/validateUserByOAuth2/kakao?num=' + ${userNum}}"
 				class="inline-flex items-center justify-center gap-3 px-6 py-3 bg-yellow-400 hover:bg-yellow-500 transition rounded-full shadow font-semibold text-black">
 				<!-- Kakao 로고 (K) 간단 SVG -->
 				<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -59,7 +59,7 @@
 			</a>
 
 			<!-- Naver 버튼 -->
-			<a th:if="${provider == 'naver'}" th:href="@{'/api/validateUserByOAuth2/naver?num=' + ${num}}"
+			<a th:if="${provider == 'naver'}" th:href="@{'/api/validateUserByOAuth2/naver?num=' + ${userNum}}"
 				class="inline-flex items-center justify-center gap-3 px-6 py-3 bg-green-600 hover:bg-green-700 transition rounded-full shadow font-semibold text-white">
 				<!-- Naver 로고 N -->
 				<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

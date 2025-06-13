@@ -69,6 +69,7 @@ public class UserController {
 		List<ProductDto> recentProducts = productService.findByUserNum(userNum);
 
 		model.addAttribute("user", userDto);
+		model.addAttribute("userNum", userDto.getNum());
 		model.addAttribute("recentProducts", recentProducts);
 		model.addAttribute("address", address);
 		return BASE_URL + "mypage";
@@ -87,7 +88,7 @@ public class UserController {
 
 		model.addAttribute("email", userDto.getEmail());
 		model.addAttribute("provider", userDto.getProvider());
-		model.addAttribute("num", userNum);
+		model.addAttribute("userNum", userNum);
 		model.addAttribute("pwd", userDto.getPwd());
 
 		return BASE_URL + "reConfirmUserInfo";
@@ -98,6 +99,7 @@ public class UserController {
 		UserDto userDto = userService.findByNum(userNum);
 		List<AddressDto> addressList = addressService.findByUserNum(userNum);
 		model.addAttribute("user", userDto);
+		model.addAttribute("userNum", userDto.getNum());
 		model.addAttribute("addressList", addressList);
 		return BASE_URL + "editProfile";
 	}

@@ -45,7 +45,7 @@ public class MainController {
 		// 로그인한 사용자가 좋아요 누른 상품 번호들을 View로 넘김
 		List<Long> likeProductList = likeService.findByUserNum(userNum);
 
-		model.addAttribute("num", userNum);
+		model.addAttribute("userNum", userNum);
 		model.addAttribute("likeProductList", likeProductList);
 		model.addAttribute("top30LikeProductList", top30LikeProductList);
 		model.addAttribute("top30ViewCountProductList", top30ViewCountProductList);

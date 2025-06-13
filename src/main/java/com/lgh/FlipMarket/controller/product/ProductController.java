@@ -31,7 +31,9 @@ public class ProductController {
 	}
 
 	@GetMapping("/addProduct")
-	public String showAddProductPage() {
+	public String showAddProductPage(Model model) {
+		Long userNum = authenticationUserId.getUserNum();
+		model.addAttribute("userNum", userNum);
 		return BASE_URL + "addProduct";
 	}
 

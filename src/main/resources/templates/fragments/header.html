@@ -19,8 +19,8 @@
 
 				<!-- 로그인 상태 -->
 				<div sec:authorize="isAuthenticated()">
-					<a th:href="@{/mypage(num=${num})}" class="hover:underline">마이페이지</a>
-					<a th:href="@{/cart(num=${num})}" class="hover:underline">장바구니</a>
+					<a th:href="@{/mypage(num=${userNum})}" class="hover:underline">마이페이지</a>
+					<a th:href="@{/cart(num=${userNum})}" class="hover:underline">장바구니</a>
 					<a th:href="@{/addProduct}" class="hover:underline">상품 등록</a>
 					<a th:href="@{/logout}" class="text-red-600 hover:underline">로그아웃</a>
 				</div>
