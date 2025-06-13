@@ -1,0 +1,38 @@
+<!-- Header / Navigation -->
+<div th:fragment="header">
+	<header class="fixed top-0 left-0 w-full z-50 bg-white shadow">
+		<div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+			<!-- 좌측 로고 -->
+			<h1 class="text-xl font-bold text-blue-600">
+				<a th:href="@{/main}">FlipMarket</a>
+			</h1>
+
+			<!-- 중앙 검색창 -->
+			<form th:action="@{/search}" method="get" class="flex-1 mx-6 max-w-xl">
+				<input type="text" name="keyword" placeholder="어떤 상품을 찾으시나요?"
+					class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+			</form>
+
+			<!-- 우측 메뉴 -->
+			<nav class="flex items-center space-x-4 text-sm">
+				<!-- 공통 메뉴 -->
+
+				<!-- 로그인 상태 -->
+				<div sec:authorize="isAuthenticated()">
+					<a th:href="@{/mypage(num=${num})}" class="hover:underline">마이페이지</a>
+					<a th:href="@{/cart(num=${num})}" class="hover:underline">장바구니</a>
+					<a th:href="@{/addProduct}" class="hover:underline">상품 등록</a>
+					<a th:href="@{/logout}" class="text-red-600 hover:underline">로그아웃</a>
+				</div>
+
+				<!-- 비로그인 상태 -->
+				<div sec:authorize="isAnonymous()">
+					<a th:href="@{/mypage}" class="hover:underline">마이페이지</a>
+					<a th:href="@{/cart}" class="hover:underline">장바구니</a>
+					<a th:href="@{/login}" class="hover:underline">로그인</a>
+					<a th:href="@{/register}" class="hover:underline">회원가입</a>
+				</div>
+			</nav>
+		</div>
+	</header>
+</div>
