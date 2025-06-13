@@ -11,7 +11,9 @@
 </head>
 
 <body>
-	<div class="max-w-5xl mx-auto p-4">
+	<div th:replace="~{/fragments/header :: header}"></div>
+	
+	<div class="pt-24 max-w-5xl mx-auto p-4">
 		<h2 class="text-2xl font-bold mb-6">🛒 장바구니</h2>
 
 		<div class="space-y-4">
@@ -71,7 +73,7 @@
 			let quantity = item.find(".quantity");
 			let unitPrice = parseInt(item.find(".unit-price").text());
 			let count = parseInt(quantity.text());
-			
+
 			if (count == stock.text()) {
 				alert("수량이 초과되었습니다.");
 				return false;
@@ -101,7 +103,7 @@
 			const formattedTotal = total.toLocaleString();
 			item.find(".total-unit-price-unformatted").text(total);
 			item.find(".total-unit-price").text(formattedTotal + "원");
-			
+
 			refreshTotalPrice();
 		}
 
@@ -150,29 +152,29 @@
 
 		function purchase(event) {
 			event.preventDefault();
-			
+
 			if (confirm("해당 상품들을 구매하시겠습니까?")) {
 				$(".cart-items").each(function () {
 					const cartNum = $(this).find(".num").text();
 					const totalPrice = parseInt($(this).find(".total-unit-price-unformatted").text());
 					const quantity = parseInt($(this).find(".quantity").text());
-					
+
 					const data = {
 						cartNum: cartNum,
 						totalPrice: totalPrice,
 						quantity: quantity
 					};
-					
+
 					$.ajax({
 						type: "POST",
 						url: "/api/cart/purchase",
 						data: JSON.stringify(data),
 						contentType: "application/json",
-						
+
 						success: function (result) {
 							// 0: 정상 작동하였을 경우
 							if (result.result == "0") {
-								
+
 							} else {
 								alert("오류 발생!!");
 								return false;

@@ -11,6 +11,8 @@
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center min-h-screen px-4">
+	<div th:replace="~{/fragments/header :: header}"></div>
+	
 	<form class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg mx-auto">
 		<span th:text="${num}" id="num" hidden></span>
 

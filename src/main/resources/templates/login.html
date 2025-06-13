@@ -10,75 +10,79 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen px-4">
-	<div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
-		<h2 class="text-2xl font-bold mb-6 text-center text-blue-600">FlipMarket 로그인</h2>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+	<div th:replace="~{/fragments/header :: header}"></div>
 
-		<form th:action="@{/login}" method="post">
-			<!-- 에러 메시지 -->
-			<div th:if="${param.error}" class="mb-4 text-red-500 text-sm">
-				이메일 또는 비밀번호가 올바르지 않습니다.
+	<main class="pt-24 flex-grow flex items-center justify-center px-4">
+
+		<div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+			<h2 class="text-2xl font-bold mb-6 text-center text-blue-600">FlipMarket 로그인</h2>
+
+			<form th:action="@{/login}" method="post">
+				<!-- 에러 메시지 -->
+				<div th:if="${param.error}" class="mb-4 text-red-500 text-sm">
+					이메일 또는 비밀번호가 올바르지 않습니다.
+				</div>
+
+				<div class="mb-4">
+					<label for="username" class="block text-sm text-gray-700 mb-1">이메일</label>
+					<input type="text" name="username" id="username"
+						class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+						placeholder="이메일 입력" />
+				</div>
+
+				<div class="mb-4">
+					<label for="password" class="block text-sm text-gray-700 mb-1">비밀번호</label>
+					<input type="password" name="password" id="password"
+						class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+						placeholder="비밀번호 입력" />
+				</div>
+
+				<div class="flex justify-between text-sm mb-6">
+					<a th:href="@{/findPassword}" class="text-blue-500 hover:underline">비밀번호 찾기</a>
+					<a th:href="@{/main}" class="text-gray-500 hover:underline">메인으로</a>
+				</div>
+
+				<button type="submit"
+					class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition">로그인</button>
+			</form>
+
+			<!-- 구글 로그인 버튼 -->
+			<div class="mt-6 flex items-center justify-center space-x-2">
+				<span class="text-gray-400">또는</span>
 			</div>
 
-			<div class="mb-4">
-				<label for="username" class="block text-sm text-gray-700 mb-1">이메일</label>
-				<input type="text" name="username" id="username"
-					class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					placeholder="이메일 입력" />
+			<a href="/oauth2/authorization/google"
+				class="mt-4 w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md py-3 hover:shadow-md transition bg-white">
+				<!-- 구글 로고 SVG -->
+				<svg class="w-6 h-6" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
+					<path fill="#4285F4"
+						d="M533.5 278.4c0-18.4-1.6-36-4.7-53.2H272v100.8h146.9c-6.4 34.5-26 63.9-55.6 83.5v69.3h89.8c52.7-48.5 83.4-120 83.4-200.4z" />
+					<path fill="#34A853"
+						d="M272 544.3c75.6 0 139.1-25 185.5-67.9l-89.8-69.3c-25 17-56.9 27-95.7 27-73.5 0-135.8-49.6-158.1-116.5H22.7v72.9c46.1 90.7 140.7 153.8 249.3 153.8z" />
+					<path fill="#FBBC05"
+						d="M113.9 321.6c-5.3-15.5-8.3-32-8.3-49s3-33.5 8.3-49V150.8H22.7c-18.5 36.7-29.1 77.8-29.1 121s10.6 84.3 29.1 121l91.2-72.2z" />
+					<path fill="#EA4335"
+						d="M272 107.7c41 0 77.9 14 106.9 41.5l80.1-80.1C408.8 24.6 345.3 0 272 0 163.5 0 69 63.1 22.7 153.8l91.2 72.9c22.2-66.9 84.5-116.5 158.1-116.5z" />
+				</svg>
+				<span class="text-gray-700 font-semibold">구글 계정으로 로그인</span>
+			</a>
+
+			<!-- 네이버 -->
+			<a href="/oauth2/authorization/naver"
+				class="mt-3 w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md py-3 hover:shadow-md transition bg-white">
+				<!-- 네이버 로고 (SVG 대체 이미지) -->
+				<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+					<path fill="#03C75A" d="M10 10h8.6l9.3 13.6V10h9.9v28h-8.6l-9.3-13.6V38H10V10z" />
+				</svg>
+				<span class="text-gray-700 font-semibold">네이버 계정으로 로그인</span>
+			</a>
+
+			<div class="mt-6 text-center text-sm text-gray-600">
+				아직 회원이 아니신가요? <a th:href="@{/register}" class="text-blue-600 hover:underline">회원가입</a>
 			</div>
-
-			<div class="mb-4">
-				<label for="password" class="block text-sm text-gray-700 mb-1">비밀번호</label>
-				<input type="password" name="password" id="password"
-					class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					placeholder="비밀번호 입력" />
-			</div>
-
-			<div class="flex justify-between text-sm mb-6">
-				<a th:href="@{/findPassword}" class="text-blue-500 hover:underline">비밀번호 찾기</a>
-				<a th:href="@{/main}" class="text-gray-500 hover:underline">메인으로</a>
-			</div>
-
-			<button type="submit"
-				class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition">로그인</button>
-		</form>
-
-		<!-- 구글 로그인 버튼 -->
-		<div class="mt-6 flex items-center justify-center space-x-2">
-			<span class="text-gray-400">또는</span>
 		</div>
-
-		<a href="/oauth2/authorization/google"
-			class="mt-4 w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md py-3 hover:shadow-md transition bg-white">
-			<!-- 구글 로고 SVG -->
-			<svg class="w-6 h-6" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
-				<path fill="#4285F4"
-					d="M533.5 278.4c0-18.4-1.6-36-4.7-53.2H272v100.8h146.9c-6.4 34.5-26 63.9-55.6 83.5v69.3h89.8c52.7-48.5 83.4-120 83.4-200.4z" />
-				<path fill="#34A853"
-					d="M272 544.3c75.6 0 139.1-25 185.5-67.9l-89.8-69.3c-25 17-56.9 27-95.7 27-73.5 0-135.8-49.6-158.1-116.5H22.7v72.9c46.1 90.7 140.7 153.8 249.3 153.8z" />
-				<path fill="#FBBC05"
-					d="M113.9 321.6c-5.3-15.5-8.3-32-8.3-49s3-33.5 8.3-49V150.8H22.7c-18.5 36.7-29.1 77.8-29.1 121s10.6 84.3 29.1 121l91.2-72.2z" />
-				<path fill="#EA4335"
-					d="M272 107.7c41 0 77.9 14 106.9 41.5l80.1-80.1C408.8 24.6 345.3 0 272 0 163.5 0 69 63.1 22.7 153.8l91.2 72.9c22.2-66.9 84.5-116.5 158.1-116.5z" />
-			</svg>
-			<span class="text-gray-700 font-semibold">구글 계정으로 로그인</span>
-		</a>
-
-		<!-- 네이버 -->
-		<a href="/oauth2/authorization/naver"
-			class="mt-3 w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md py-3 hover:shadow-md transition bg-white">
-			<!-- 네이버 로고 (SVG 대체 이미지) -->
-			<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-				<path fill="#03C75A" d="M10 10h8.6l9.3 13.6V10h9.9v28h-8.6l-9.3-13.6V38H10V10z" />
-			</svg>
-			<span class="text-gray-700 font-semibold">네이버 계정으로 로그인</span>
-		</a>
-
-		<div class="mt-6 text-center text-sm text-gray-600">
-			아직 회원이 아니신가요? <a th:href="@{/register}" class="text-blue-600 hover:underline">회원가입</a>
-		</div>
-	</div>
-
+	</main>
 </body>
 
 </html>

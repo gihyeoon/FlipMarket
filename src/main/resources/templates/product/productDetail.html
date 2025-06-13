@@ -14,6 +14,8 @@
 <body class="bg-gray-50 text-gray-800">
 	<span id="productNum" th:text="${product.num}" hidden></span>
 	<span id="userNum" th:text="${userNum}" hidden></span>
+	
+	<div th:replace="~{/fragments/header :: header}"></div>
 
 	<div class="max-w-4xl mx-auto py-10 px-4">
 		<!-- 뒤로가기 버튼 -->

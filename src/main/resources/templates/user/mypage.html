@@ -2,64 +2,66 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <title>마이페이지 | FlipMarket</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+	<meta charset="UTF-8">
+	<title>마이페이지 | FlipMarket</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100 min-h-screen">
+	<div th:replace="~{/fragments/header :: header}"></div>
 
-  <div class="max-w-5xl mx-auto p-6 mt-10 bg-white rounded-2xl shadow-lg space-y-10">
+	<div class="pt-24 max-w-5xl mx-auto p-6 mt-10 bg-white rounded-2xl shadow-lg space-y-10">
 
-    <!-- 프로필 영역 -->
-    <section class="flex flex-col md:flex-row items-center gap-6">
-      <img src="/images/basic_profile.png" alt="프로필 이미지" class="w-28 h-28 rounded-full shadow-md" />
+		<!-- 프로필 영역 -->
+		<section class="flex flex-col md:flex-row items-center gap-6">
+			<img src="/images/basic_profile.png" alt="프로필 이미지" class="w-28 h-28 rounded-full shadow-md" />
 
-      <div class="flex-1 space-y-2">
-        <h2 class="text-2xl font-bold text-gray-800" th:text="${user.name} + '님, 안녕하세요!'"></h2>
-        <p class="text-sm text-gray-600"><strong>이메일:</strong> <span th:text="${user.email}"></span></p>
-        <p class="text-sm text-gray-600"><strong>기본 주소지:</strong>
-          <span th:text="${address}"></span>
-        </p>
-        <p class="text-sm text-gray-600"><strong>가입일:</strong>
-          <span th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}"></span>
-        </p>
+			<div class="flex-1 space-y-2">
+				<h2 class="text-2xl font-bold text-gray-800" th:text="${user.name} + '님, 안녕하세요!'"></h2>
+				<p class="text-sm text-gray-600"><strong>이메일:</strong> <span th:text="${user.email}"></span></p>
+				<p class="text-sm text-gray-600"><strong>기본 주소지:</strong>
+					<span th:text="${address}"></span>
+				</p>
+				<p class="text-sm text-gray-600"><strong>가입일:</strong>
+					<span th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}"></span>
+				</p>
 
-        <div class="mt-4 flex gap-2">
-          <a th:href="@{/mypage/reConfirmUserInfo(num=${user.num})}"
-             class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">회원정보 수정</a>
-          <a th:href="@{/main}"
-             class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition">메인으로</a>
-        </div>
-      </div>
-    </section>
+				<div class="mt-4 flex gap-2">
+					<a th:href="@{/mypage/reConfirmUserInfo(num=${user.num})}"
+						class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">회원정보 수정</a>
+					<a th:href="@{/main}"
+						class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition">메인으로</a>
+				</div>
+			</div>
+		</section>
 
-    <!-- 최근 등록 상품 -->
-    <section>
-      <h3 class="text-xl font-semibold text-gray-800 mb-4">최근 등록한 상품</h3>
+		<!-- 최근 등록 상품 -->
+		<section>
+			<h3 class="text-xl font-semibold text-gray-800 mb-4">최근 등록한 상품</h3>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-           th:if="${recentProducts != null and #lists.size(recentProducts) > 0}">
-        <div th:each="product : ${recentProducts}"
-             class="bg-white border rounded-lg shadow-sm hover:shadow-md transition p-4">
-          <a th:href="@{/products/editProduct(num=${product.num})}">
-            <img th:src="@{|/images/${product.imagePath}|}" alt="상품 이미지"
-                 class="w-full h-40 object-cover rounded mb-3">
-            <h4 class="font-bold text-gray-900 truncate" th:text="${product.productName}">상품명</h4>
-            <p class="text-blue-600 font-semibold mt-1"
-               th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + '원'">20,000원</p>
-          </a>
-        </div>
-      </div>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+				th:if="${recentProducts != null and #lists.size(recentProducts) > 0}">
+				<div th:each="product : ${recentProducts}"
+					class="bg-white border rounded-lg shadow-sm hover:shadow-md transition p-4">
+					<a th:href="@{/products/editProduct(num=${product.num})}">
+						<img th:src="@{|/images/${product.imagePath}|}" alt="상품 이미지"
+							class="w-full h-40 object-cover rounded mb-3">
+						<h4 class="font-bold text-gray-900 truncate" th:text="${product.productName}">상품명</h4>
+						<p class="text-blue-600 font-semibold mt-1"
+							th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + '원'">20,000원</p>
+					</a>
+				</div>
+			</div>
 
-      <p class="text-gray-500 text-center mt-4"
-         th:if="${recentProducts == null or #lists.isEmpty(recentProducts)}">
-        최근 등록한 상품이 없습니다.
-      </p>
-    </section>
+			<p class="text-gray-500 text-center mt-4"
+				th:if="${recentProducts == null or #lists.isEmpty(recentProducts)}">
+				최근 등록한 상품이 없습니다.
+			</p>
+		</section>
 
-  </div>
+	</div>
 
 </body>
+
 </html>

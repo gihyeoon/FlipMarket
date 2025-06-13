@@ -11,105 +11,110 @@
 	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 
-<body class="bg-gray-50 flex items-center justify-center min-h-screen px-4">
+<body class="bg-gray-100 min-h-screen flex flex-col">
+	<div th:replace="~{/fragments/header :: header}"></div>
+	
+	<main class="pt-24 flex-grow flex items-center justify-center px-4 mt-10">
+		<div class="w-full max-w-lg bg-white p-8 rounded-2xl shadow-lg">
+			<h2 class="text-2xl font-bold mb-6 text-center text-blue-600">FlipMarket 회원가입</h2>
 
-	<div class="w-full max-w-lg bg-white p-8 rounded-2xl shadow-lg">
-		<h2 class="text-2xl font-bold mb-6 text-center text-blue-600">FlipMarket 회원가입</h2>
+			<form id="registerForm">
 
-		<form id="registerForm">
+				<!-- 이메일 -->
+				<div class="mb-4">
+					<label for="email" class="block text-sm text-gray-700 mb-1">이메일</label>
+					<div class="flex gap-2">
+						<input type="text" name="email" id="email" required
+							class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+							placeholder="이메일 입력" />
+						<button type="button" onclick="checkEmailDuplicate(event)" id="emailOverlay"
+							class="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-xs">중복확인</button>
+					</div>
+				</div>
 
-			<!-- 이메일 -->
-			<div class="mb-4">
-				<label for="email" class="block text-sm text-gray-700 mb-1">이메일</label>
-				<div class="flex gap-2">
-					<input type="text" name="email" id="email" required
+				<!-- 비밀번호 -->
+				<div class="mb-4">
+					<label for="pwd" class="block text-sm text-gray-700 mb-1">비밀번호</label>
+					<input type="password" name="pwd" id="pwd" required
 						class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-						placeholder="이메일 입력" />
-					<button type="button" onclick="checkEmailDuplicate(event)" id="emailOverlay"
-						class="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-xs">중복확인</button>
+						placeholder="비밀번호 입력" />
 				</div>
-			</div>
 
-			<!-- 비밀번호 -->
-			<div class="mb-4">
-				<label for="pwd" class="block text-sm text-gray-700 mb-1">비밀번호</label>
-				<input type="password" name="pwd" id="pwd" required
-					class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					placeholder="비밀번호 입력" />
-			</div>
-
-			<!-- 이름 -->
-			<div class="mb-4">
-				<label for="name" class="block text-sm text-gray-700 mb-1">이름</label>
-				<input type="text" name="name" id="name" required
-					class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					placeholder="이름 입력" />
-			</div>
-
-			<!-- 주소 입력 폼 -->
-			<div class="mb-4">
-				<label class="block text-sm font-medium text-gray-700">주소</label>
-				<div class="flex space-x-2">
-					<input type="text" id="postcode" class="w-1/3 px-4 py-2 border rounded" placeholder="우편번호" readonly>
-					<button type="button" onclick="execDaumPostcode()"
-						class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">주소찾기</button>
+				<!-- 이름 -->
+				<div class="mb-4">
+					<label for="name" class="block text-sm text-gray-700 mb-1">이름</label>
+					<input type="text" name="name" id="name" required
+						class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+						placeholder="이름 입력" />
 				</div>
-				<input type="text" id="address" class="w-full mt-2 px-4 py-2 border rounded" placeholder="기본 주소"
-					readonly>
-				<input type="text" id="detailAddress" class="w-full mt-2 px-4 py-2 border rounded" placeholder="상세 주소">
 
-				<span id="addressType" hidden></span>
-				<span id="userSelectedType" hidden></span>
-				<span id="jibunAddress" hidden></span>
-				<span id="buildingName" hidden></span>
+				<!-- 주소 입력 폼 -->
+				<div class="mb-4">
+					<label class="block text-sm font-medium text-gray-700">주소</label>
+					<div class="flex space-x-2">
+						<input type="text" id="postcode" class="w-1/3 px-4 py-2 border rounded" placeholder="우편번호"
+							readonly>
+						<button type="button" onclick="execDaumPostcode()"
+							class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">주소찾기</button>
+					</div>
+					<input type="text" id="address" class="w-full mt-2 px-4 py-2 border rounded" placeholder="기본 주소"
+						readonly>
+					<input type="text" id="detailAddress" class="w-full mt-2 px-4 py-2 border rounded"
+						placeholder="상세 주소">
+
+					<span id="addressType" hidden></span>
+					<span id="userSelectedType" hidden></span>
+					<span id="jibunAddress" hidden></span>
+					<span id="buildingName" hidden></span>
+				</div>
+
+				<!-- 가입 버튼 -->
+				<button type="submit" onclick="register(event);"
+					class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition">가입하기</button>
+			</form>
+
+			<!-- 소셜 로그인 구역 추가 -->
+			<div class="mt-6">
+				<div class="flex items-center justify-center mb-4">
+					<hr class="w-full border-t border-gray-300">
+					<span class="px-3 text-gray-500 text-sm">또는</span>
+					<hr class="w-full border-t border-gray-300">
+				</div>
+
+				<!-- 구글 로그인 버튼 -->
+				<button type="button" onclick="window.location.href='/oauth2/authorization/google'"
+					class="mt-4 w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md py-3 hover:shadow-md transition bg-white">
+					<!-- 구글 로고 SVG -->
+					<svg class="w-6 h-6" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
+						<path fill="#4285F4"
+							d="M533.5 278.4c0-18.4-1.6-36-4.7-53.2H272v100.8h146.9c-6.4 34.5-26 63.9-55.6 83.5v69.3h89.8c52.7-48.5 83.4-120 83.4-200.4z" />
+						<path fill="#34A853"
+							d="M272 544.3c75.6 0 139.1-25 185.5-67.9l-89.8-69.3c-25 17-56.9 27-95.7 27-73.5 0-135.8-49.6-158.1-116.5H22.7v72.9c46.1 90.7 140.7 153.8 249.3 153.8z" />
+						<path fill="#FBBC05"
+							d="M113.9 321.6c-5.3-15.5-8.3-32-8.3-49s3-33.5 8.3-49V150.8H22.7c-18.5 36.7-29.1 77.8-29.1 121s10.6 84.3 29.1 121l91.2-72.2z" />
+						<path fill="#EA4335"
+							d="M272 107.7c41 0 77.9 14 106.9 41.5l80.1-80.1C408.8 24.6 345.3 0 272 0 163.5 0 69 63.1 22.7 153.8l91.2 72.9c22.2-66.9 84.5-116.5 158.1-116.5z" />
+					</svg>
+					<span>구글 계정으로 회원가입</span>
+				</button>
+
+				<!-- 네이버 로그인 버튼 -->
+				<button type="button" onclick="window.location.href='/oauth2/authorization/naver'"
+					class="mt-4 w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md py-3 hover:shadow-md transition bg-white">
+					<!-- 네이버 로고 (SVG 대체 이미지) -->
+					<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+						<path fill="#03C75A" d="M10 10h8.6l9.3 13.6V10h9.9v28h-8.6l-9.3-13.6V38H10V10z" />
+					</svg>
+					<span>네이버 계정으로 회원가입</span>
+				</button>
 			</div>
 
-			<!-- 가입 버튼 -->
-			<button type="submit" onclick="register(event);"
-				class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition">가입하기</button>
-		</form>
-
-		<!-- 소셜 로그인 구역 추가 -->
-		<div class="mt-6">
-			<div class="flex items-center justify-center mb-4">
-				<hr class="w-full border-t border-gray-300">
-				<span class="px-3 text-gray-500 text-sm">또는</span>
-				<hr class="w-full border-t border-gray-300">
+			<!-- 메인으로 이동 -->
+			<div class="mt-6 text-center text-sm text-gray-600">
+				<a th:href="@{/}" class="text-blue-600 hover:underline">메인 페이지로 이동</a>
 			</div>
-
-			<!-- 구글 로그인 버튼 -->
-			<button type="button" onclick="window.location.href='/oauth2/authorization/google'"
-				class="mt-4 w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md py-3 hover:shadow-md transition bg-white">
-				<!-- 구글 로고 SVG -->
-				<svg class="w-6 h-6" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
-					<path fill="#4285F4"
-						d="M533.5 278.4c0-18.4-1.6-36-4.7-53.2H272v100.8h146.9c-6.4 34.5-26 63.9-55.6 83.5v69.3h89.8c52.7-48.5 83.4-120 83.4-200.4z" />
-					<path fill="#34A853"
-						d="M272 544.3c75.6 0 139.1-25 185.5-67.9l-89.8-69.3c-25 17-56.9 27-95.7 27-73.5 0-135.8-49.6-158.1-116.5H22.7v72.9c46.1 90.7 140.7 153.8 249.3 153.8z" />
-					<path fill="#FBBC05"
-						d="M113.9 321.6c-5.3-15.5-8.3-32-8.3-49s3-33.5 8.3-49V150.8H22.7c-18.5 36.7-29.1 77.8-29.1 121s10.6 84.3 29.1 121l91.2-72.2z" />
-					<path fill="#EA4335"
-						d="M272 107.7c41 0 77.9 14 106.9 41.5l80.1-80.1C408.8 24.6 345.3 0 272 0 163.5 0 69 63.1 22.7 153.8l91.2 72.9c22.2-66.9 84.5-116.5 158.1-116.5z" />
-				</svg>
-				<span>구글 계정으로 회원가입</span>
-			</button>
-
-			<!-- 네이버 로그인 버튼 -->
-			<button type="button" onclick="window.location.href='/oauth2/authorization/naver'"
-				class="mt-4 w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md py-3 hover:shadow-md transition bg-white">
-				<!-- 네이버 로고 (SVG 대체 이미지) -->
-				<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-					<path fill="#03C75A" d="M10 10h8.6l9.3 13.6V10h9.9v28h-8.6l-9.3-13.6V38H10V10z" />
-				</svg>
-				<span>네이버 계정으로 회원가입</span>
-			</button>
 		</div>
-
-		<!-- 메인으로 이동 -->
-		<div class="mt-6 text-center text-sm text-gray-600">
-			<a th:href="@{/}" class="text-blue-600 hover:underline">메인 페이지로 이동</a>
-		</div>
-	</div>
+	</main>
 
 </html>
 <th:block layout:fragment="script">
@@ -147,7 +152,7 @@
 				$("#email").focus();
 				return false;
 			}
-			
+
 			if (!regExp.test(email)) {
 				alert("이메일을 형식에 맞게 입력해주세요.");
 				return false;

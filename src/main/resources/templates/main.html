@@ -4,11 +4,11 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>FlipMarket - 메인</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<title>메인</title>
 	<style>
 		#productScroll::-webkit-scrollbar {
 			display: none;
@@ -34,46 +34,10 @@
 
 	<span id="userNum" th:text="${num}" hidden></span>
 
-	<!-- Header / Navigation -->
-	<header class="bg-white shadow">
-		<div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-			<h1 class="text-xl font-bold text-blue-600"><a th:href="@{/main}">FlipMarket</a></h1>
-
-			<nav class="flex items-center space-x-4 text-sm">
-				<!-- 공통 메뉴 -->
-
-				<!-- 로그인 상태 -->
-				<div sec:authorize="isAuthenticated()">
-					<a th:href="@{/mypage(num=${num})}" class="hover:underline">마이페이지</a>
-					<a th:href="@{/cart(num=${num})}" class="hover:underline">장바구니</a>
-					<a th:href="@{/addProduct}" class="hover:underline">상품 등록</a>
-					<a th:href="@{/logout}" class="text-red-600 hover:underline">로그아웃</a>
-				</div>
-
-				<!-- 비로그인 상태 -->
-				<div sec:authorize="isAnonymous()">
-					<a th:href="@{/mypage}" class="hover:underline">마이페이지</a>
-					<a th:href="@{/cart}" class="hover:underline">장바구니</a>
-					<a th:href="@{/login}" class="hover:underline">로그인</a>
-					<a th:href="@{/register}" class="hover:underline">회원가입</a>
-				</div>
-			</nav>
-		</div>
-	</header>
+	<div th:replace="~{/fragments/header :: header}"></div>
 
 	<!-- 상품 리스트 영역 -->
-	<main class="max-w-7xl mx-auto px-4 py-8">
-		<!--<div class="flex items-center justify-between mb-6">
-			<h2 class="text-2xl font-semibold mb-6">전체 상품</h2>
-
-			<form th:action="@{/main}" method="get" class="flex items-center space-x-2">
-				<input type="text" name="keyword" placeholder="상품명 검색"
-					class="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					th:value="${param.keyword}" />
-				<button type="submit"
-					class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">검색</button>
-			</form>
-		</div>-->
+	<main class="pt-24 max-w-7xl mx-auto px-4 py-8">
 
 		<div class="mb-4">
 			<h2 class="text-2xl font-semibold text-gray-800 mb-5">
@@ -113,6 +77,8 @@
 				</div>
 			</div>
 
+			<div class="mb-20"></div>
+
 			<h2 class="text-2xl font-semibold text-gray-800 mb-5">
 				많이 본 상품
 			</h2>
@@ -151,7 +117,6 @@
 			</div>
 		</div>
 	</main>
-
 </body>
 
 </html>
