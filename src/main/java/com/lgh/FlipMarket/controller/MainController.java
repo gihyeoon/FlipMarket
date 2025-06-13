@@ -52,5 +52,12 @@ public class MainController {
 
 		return "main";
 	}
+	
+	@GetMapping("/search")
+	public String searchForm(Model model) {
+		
+		
+		return "search";
+	}
 
 }
