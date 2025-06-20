@@ -14,7 +14,7 @@
 <body class="bg-gray-50 text-gray-800">
 	<span id="productNum" th:text="${product.num}" hidden></span>
 	<span id="userNum" th:text="${userNum}" hidden></span>
-	
+
 	<div th:replace="~{/fragments/header :: header}"></div>
 
 	<div class="max-w-4xl mx-auto py-10 px-4">
@@ -78,6 +78,37 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- 관련 상품 섹션 -->
+	<div class="max-w-4xl mx-auto px-4 mt-12">
+		<h2 class="text-xl font-semibold mb-4">관련 상품</h2>
+		<!-- 관련 상품이 없는 경우 -->
+		<div th:if="${#lists.isEmpty(relatedProductList)}"
+			class="flex flex-col items-center justify-center bg-white border border-gray-200 rounded-lg py-16 shadow-sm">
+			<!-- 일러스트 아이콘 (대체 가능) -->
+			<img src="/images/empty-box.svg" alt="비어 있음" class="w-20 h-20 mb-6 opacity-60">
+
+			<!-- 텍스트 -->
+			<p class="text-gray-600 text-base font-medium">아직 관련 상품이 없어요</p>
+			<p class="text-sm text-gray-400 mt-1">다른 상품을 구경해보시는 건 어떠세요?</p>
+		</div>
+
+		<!-- 관련 상품 카드 반복 영역 -->
+		<div th:unless="${#lists.isEmpty(relatedProductList)}"
+			class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+			<div th:each="list : ${relatedProductList}">
+				<div class="bg-white rounded-lg shadow p-4 hover:shadow-md transition">
+					<a th:href="@{/products(num=${list.num})}">
+						<img th:src="@{|/images/${list.imagePath}|}" alt="관련 상품 이미지"
+							class="w-full h-40 object-contain mb-2 rounded border">
+						<h3 class="text-sm font-medium truncate" th:text="${list.productName}">상품명</h3>
+						<p class="text-green-600 text-sm font-semibold"
+							th:text="${#numbers.formatInteger(list.price, 3, 'COMMA')} + '원'">가격</p>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>
@@ -87,22 +118,22 @@
 		$(document).ready(function () {
 			const userNum = $("#userNum").text();
 			const productNum = $("#productNum").text();
-			
+
 			if (userNum == 0) {
 				return false;
 			}
-			
+
 			const data = {
 				userNum: userNum,
 				productNum: productNum,
 			}
-			
+
 			$.ajax({
 				type: "POST",
 				url: "/api/addViewCount",
 				data: JSON.stringify(data),
 				contentType: "application/json",
-				
+
 				success: function (result) {
 				},
 				error: function (request, status, error) {
@@ -110,16 +141,16 @@
 				}
 			});
 		});
-		
+
 		function likeProduct(productNum, likeCount) {
 			const userNum = $("#userNum").text();
-			
+
 			const data = {
 				productNum: productNum,
 				likeCount: likeCount,
 				userNum: userNum,
 			}
-			
+
 			if (userNum == 0) {
 				alert("로그인 이후 사용 가능한 서비스입니다.");
 				return false;

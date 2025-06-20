@@ -41,11 +41,16 @@ public class ProductController {
 	public String showProductDetailPage(@RequestParam("num") Long productNum, Model model) {
 		Long userNum = authenticationUserId.getUserNum();
 
+		ProductDto product = productService.findByNum(productNum);
 		// 로그인한 사용자가 좋아요 누른 상품 번호들을 View로 넘김
 		List<Long> likeProductList = likeService.findByUserNum(userNum);
-		ProductDto product = productService.findByNum(productNum);
+		List<ProductDto> relatedProductList = productService.findTop10RelatedProductsByUserNumAndCategory(userNum,
+				product.getNum(), product.getCategory());
+
+		System.out.println("상품 카테고리 : " + product.getCategory());
 
 		model.addAttribute("likeProductList", likeProductList);
+		model.addAttribute("relatedProductList", relatedProductList);
 		model.addAttribute("product", product);
 		model.addAttribute("userNum", userNum);
 

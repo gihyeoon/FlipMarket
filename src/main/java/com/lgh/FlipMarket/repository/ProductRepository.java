@@ -26,6 +26,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	
 	@NativeQuery(value = "select p.num, p.product_name, p.price, p.category, p.stock, p.description, p.image_path, p.like_count, count(vc.num) from product p left outer join view_count vc on p.num = vc.product_num where p.user_num <> ?1 group by p.num order by count(vc.num) desc")
 	List<Object[]> findTop30ViewCountByUserNum(Long userNum);
+	
+	@NativeQuery(value = "select num, product_name, price, category, stock, description, image_path, like_count FROM product WHERE user_num <> ?1 AND stock > 0 AND num <> ?2 AND category = ?3 LIMIT 10")
+	List<Object[]> findTop10RelatedProductsByUserNumAndCategory(Long userNum, Long productNum, String category);
 
 	@NativeQuery(value = "SELECT COUNT(*) FROM product WHERE product_name = ?1 and category = ?2 and user_num = ?3")
 	int countByProductNameAndCategory(String productName, String category, Long userNum);

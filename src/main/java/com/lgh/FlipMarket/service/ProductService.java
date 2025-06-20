@@ -95,6 +95,16 @@ public class ProductService {
 				.collect(Collectors.toList());
 	}
 
+	public List<ProductDto> findTop10RelatedProductsByUserNumAndCategory(Long userNum, Long productNum, String category) {
+		List<Object[]> results = productRepository.findTop10RelatedProductsByUserNumAndCategory(userNum, productNum, category);
+
+		return results.stream()
+				.map(r -> new ProductDto(Long.parseLong(r[0].toString()), r[1].toString(),
+						Integer.parseInt(r[2].toString()), r[3].toString(), Integer.parseInt(r[4].toString()),
+						r[5].toString(), r[6].toString(), Integer.parseInt(r[7].toString())))
+				.collect(Collectors.toList());
+	}
+
 	// 상품 신규 등록
 	public void addProduct(String path, String productName, String category, int price, int stock, String desc,
 			UserDto userDto) throws IOException {
