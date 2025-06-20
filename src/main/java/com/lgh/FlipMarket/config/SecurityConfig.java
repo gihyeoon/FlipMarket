@@ -2,6 +2,8 @@ package com.lgh.FlipMarket.config;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,13 +32,15 @@ public class SecurityConfig {
 
 	private final CustomOAuth2SuccessHandler auth2SuccessHandler;
 
+	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
+
 	public SecurityConfig(CustomUserDetailsService customUserDetailsService, CustomOAuth2UserService oAuth2UserService,
 			CustomOAuth2SuccessHandler auth2SuccessHandler) {
 		this.customUserDetailsService = customUserDetailsService;
 		this.oAuth2UserService = oAuth2UserService;
 		this.auth2SuccessHandler = auth2SuccessHandler;
 	}
-	
+
 	@Bean
 	AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 		return configuration.getAuthenticationManager();
@@ -68,7 +72,7 @@ public class SecurityConfig {
 						.permitAll().anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
 						.defaultSuccessUrl("/main", true).permitAll().failureHandler((request, response, exception) -> {
-							System.out.println("로그인 실패 : " + exception.getMessage());
+							log.info("로그인 실패 : " + exception.getMessage());
 							response.sendRedirect("/login?error");
 						}))
 				.oauth2Login(oauth2 -> {

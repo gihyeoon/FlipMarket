@@ -3,9 +3,13 @@ package com.lgh.FlipMarket.config;
 import java.io.File;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ProductImageHandler {
+
+	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
 	public String save(MultipartFile image) throws IOException {
 		String baseDir = System.getProperty("user.dir") + "/src/main/resources/static/images/";
@@ -21,8 +25,8 @@ public class ProductImageHandler {
 		}
 
 		// 나중에 실제 서버 운용해서 이미지 파일을 저장하게 될 때는 그 파일을 저장하는 로직을 추가해야함.
-		System.out.println(filePath);
-		
+		log.info("상품 이미지 파일 경로: " + filePath);
+
 		image.transferTo(new File(filePath));
 
 		return newFileName;

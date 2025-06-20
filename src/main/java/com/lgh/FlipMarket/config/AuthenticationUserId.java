@@ -15,6 +15,8 @@ public class AuthenticationUserId {
 
 	private final UserService userService;
 
+	private static final String OAUTH2_EMAIL = "email";
+
 	public AuthenticationUserId(UserService userService) {
 		this.userService = userService;
 	}
@@ -30,13 +32,13 @@ public class AuthenticationUserId {
 				OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
 
 				// 네이버 로그인
-				if ((String) oauth2User.getAttributes().get("email") == null) {
+				if ((String) oauth2User.getAttributes().get(OAUTH2_EMAIL) == null) {
 					Map<String, Object> response = (Map<String, Object>) oauth2User.getAttributes().get("response");
-					email = (String) response.get("email");
+					email = (String) response.get(OAUTH2_EMAIL);
 				}
 				// 구글 로그인
 				else {
-					email = (String) oauth2User.getAttributes().get("email");
+					email = (String) oauth2User.getAttributes().get(OAUTH2_EMAIL);
 				}
 			} else {
 				email = authentication.getName();
