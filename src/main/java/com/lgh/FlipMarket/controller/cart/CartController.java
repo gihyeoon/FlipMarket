@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lgh.FlipMarket.config.AuthenticationUserId;
+import com.lgh.FlipMarket.config.Constants;
 import com.lgh.FlipMarket.dto.CartDto;
 import com.lgh.FlipMarket.dto.ProductDto;
 import com.lgh.FlipMarket.dto.UserDto;
@@ -68,9 +69,9 @@ public class CartController {
 		int result = cartService.deleteByNum(cartNum);
 
 		if (result > 0) {
-			return Map.of("result", "0");
+			return Map.of(Constants.RETURN_KEY_NAME, "0");
 		} else {
-			return Map.of("result", "1");
+			return Map.of(Constants.RETURN_KEY_NAME, "1");
 		}
 	}
 
@@ -92,7 +93,7 @@ public class CartController {
 			int delCnt = cartService.deleteByNum(cartNum);
 
 			if (delCnt < 1) {
-				return Map.of("result", "1");
+				return Map.of(Constants.RETURN_KEY_NAME, "1");
 			}
 
 			// 구매를 확정짓는 순간 해당 상품의 재고 또한 수정되어야함.
@@ -100,10 +101,10 @@ public class CartController {
 
 			// 구매하게되면 purchase 테이블에 해당 정보들을 Insert 한다.
 			purchaseService.addPurchase(userDto, productDto, totalPrice, quantity);
-			return Map.of("result", "0");
+			return Map.of(Constants.RETURN_KEY_NAME, "0");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Map.of("result", "1");
+			return Map.of(Constants.RETURN_KEY_NAME, "1");
 		}
 
 	}

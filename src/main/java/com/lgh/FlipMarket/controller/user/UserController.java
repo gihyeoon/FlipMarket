@@ -2,6 +2,8 @@ package com.lgh.FlipMarket.controller.user;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,8 @@ public class UserController {
 	private final ProductService productService;
 
 	private final AddressService addressService;
+
+	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
 	private static final String BASE_URL = "user/";
 
@@ -54,7 +58,7 @@ public class UserController {
 		UserDto userDto = userService.findByNum(userNum);
 		AddressDto addressDto = addressService.findByUserNumDefault(userNum);
 		String address = "";
-		
+
 		if (addressDto.getRoadAddress() == null && addressDto.getJibunAddress() != null) {
 			address = addressDto.getJibunAddress();
 		} else if (addressDto.getRoadAddress() != null && addressDto.getJibunAddress() == null) {
@@ -62,8 +66,8 @@ public class UserController {
 		} else {
 			address = "등록된 주소지가 없습니다.";
 		}
-		
-		System.out.println("등록된 기본 주소지 : " + address);
+
+		log.info("등록된 기본 주소지 : " + address);
 
 		// 사용자가 가장 최근에 등록한 3개의 상품들만 조회
 		List<ProductDto> recentProducts = productService.findByUserNum(userNum);

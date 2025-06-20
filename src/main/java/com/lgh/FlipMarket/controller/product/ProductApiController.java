@@ -3,10 +3,6 @@ package com.lgh.FlipMarket.controller.product;
 import java.io.IOException;
 import java.util.Map;
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.lgh.FlipMarket.config.AuthenticationUserId;
+import com.lgh.FlipMarket.config.Constants;
 import com.lgh.FlipMarket.config.ProductImageHandler;
 import com.lgh.FlipMarket.dto.ProductDto;
 import com.lgh.FlipMarket.dto.UserDto;
@@ -60,11 +57,11 @@ public class ProductApiController {
 		int result = productService.countByProductNameAndCategory(productName, category, userNum);
 
 		if (result > 0) {
-			return Map.of("result", "1");
+			return Map.of(Constants.RETURN_KEY_NAME, "1");
 		} else {
 			productService.addProduct(productImageHandler.save(image), productName, category, price, stock, desc,
 					userDto);
-			return Map.of("result", "0");
+			return Map.of(Constants.RETURN_KEY_NAME, "0");
 		}
 	}
 
@@ -75,11 +72,11 @@ public class ProductApiController {
 		int count = cartService.countCartByUserNumAndProductNum(userNum, productNum);
 
 		if (userNum == 0) {
-			return Map.of("result", "0");
+			return Map.of(Constants.RETURN_KEY_NAME, "0");
 		}
 
 		if (count > 0) {
-			return Map.of("result", "2");
+			return Map.of(Constants.RETURN_KEY_NAME, "2");
 		} else {
 			UserDto userDto = userService.findByNum(userNum);
 			ProductDto productDto = productService.findByNum(productNum);
@@ -87,7 +84,7 @@ public class ProductApiController {
 
 			cartService.addCart(userDto, productDto, quantity);
 
-			return Map.of("result", "1");
+			return Map.of(Constants.RETURN_KEY_NAME, "1");
 		}
 	}
 
@@ -105,24 +102,24 @@ public class ProductApiController {
 					productNum);
 		}
 
-		return Map.of("result", "0");
+		return Map.of(Constants.RETURN_KEY_NAME, "0");
 	}
 
 	@PostMapping("/deleteProduct")
 	public Map<String, String> deleteProduct(@RequestBody Map<String, String> data) {
 		Long productNum = Long.parseLong(data.get("num"));
 		productService.deleteProduct(productNum);
-		return Map.of("result", "0");
+		return Map.of(Constants.RETURN_KEY_NAME, "0");
 	}
 
 	@PostMapping("/addViewCount")
 	public Map<String, String> addViewCount(@RequestBody Map<String, String> data) {
 		Long userNum = Long.parseLong(data.get("userNum"));
 		Long productNum = Long.parseLong(data.get("productNum"));
-		
+
 		viewCountService.save(userNum, productNum);
-		
-		return Map.of("result", "1");
+
+		return Map.of(Constants.RETURN_KEY_NAME, "1");
 	}
 
 }

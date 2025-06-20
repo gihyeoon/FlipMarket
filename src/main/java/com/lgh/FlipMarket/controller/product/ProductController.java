@@ -2,6 +2,8 @@ package com.lgh.FlipMarket.controller.product;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,8 @@ public class ProductController {
 	private final LikeService likeService;
 
 	private final AuthenticationUserId authenticationUserId;
+
+	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
 	private static final String BASE_URL = "product/";
 
@@ -47,7 +51,7 @@ public class ProductController {
 		List<ProductDto> relatedProductList = productService.findTop10RelatedProductsByUserNumAndCategory(userNum,
 				product.getNum(), product.getCategory());
 
-		System.out.println("상품 카테고리 : " + product.getCategory());
+		log.info("상품 카테고리 : " + product.getCategory());
 
 		model.addAttribute("likeProductList", likeProductList);
 		model.addAttribute("relatedProductList", relatedProductList);

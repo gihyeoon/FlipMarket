@@ -2,6 +2,8 @@ package com.lgh.FlipMarket.controller.user;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,13 +12,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lgh.FlipMarket.config.Constants;
 import com.lgh.FlipMarket.config.RandomPasswordGenerator;
 import com.lgh.FlipMarket.config.mail.MailService;
 import com.lgh.FlipMarket.dto.UserDto;
@@ -24,8 +26,6 @@ import com.lgh.FlipMarket.entity.User;
 import com.lgh.FlipMarket.repository.UserRepository;
 import com.lgh.FlipMarket.service.AddressService;
 import com.lgh.FlipMarket.service.UserService;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -42,6 +42,8 @@ public class UserApiController {
 
 	private final MailService mailService;
 
+	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
+
 	public UserApiController(UserRepository userRepository, UserService userService, AddressService addressService,
 			BCryptPasswordEncoder passwordEncoder, MailService mailService) {
 		this.userRepository = userRepository;
@@ -53,7 +55,7 @@ public class UserApiController {
 
 	@GetMapping("/overlap/emailRegister")
 	public Map<String, String> emailRegister(@RequestParam("email") String userEmail) {
-		return Map.of("result", userService.countUserByEmail(userEmail) > 0 ? "1" : "0");
+		return Map.of(Constants.RETURN_KEY_NAME, userService.countUserByEmail(userEmail) > 0 ? "1" : "0");
 	}
 
 	@PostMapping("/register")
@@ -100,9 +102,9 @@ public class UserApiController {
 			int result = userService.updateEmail(data.get("email"), Long.parseLong(data.get("num")));
 
 			if (result > 0) {
-				System.out.println("이메일 업데이트 성공");
+				log.info("이메일 업데이트 성공");
 			} else {
-				System.out.println("유저 정보 없음");
+				log.warn("유저 정보 없음");
 			}
 
 			// 업데이트 이후 로그인 정보 갱신
@@ -130,9 +132,9 @@ public class UserApiController {
 			int result = userService.updatePhoneNum(phoneNum, num);
 
 			if (result > 0) {
-				System.out.println("휴대폰 번호 업데이트 성공");
+				log.info("휴대폰 번호 업데이트 성공");
 			} else {
-				System.out.println("유저 정보 없음");
+				log.warn("유저 정보 없음");
 			}
 			return ResponseEntity.ok("success");
 		} catch (Exception e) {
@@ -153,9 +155,9 @@ public class UserApiController {
 			int result = userService.updatePwd(encodedNewPwd, num);
 
 			if (result > 0) {
-				System.out.println("비밀번호 변경 완료");
+				log.info("비밀번호 변경 완료");
 			} else {
-				System.out.println("비밀번호 변경할 유저 정보 없음");
+				log.warn("비밀번호 변경할 유저 정보 없음");
 			}
 
 			User user = userRepository.findById(num).orElseThrow(() -> new RuntimeException("사용자 없음"));
@@ -165,9 +167,9 @@ public class UserApiController {
 			Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(auth);
 
-			return Map.of("result", "1");
+			return Map.of(Constants.RETURN_KEY_NAME, "1");
 		} else {
-			return Map.of("result", "0");
+			return Map.of(Constants.RETURN_KEY_NAME, "0");
 		}
 	}
 
@@ -186,9 +188,9 @@ public class UserApiController {
 			int result = userService.updatePwd(encodedNewPwd, num);
 
 			if (result > 0) {
-				System.out.println("비밀번호 재설정 완료");
+				log.info("비밀번호 재설정 완료");
 			} else {
-				System.out.println("비밀번호 재설정 실패");
+				log.warn("비밀번호 재설정 실패");
 			}
 
 			User user = userRepository.findById(num).orElseThrow(() -> new RuntimeException("사용자 없음"));
@@ -208,25 +210,25 @@ public class UserApiController {
 		int cnt = userService.countUserByEmail(email);
 
 		if (cnt == 0) {
-			return Map.of("result", "0");
+			return Map.of(Constants.RETURN_KEY_NAME, "0");
 		} else {
 			// 소셜 계정은 비밀번호 개념이 없기 때문에 재설정이 불가능하게 한다.
 			Long userNum = userService.findNumByEmail(email);
 			String provider = userService.findByNum(userNum).getProvider();
 
 			if (provider != null) {
-				return Map.of("result", "2", "provider", provider);
+				return Map.of(Constants.RETURN_KEY_NAME, "2", "provider", provider);
 			}
 
 			// 임시 비밀번호를 해당 메일로 보내줌.
 			String tempPassword = RandomPasswordGenerator.generateRandomString(16);
-			
+
 			mailService.sendTempPassword(email, "임시 비밀번호입니다.", tempPassword);
-			
+
 			// 그리고 실제 DB에도 해당 임시 비밀번호를 UPDATE
 			userService.updatePwd(passwordEncoder.encode(tempPassword), userNum);
-			
-			return Map.of("result", "1");
+
+			return Map.of(Constants.RETURN_KEY_NAME, "1");
 		}
 	}
 
@@ -236,7 +238,7 @@ public class UserApiController {
 
 		userService.deleteByNum(userNum);
 
-		return Map.of("result", "0");
+		return Map.of(Constants.RETURN_KEY_NAME, "0");
 	}
 
 }
