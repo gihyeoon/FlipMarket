@@ -14,7 +14,7 @@ Spring Boot 기반의 **상품 사고팔기 서비스**입니다.
 ## 🚀 사용 기술 (Tech Stack)
 
 - **Frontend**: Tailwind CSS
-- **Backend**: Java 24, Spring Boot, Spring Security, JPA (Hibernate)
+- **Backend**: Java 17, Spring Boot, Spring Security, JPA (Hibernate)
 - **Database**: MySQL
 - **Build Tool**: Gradle
 - **Authentication**: 로그인/회원가입, 비밀번호 암호화
