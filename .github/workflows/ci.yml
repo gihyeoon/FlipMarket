@@ -2,22 +2,27 @@ name: CI with SonarCloud
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  build:
+  sonarcloud:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 전체 Git 히스토리 필요
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          distribution: temurin
+          java-version: 17
 
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -27,15 +32,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build and test
-        run: ./gradlew build -x test
+      - name: Build with Gradle
+        run: ./gradlew build
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v1.9.1
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
         with:
-          projectKey: gihyeoon_FlipMarket
-          organization: gihyeoon
-          token: ${{ secrets.SONAR_TOKEN }}
+          organization: gihyeoon      # SonarCloud 조직명
+          projectKey: FlipMarket      # SonarCloud 프로젝트 키
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
