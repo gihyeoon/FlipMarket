@@ -11,6 +11,8 @@ public class ReviewDto {
 
 	private User user;
 
+	private String username;
+
 	private Product product;
 
 	private int rating;
@@ -32,12 +34,24 @@ public class ReviewDto {
 		this.createdAt = createdAt;
 	}
 
+	public ReviewDto(Long num, String username, int rating, String description, LocalDateTime createdAt) {
+		this.num = num;
+		this.username = username;
+		this.rating = rating;
+		this.description = description;
+		this.createdAt = createdAt;
+	}
+
 	public Long getNum() {
 		return num;
 	}
 
 	public User getUser() {
 		return user;
+	}
+
+	public String getUsername() {
+		return username;
 	}
 
 	public Product getProduct() {

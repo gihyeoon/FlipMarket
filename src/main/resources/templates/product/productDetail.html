@@ -109,6 +109,43 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- 리뷰 섹션 -->
+	<div class="max-w-4xl mx-auto px-4 mt-12">
+		<h2 class="text-xl font-semibold mb-4">상품 리뷰</h2>
+
+		<!-- 리뷰가 없는 경우 -->
+		<div th:if="${#lists.isEmpty(reviewList)}"
+			class="flex flex-col items-center justify-center bg-white border border-gray-200 rounded-lg py-16 shadow-sm">
+			<p class="text-gray-600 text-base font-medium">아직 등록된 리뷰가 없어요</p>
+			<p class="text-sm text-gray-400 mt-1">첫 번째 리뷰를 작성해보세요!</p>
+		</div>
+
+		<!-- 리뷰가 있을 경우 -->
+		<div th:unless="${#lists.isEmpty(reviewList)}" class="space-y-6">
+			<div th:each="review : ${reviewList}" class="bg-white p-5 rounded-lg shadow-sm border">
+				<!-- 리뷰 헤더 -->
+				<div class="flex items-center justify-between mb-2">
+					<div class="flex items-center space-x-2">
+						<span class="text-sm font-semibold text-gray-800" th:text="${review.username}"></span>
+						<span class="text-sm text-gray-400"
+							th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd')}">2025-07-06</span>
+					</div>
+
+					<!-- 별점 -->
+					<div class="flex space-x-1">
+						<span th:each="i : ${#numbers.sequence(1, 5)}">
+							<i
+								th:classappend="${i <= review.rating} ? 'fa-solid fa-star text-yellow-400' : 'fa-regular fa-star text-gray-300'"></i>
+						</span>
+					</div>
+				</div>
+
+				<!-- 리뷰 내용 -->
+				<p class="text-gray-700 text-sm whitespace-pre-line" th:text="${review.description}">리뷰 내용</p>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>
