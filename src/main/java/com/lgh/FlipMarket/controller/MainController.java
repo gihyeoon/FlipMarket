@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lgh.FlipMarket.config.AuthenticationUserId;
 import com.lgh.FlipMarket.dto.ProductDto;
@@ -38,10 +39,10 @@ public class MainController {
 
 		// 좋아요 수가 많은 순으로 TOP 30 제품을 조회
 		List<ProductDto> top30LikeProductList = productService.findTop30LikeByUserNum(userNum);
-		
+
 		// 조회 수가 많은 순으로 TOP 30 제품을 조회
 		List<ProductDto> top30ViewCountProductList = productService.findTop30ViewCountByUserNum(userNum);
-		
+
 		// 로그인한 사용자가 좋아요 누른 상품 번호들을 View로 넘김
 		List<Long> likeProductList = likeService.findByUserNum(userNum);
 
@@ -52,11 +53,15 @@ public class MainController {
 
 		return "main";
 	}
-	
+
 	@GetMapping("/search")
-	public String searchForm(Model model) {
-		
-		
+	public String searchForm(@RequestParam("keyword") String keyword, Model model) {
+		Long userNum = authenticationUserId.getUserNum();
+
+		List<ProductDto> productList = productService.findByKeywordAndUserNum(keyword, userNum);
+
+		model.addAttribute("productList", productList);
+
 		return "search";
 	}
 

@@ -13,6 +13,34 @@
 
 <body class="bg-gray-100">
 	<div th:replace="~{/fragments/header :: header}"></div>
+
+	<!-- 검색 결과 영역 -->
+	<div class="max-w-6xl mx-auto px-4 mt-10">
+		<h2 class="text-2xl font-semibold mb-6" th:text="'검색 결과 - ' + ${keyword}"></h2>
+
+		<!-- 결과가 없는 경우 -->
+		<div th:if="${#lists.isEmpty(productList)}"
+			class="flex flex-col items-center justify-center bg-white border border-gray-200 rounded-lg py-16 shadow-sm">
+			<img src="/images/empty-box.svg" alt="검색 결과 없음" class="w-20 h-20 mb-6 opacity-60">
+			<p class="text-gray-600 text-base font-medium">검색 결과가 없습니다</p>
+			<p class="text-sm text-gray-400 mt-1">다른 키워드로 다시 검색해보세요</p>
+		</div>
+
+		<!-- 결과가 있을 경우 -->
+		<div th:unless="${#lists.isEmpty(productList)}" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+			<div th:each="product : ${productList}">
+				<div class="bg-white rounded-lg shadow p-4 hover:shadow-md transition">
+					<a th:href="@{/products(num=${product.num})}">
+						<img th:src="@{|/images/${product.imagePath}|}" alt="상품 이미지"
+							class="w-full h-40 object-contain mb-2 rounded border">
+						<h3 class="text-sm font-medium truncate" th:text="${product.productName}">상품명</h3>
+						<p class="text-green-600 text-sm font-semibold"
+							th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + '원'">가격</p>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>

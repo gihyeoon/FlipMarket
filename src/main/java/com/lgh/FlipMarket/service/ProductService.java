@@ -62,9 +62,8 @@ public class ProductService {
 	}
 
 	// 메인화면 검색 조회 (조건1: 상품명, 조건2: 로그인한 사용자는 제외)
-	@Deprecated
 	public List<ProductDto> findByKeywordAndUserNum(String keyword, Long userNum) {
-		List<Object[]> results = productRepository.findByKeywordAndUserNum(keyword, userNum);
+		List<Object[]> results = productRepository.findByKeywordAndUserNum("%" + keyword + "%", userNum);
 
 		return results.stream()
 				.map(r -> new ProductDto(Long.parseLong(r[0].toString()), r[1].toString(),
