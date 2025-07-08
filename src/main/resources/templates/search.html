@@ -15,9 +15,11 @@
 	<div th:replace="~{/fragments/header :: header}"></div>
 
 	<!-- 검색 결과 영역 -->
-	<div class="max-w-6xl mx-auto px-4 mt-10">
-		<h2 class="text-2xl font-semibold mb-6" th:text="'검색 결과 - ' + ${keyword}"></h2>
+	<div class="max-w-6xl mx-auto px-4 mt-20">
+		<span><h2 class="text-2xl font-semibold mb-6 inline" th:text="${param.keyword} + ' '"></h2>에 대한 검색결과</span>
 
+		<div class="mt-10"></div>
+		
 		<!-- 결과가 없는 경우 -->
 		<div th:if="${#lists.isEmpty(productList)}"
 			class="flex flex-col items-center justify-center bg-white border border-gray-200 rounded-lg py-16 shadow-sm">
@@ -34,6 +36,7 @@
 						<img th:src="@{|/images/${product.imagePath}|}" alt="상품 이미지"
 							class="w-full h-40 object-contain mb-2 rounded border">
 						<h3 class="text-sm font-medium truncate" th:text="${product.productName}">상품명</h3>
+						<div class="text-sm text-gray-500" th:text="${product.category}">카테고리</div>
 						<p class="text-green-600 text-sm font-semibold"
 							th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + '원'">가격</p>
 					</a>
