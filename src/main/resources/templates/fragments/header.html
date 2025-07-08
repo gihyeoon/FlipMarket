@@ -14,12 +14,25 @@
 			</form>
 
 			<!-- 우측 메뉴 -->
-			<nav class="flex items-center space-x-4 text-sm">
-				<!-- 공통 메뉴 -->
-
+			<nav class="flex items-center space-x-4 text-sm relative">
 				<!-- 로그인 상태 -->
-				<div sec:authorize="isAuthenticated()">
-					<a th:href="@{/mypage(num=${userNum})}" class="hover:underline">마이페이지</a>
+				<div sec:authorize="isAuthenticated()" class="flex items-center space-x-4 relative">
+					<!-- 마이페이지 드롭다운 -->
+					<div class="relative">
+						<button id="mypageBtn" class="hover:underline focus:outline-none">
+							마이페이지
+						</button>
+
+						<!-- 드롭다운 메뉴 -->
+						<div id="mypageDropdown" class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50
+														   hidden opacity-0 scale-95 transform transition-all duration-200 ease-out">
+							<a th:href="@{/mypage(num=${userNum})}"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">정보 조회</a>
+							<a th:href="@{/mypage/orders(num=${userNum})}"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">주문 목록</a>
+						</div>
+					</div>
+
 					<a th:href="@{/cart(num=${userNum})}" class="hover:underline">장바구니</a>
 					<a th:href="@{/addProduct}" class="hover:underline">상품 등록</a>
 					<a th:href="@{/logout}" class="text-red-600 hover:underline">로그아웃</a>
