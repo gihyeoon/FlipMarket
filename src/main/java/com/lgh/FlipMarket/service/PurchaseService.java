@@ -37,5 +37,8 @@ public class PurchaseService {
 
 		purchaseRepository.save(purchase);
 	}
+	
+	// 로그인한 사용자의 결제 내역 조회
+	
 
 }

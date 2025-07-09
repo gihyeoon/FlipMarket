@@ -15,6 +15,7 @@ import com.lgh.FlipMarket.dto.ProductDto;
 import com.lgh.FlipMarket.dto.UserDto;
 import com.lgh.FlipMarket.service.AddressService;
 import com.lgh.FlipMarket.service.ProductService;
+import com.lgh.FlipMarket.service.PurchaseService;
 import com.lgh.FlipMarket.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,14 +29,18 @@ public class UserController {
 
 	private final AddressService addressService;
 
+	private final PurchaseService purchaseService;
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
 	private static final String BASE_URL = "user/";
 
-	public UserController(UserService userService, ProductService productService, AddressService addressService) {
+	public UserController(UserService userService, ProductService productService, AddressService addressService,
+			PurchaseService purchaseService) {
 		this.userService = userService;
 		this.productService = productService;
 		this.addressService = addressService;
+		this.purchaseService = purchaseService;
 	}
 
 	@GetMapping("/register")
@@ -77,6 +82,15 @@ public class UserController {
 		model.addAttribute("recentProducts", recentProducts);
 		model.addAttribute("address", address);
 		return BASE_URL + "mypage";
+	}
+
+	@GetMapping("/mypage/orders")
+	public String showMyOrderList(@RequestParam("num") Long userNun, Model model) {
+		UserDto userDto = userService.findByNum(userNun);
+
+		model.addAttribute("user", userDto);
+
+		return BASE_URL + "orderList";
 	}
 
 	@GetMapping("/api/validateUserByOAuth2/{provider}")
