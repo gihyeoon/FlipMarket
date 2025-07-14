@@ -1,8 +1,12 @@
 package com.lgh.FlipMarket.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import com.lgh.FlipMarket.dto.ProductDto;
+import com.lgh.FlipMarket.dto.PurchaseDto;
 import com.lgh.FlipMarket.dto.UserDto;
 import com.lgh.FlipMarket.entity.Product;
 import com.lgh.FlipMarket.entity.Purchase;
@@ -37,8 +41,19 @@ public class PurchaseService {
 
 		purchaseRepository.save(purchase);
 	}
-	
+
 	// 로그인한 사용자의 결제 내역 조회
-	
+	public List<PurchaseDto> findByUserNum(Long userNum) {
+		List<Object[]> results = purchaseRepository.findByUserNum(userNum);
+		User user = userRepository.findById(userNum)
+				.orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+
+		return results.stream()
+				.map(r -> new PurchaseDto(Long.parseLong(r[0].toString()), Integer.parseInt(r[1].toString()),
+						Integer.parseInt(r[2].toString()), user,
+						productRepository.findById(Long.parseLong(r[4].toString()))
+								.orElseThrow(() -> new IllegalArgumentException("해당하는 상품은 존재하지 않습니다."))))
+				.collect(Collectors.toList());
+	}
 
 }
