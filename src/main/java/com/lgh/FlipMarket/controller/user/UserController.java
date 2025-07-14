@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lgh.FlipMarket.dto.AddressDto;
 import com.lgh.FlipMarket.dto.ProductDto;
+import com.lgh.FlipMarket.dto.PurchaseDto;
 import com.lgh.FlipMarket.dto.UserDto;
 import com.lgh.FlipMarket.service.AddressService;
 import com.lgh.FlipMarket.service.ProductService;
@@ -87,8 +88,10 @@ public class UserController {
 	@GetMapping("/mypage/orders")
 	public String showMyOrderList(@RequestParam("num") Long userNun, Model model) {
 		UserDto userDto = userService.findByNum(userNun);
+		List<PurchaseDto> purchaseList = purchaseService.findByUserNum(userNun);
 
 		model.addAttribute("user", userDto);
+		model.addAttribute("purchaseList", purchaseList);
 
 		return BASE_URL + "orderList";
 	}
