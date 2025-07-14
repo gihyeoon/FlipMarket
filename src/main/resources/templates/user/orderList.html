@@ -14,5 +14,46 @@
 
 <body>
 	<div th:replace="~{/fragments/header :: header}"></div>
+
+	<div class="max-w-5xl mx-auto px-4 py-10">
+		<h2 class="text-2xl font-bold mb-6">주문 내역</h2>
+
+		<!-- 주문 내역 반복 -->
+		<div th:each="order : ${purchaseList}" class="bg-white shadow-md rounded-lg p-4 mb-4">
+			<div class="flex items-center space-x-4">
+				<!-- 상품 이미지 -->
+				<img th:src="@{|/images/${order.product.imagePath}|}" alt="상품 이미지"
+					class="w-24 h-24 object-contain border rounded-md">
+
+				<!-- 상품 정보 -->
+				<div class="flex-1 space-y-1">
+					<h3 class="text-lg font-semibold" th:text="${order.product.productName}"></h3>
+					<p class="text-sm text-gray-600">수량: <span th:text="${order.quantity}"></span></p>
+					<p class="text-sm text-gray-600">
+						총 가격:
+						<span class="font-medium text-green-600"
+							th:text="${#numbers.formatInteger(order.totalPrice, 3, 'COMMA')} + '원'"></span>
+					</p>
+					<p class="text-sm text-gray-500"
+						th:text="'결제일: ' + ${#temporals.format(order.createdAt, 'yyyy-MM-dd')}">
+						결제일: 2025-07-14
+					</p>
+				</div>
+
+				<!-- 리뷰 등록 버튼 -->
+				<div class="ml-auto">
+					<button th:if="${order.hasReview == false}"
+						th:onclick="'location.href=\'/review/write?orderId=' + ${order.num} + '\';'"
+						class="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+						리뷰 작성
+					</button>
+					<span th:if="${order.hasReview == true}" class="text-sm text-gray-500 italic">
+						리뷰 완료
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
+
 </html>
