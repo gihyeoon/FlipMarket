@@ -1,6 +1,7 @@
 package com.lgh.FlipMarket.service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,10 +27,13 @@ public class ReviewService {
 	public List<ReviewDto> findByProductNum(Long productNum) {
 		List<Object[]> results = reviewRepository.findByProductNum(productNum);
 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
 		return results.stream()
 				.map(r -> new ReviewDto(Long.parseLong(r[0].toString()),
 						userRepository.findById(Long.parseLong(r[1].toString())).get().getName(),
-						Integer.parseInt(r[3].toString()), r[4].toString(), LocalDateTime.parse(r[5].toString())))
+						Integer.parseInt(r[3].toString()), r[4].toString(),
+						LocalDateTime.parse(r[5].toString().split("\\.")[0], formatter)))
 				.collect(Collectors.toList());
 	}
 
