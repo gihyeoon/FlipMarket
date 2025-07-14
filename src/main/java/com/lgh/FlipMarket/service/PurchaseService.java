@@ -1,5 +1,7 @@
 package com.lgh.FlipMarket.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,11 +50,15 @@ public class PurchaseService {
 		User user = userRepository.findById(userNum)
 				.orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
 		return results.stream()
 				.map(r -> new PurchaseDto(Long.parseLong(r[0].toString()), Integer.parseInt(r[1].toString()),
 						Integer.parseInt(r[2].toString()), user,
 						productRepository.findById(Long.parseLong(r[4].toString()))
-								.orElseThrow(() -> new IllegalArgumentException("해당하는 상품은 존재하지 않습니다."))))
+								.orElseThrow(() -> new IllegalArgumentException("해당하는 상품은 존재하지 않습니다.")),
+						LocalDateTime.parse(r[5].toString().split("\\.")[0], formatter),
+						Integer.parseInt(r[6].toString()) == 0 ? false : true))
 				.collect(Collectors.toList());
 	}
 
