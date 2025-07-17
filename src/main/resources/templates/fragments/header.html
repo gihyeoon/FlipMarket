@@ -39,7 +39,7 @@
 				</div>
 
 				<!-- 비로그인 상태 -->
-				<div sec:authorize="isAnonymous()">
+				<div sec:authorize="isAnonymous()" class="flex items-center space-x-4 relative">
 					<a th:href="@{/mypage}" class="hover:underline">마이페이지</a>
 					<a th:href="@{/cart}" class="hover:underline">장바구니</a>
 					<a th:href="@{/login}" class="hover:underline">로그인</a>
