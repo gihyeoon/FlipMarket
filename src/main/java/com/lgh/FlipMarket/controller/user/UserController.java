@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.lgh.FlipMarket.config.AuthenticationUserId;
 import com.lgh.FlipMarket.dto.AddressDto;
 import com.lgh.FlipMarket.dto.ProductDto;
 import com.lgh.FlipMarket.dto.PurchaseDto;
@@ -32,16 +33,19 @@ public class UserController {
 
 	private final PurchaseService purchaseService;
 
+	private final AuthenticationUserId authenticationUserId;
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
 	private static final String BASE_URL = "user/";
 
 	public UserController(UserService userService, ProductService productService, AddressService addressService,
-			PurchaseService purchaseService) {
+			PurchaseService purchaseService, AuthenticationUserId authenticationUserId) {
 		this.userService = userService;
 		this.productService = productService;
 		this.addressService = addressService;
 		this.purchaseService = purchaseService;
+		this.authenticationUserId = authenticationUserId;
 	}
 
 	@GetMapping("/register")
@@ -134,6 +138,15 @@ public class UserController {
 		model.addAttribute("num", userDto.getNum());
 
 		return BASE_URL + "resetPassword";
+	}
+
+	@GetMapping("/review/write")
+	public String showReviewPage(@RequestParam("num") Long productNum, Model model) {
+		Long userNum = authenticationUserId.getUserNum();
+
+		model.addAttribute("num", userNum);
+
+		return "review";
 	}
 
 }
