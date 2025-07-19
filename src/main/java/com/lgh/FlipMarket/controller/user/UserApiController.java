@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lgh.FlipMarket.config.AuthenticationUserId;
 import com.lgh.FlipMarket.config.Constants;
 import com.lgh.FlipMarket.config.RandomPasswordGenerator;
 import com.lgh.FlipMarket.config.mail.MailService;
@@ -25,6 +26,7 @@ import com.lgh.FlipMarket.dto.UserDto;
 import com.lgh.FlipMarket.entity.User;
 import com.lgh.FlipMarket.repository.UserRepository;
 import com.lgh.FlipMarket.service.AddressService;
+import com.lgh.FlipMarket.service.ReviewService;
 import com.lgh.FlipMarket.service.UserService;
 
 @CrossOrigin(origins = "http://localhost:8080")
@@ -38,19 +40,26 @@ public class UserApiController {
 
 	private final AddressService addressService;
 
+	private final ReviewService reviewService;
+
 	private final BCryptPasswordEncoder passwordEncoder;
 
 	private final MailService mailService;
 
+	private final AuthenticationUserId authenticationUserId;
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
 	public UserApiController(UserRepository userRepository, UserService userService, AddressService addressService,
-			BCryptPasswordEncoder passwordEncoder, MailService mailService) {
+			ReviewService reviewService, BCryptPasswordEncoder passwordEncoder, MailService mailService,
+			AuthenticationUserId authenticationUserId) {
 		this.userRepository = userRepository;
 		this.userService = userService;
 		this.addressService = addressService;
+		this.reviewService = reviewService;
 		this.passwordEncoder = passwordEncoder;
 		this.mailService = mailService;
+		this.authenticationUserId = authenticationUserId;
 	}
 
 	@GetMapping("/overlap/emailRegister")
@@ -237,6 +246,18 @@ public class UserApiController {
 		Long userNum = Long.parseLong(data.get("userNum"));
 
 		userService.deleteByNum(userNum);
+
+		return Map.of(Constants.RETURN_KEY_NAME, "0");
+	}
+
+	@PostMapping("/review/addReview")
+	public Map<String, String> addReview(@RequestBody Map<String, String> data) {
+		Long userNum = authenticationUserId.getUserNum();
+		Long productNum = Long.parseLong(data.get("productNum"));
+		int rating = Integer.parseInt(data.get("rating"));
+		String description = data.get("description");
+
+		reviewService.addReview(userNum, productNum, rating, description);
 
 		return Map.of(Constants.RETURN_KEY_NAME, "0");
 	}

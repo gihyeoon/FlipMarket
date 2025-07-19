@@ -90,11 +90,12 @@ public class UserController {
 	}
 
 	@GetMapping("/mypage/orders")
-	public String showMyOrderList(@RequestParam("num") Long userNun, Model model) {
-		UserDto userDto = userService.findByNum(userNun);
-		List<PurchaseDto> purchaseList = purchaseService.findByUserNum(userNun);
+	public String showMyOrderList(@RequestParam("num") Long userNum, Model model) {
+		UserDto userDto = userService.findByNum(userNum);
+		List<PurchaseDto> purchaseList = purchaseService.findByUserNum(userNum);
 
 		model.addAttribute("user", userDto);
+		model.addAttribute("userNum", userNum);
 		model.addAttribute("purchaseList", purchaseList);
 
 		return BASE_URL + "orderList";
