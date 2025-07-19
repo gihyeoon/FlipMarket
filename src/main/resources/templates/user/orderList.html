@@ -49,7 +49,7 @@
 				<!-- 리뷰 등록 버튼 -->
 				<div class="ml-auto">
 					<button th:if="${order.hasReview == false}"
-						th:onclick="'location.href=\'/review/write?productNum=' + ${order.product.num} + '\';'"
+						th:onclick="'location.href=\'/review/write?productNum=' + ${order.product.num} + '&purchaseNum=' + ${order.num} + '\';'"
 						class="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition">
 						리뷰 작성
 					</button>
