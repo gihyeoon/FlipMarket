@@ -73,4 +73,8 @@ public class Purchase {
 		return totalPrice;
 	}
 	
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+	
 }
