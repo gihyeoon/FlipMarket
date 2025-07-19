@@ -141,12 +141,16 @@ public class UserController {
 	}
 
 	@GetMapping("/review/write")
-	public String showReviewPage(@RequestParam("num") Long productNum, Model model) {
+	public String showReviewPage(@RequestParam("productNum") Long productNum, @RequestParam("purchaseNum") Long purchaseNum, Model model) {
 		Long userNum = authenticationUserId.getUserNum();
+		ProductDto productDto = productService.findByNum(productNum);
+		PurchaseDto purchaseDto = purchaseService.findByNum(purchaseNum);
 
 		model.addAttribute("num", userNum);
+		model.addAttribute("product", productDto);
+		model.addAttribute("order", purchaseDto);
 
-		return "review";
+		return BASE_URL + "review";
 	}
 
 }
