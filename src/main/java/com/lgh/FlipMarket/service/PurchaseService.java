@@ -62,4 +62,11 @@ public class PurchaseService {
 				.collect(Collectors.toList());
 	}
 
+	public PurchaseDto findByNum(Long purchaseNum) {
+		Purchase purchase = purchaseRepository.findById(purchaseNum)
+				.orElseThrow(() -> new IllegalArgumentException("해당하는 결재내역이 없습니다."));
+		return new PurchaseDto(purchaseNum, purchase.getQuantity(), purchase.getTotalPrice(), null, null,
+				purchase.getCreatedAt(), false);
+	}
+
 }
