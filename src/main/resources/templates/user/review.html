@@ -29,9 +29,9 @@
 		</div>
 
 		<!-- 리뷰 폼 -->
-		<form th:action="@{/review/submit}" method="post" class="space-y-6">
-			<input type="hidden" name="productId" th:value="${product.num}" />
-			<input type="hidden" name="orderId" th:value="${order.num}" />
+		<form class="space-y-6">
+			<input type="hidden" name="productNum" id="productNum" th:value="${product.num}" />
+			<input type="hidden" name="purchaseNum" id="purchaseNum" th:value="${order.num}" />
 
 			<!-- ⭐ 별점 선택 영역 -->
 			<label class="block text-sm font-medium mb-2">별점</label>
@@ -57,7 +57,8 @@
 
 			<!-- 등록 버튼 -->
 			<div class="text-right">
-				<button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+				<button type="button" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+					onclick="addReview();">
 					리뷰 등록
 				</button>
 			</div>
@@ -81,6 +82,45 @@
 			});
 		});
 	});
+
+	const addReview = function () {
+		const productNum = $("#productNum").val();
+		const ratingVal = $("#ratingValue").val();
+		const content = $("#content").val();
+
+		const data = {
+			productNum: productNum,
+			rating: ratingVal,
+			description: content,
+		};
+
+		if (ratingVal == 0) {
+			alert("별점을 선택해주세요.");
+			return false;
+		}
+
+		if (content == "") {
+			alert("리뷰 내용을 작성해주세요.")
+			return false;
+		}
+
+		if (confirm("리뷰를 등록하시겠습니까?")) {
+			$.ajax({
+				type: "POST",
+				url: "/api/review/addReview",
+				data: JSON.stringify(data),
+				contentType: "application/json",
+
+				success: function (result) {
+					alert("리뷰가 등록되었습니다.");
+					window.location.href = "/main";
+				},
+				error: function (request, status, error) {
+					alert("리뷰 등록 오류\ncode: " + request.status + "\nerror: " + error);
+				}
+			});
+		}
+	}
 </script>
 
 </html>
