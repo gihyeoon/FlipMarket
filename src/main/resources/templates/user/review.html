@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<meta charset="UTF-8">
+	<title>리뷰</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<script th:src="@{/js/header-dropdown.js}"></script>
+</head>
+
+<body>
+	<div class="max-w-3xl mx-auto px-4 py-10">
+		<h2 class="text-2xl font-bold mb-6">리뷰 작성</h2>
+
+		<!-- 상품 정보 -->
+		<div class="flex items-center bg-white p-4 rounded-lg shadow mb-6">
+			<img th:src="@{|/images/${product.imagePath}|}" alt="상품 이미지"
+				class="w-24 h-24 object-contain border rounded mr-4">
+			<div>
+				<h3 class="text-lg font-semibold" th:text="${product.productName}">상품명</h3>
+				<p class="text-sm text-gray-500"
+					th:text="'구매일: ' + ${#temporals.format(order.createdAt, 'yyyy-MM-dd')}">
+					구매일</p>
+			</div>
+		</div>
+
+		<!-- 리뷰 폼 -->
+		<form th:action="@{/review/submit}" method="post" class="space-y-6">
+			<input type="hidden" name="productId" th:value="${product.num}" />
+			<input type="hidden" name="orderId" th:value="${order.num}" />
+
+			<!-- ⭐ 별점 선택 영역 -->
+			<label class="block text-sm font-medium mb-2">별점</label>
+			<div class="flex items-center space-x-1 text-yellow-400 text-2xl" id="starRating">
+				<!-- 별 5개 반복 -->
+				<span class="star cursor-pointer text-gray-300" data-value="1">&#9733;</span>
+				<span class="star cursor-pointer text-gray-300" data-value="2">&#9733;</span>
+				<span class="star cursor-pointer text-gray-300" data-value="3">&#9733;</span>
+				<span class="star cursor-pointer text-gray-300" data-value="4">&#9733;</span>
+				<span class="star cursor-pointer text-gray-300" data-value="5">&#9733;</span>
+			</div>
+
+			<!-- 선택된 값을 서버로 넘기기 위한 hidden input -->
+			<input type="hidden" name="rating" id="ratingValue" value="0">
+
+			<!-- 내용 입력 -->
+			<div>
+				<label for="content" class="block text-sm font-medium mb-2">리뷰 내용</label>
+				<textarea id="content" name="content" rows="5"
+					class="w-full border rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-400 resize-none"
+					placeholder="리뷰를 작성해주세요."></textarea>
+			</div>
+
+			<!-- 등록 버튼 -->
+			<div class="text-right">
+				<button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+					리뷰 등록
+				</button>
+			</div>
+		</form>
+	</div>
+</body>
+
+<script>
+	$(document).ready(function () {
+		$('.star').on('click', function () {
+			const selectedRating = $(this).data('value'); // 몇 번째 별인지 가져옴
+			$('#ratingValue').val(selectedRating); // hidden input에 저장
+
+			// 모든 별 회색으로 초기화 후, 선택한 별까지 노란색으로
+			$('.star').each(function (index) {
+				if (index < selectedRating) {
+					$(this).removeClass('text-gray-300').addClass('text-yellow-400');
+				} else {
+					$(this).removeClass('text-yellow-400').addClass('text-gray-300');
+				}
+			});
+		});
+	});
+</script>
+
+</html>
